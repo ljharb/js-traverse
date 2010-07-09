@@ -2,6 +2,17 @@ Description
 ===========
 Traverse and transform objects by visiting every node on a recursive walk.
 
+Installation
+============
+
+Using npm:
+    npm install traverse
+
+Or check out the repository and link your development copy:
+    git clone http://github.com/substack/js-traverse.git
+    cd js-traverse
+    npm link .
+
 Examples
 ========
 
