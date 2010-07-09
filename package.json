@@ -1,10 +1,7 @@
 {
     "name" : "traverse",
     "version" : "0.0.1",
-    "description" : "
-        Traverse and transform objects by visiting every node on a recursive
-        walk.
-    ",
+    "description" : "Traverse and transform objects by visiting every node on a recursive walk.",
     "author" : "James Halliday",
     "main" : "traverse",
     "repository" : {
