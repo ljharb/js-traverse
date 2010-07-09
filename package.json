@@ -10,5 +10,5 @@
     "repository" : {
         "type" : "git",
         "url" : "http://github.com/substack/js-traverse.git"
-    },
+    }
 }

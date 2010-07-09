@@ -5,8 +5,46 @@ Traverse and transform objects by visiting every node on a recursive walk.
 Examples
 ========
 
-JSON Scrubbing Example
-----------------------
+These examples use node.js, but the module should work without it.
+
+Collect Leaf Nodes
+------------------
+    var sys = require('sys');
+    var Traverse = require('traverse').Traverse;
+    
+    var acc = [];
+    Traverse({
+        a : [1,2,3],
+        b : 4,
+        c : [5,6],
+        d : { e : [7,8], f : 9 }
+    }).forEach(function (x) {
+        if (this.isLeaf) acc.push(x);
+    });
+    sys.puts(acc.join(' '));
+    
+    /* Output:
+        1 2 3 4 5 6 7 8 9
+    */
+
+Replace Negative Numbers
+------------------------
+    var sys = require('sys');
+    var Traverse = require('traverse').Traverse;
+    
+    var fixed = Traverse([
+        5, 6, -3, [ 7, 8, -2, 1 ], { f : 10, g : -13 }
+    ]).modify(function (x) {
+        if (x < 0) this.update(x + 127);
+    }).get()
+    sys.puts(sys.inspect(fixed));
+    
+    /* Output:
+        [ 5, 6, 124, [ 7, 8, 125, 1 ], { f: 10, g: 114 } ]
+    */
+
+Scrub and Collect Functions
+---------------------------
 
 Suppose you have a complex data structure that you want to send to another
 process with JSON over a network socket. If the data structure has references to
