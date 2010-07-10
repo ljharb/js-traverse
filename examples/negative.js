@@ -8,3 +8,7 @@ var fixed = Traverse([
     if (x < 0) this.update(x + 128);
 }).get()
 sys.puts(sys.inspect(fixed));
+
+/* Output:
+    [ 5, 6, 125, [ 7, 8, 126, 1 ], { f: 10, g: 115 } ]
+*/
