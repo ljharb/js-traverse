@@ -17,11 +17,6 @@ function Traverse (obj) {
                 parent : parents.slice(-1)[0],
                 key : path.slice(-1)[0],
                 isRoot : node == obj,
-                notRoot : node != obj,
-                isLeaf : typeof(node) != 'object'
-                    || Object.keys(node).length == 0,
-                notLeaf : typeof(node) == 'object'
-                    && Object.keys(node).length > 0,
                 update : function (x) {
                     if (state.isRoot) {
                         obj = x;
@@ -33,9 +28,18 @@ function Traverse (obj) {
                 },
                 level : path.length,
             };
+            if (typeof(node) == 'object' && node !== null) {
+                state.isLeaf = Object.keys(node).length == 0
+            }
+            else {
+                state.isLeaf = true;
+            }
+            
+            state.notLeaf = !state.isLeaf;
+            state.notRoot = !state.isRoot;
             
             f.call(state, node);
-            if (typeof(state.node) == 'object') {
+            if (typeof(state.node) == 'object' && state.node !== null) {
                 parents.push(state);
                 Object.keys(state.node).forEach(function (key) {
                     path.push(key);
