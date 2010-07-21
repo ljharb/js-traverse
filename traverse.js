@@ -1,4 +1,6 @@
-exports.Traverse = Traverse;
+module.exports = Traverse;
+module.exports.Traverse = Traverse;
+
 function Traverse (obj) {
     if (!(this instanceof Traverse)) return new Traverse(obj);
     

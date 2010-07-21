@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 var sys = require('sys');
-var Traverse = require('traverse').Traverse;
+var Traverse = require('traverse');
 
 var fixed = Traverse([
     5, 6, -3, [ 7, 8, -2, 1 ], { f : 10, g : -13 }

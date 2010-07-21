@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 var sys = require('sys');
-var Traverse = require('traverse').Traverse;
+var Traverse = require('traverse');
 
 var id = 54;
 var callbacks = {};
