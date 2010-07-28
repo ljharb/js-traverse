@@ -7,7 +7,7 @@ function Traverse (refObj) {
     // clone refObj for a properly immutable interface:
     function clone(ref) {
         if (typeof ref == 'object' && ref !== null) {
-            var node = ref.constructor();
+            var node = ref instanceof Array ? [] : {};
             Object.keys(ref).forEach(function (key) {
                 node[key] = clone(ref[key]);
             });
