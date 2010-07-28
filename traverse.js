@@ -1,8 +1,23 @@
 module.exports = Traverse;
 module.exports.Traverse = Traverse;
 
-function Traverse (obj) {
-    if (!(this instanceof Traverse)) return new Traverse(obj);
+function Traverse (refObj) {
+    if (!(this instanceof Traverse)) return new Traverse(refObj);
+    
+    // clone refObj for a properly immutable interface:
+    function clone(ref) {
+        if (typeof ref == 'object' && ref !== null) {
+            var node = ref.constructor();
+            Object.keys(ref).forEach(function (key) {
+                node[key] = clone(ref[key]);
+            });
+            return node;
+        }
+        else {
+            return ref;
+        }
+    }
+    var obj = clone(refObj);
     
     this.get = function () { return obj };
     
@@ -30,7 +45,7 @@ function Traverse (obj) {
                 },
                 level : path.length,
             };
-            if (typeof(node) == 'object' && node !== null) {
+            if (typeof node == 'object' && node !== null) {
                 state.isLeaf = Object.keys(node).length == 0
             }
             else {
@@ -41,7 +56,7 @@ function Traverse (obj) {
             state.notRoot = !state.isRoot;
             
             f.call(state, node);
-            if (typeof(state.node) == 'object' && state.node !== null) {
+            if (typeof state.node == 'object' && state.node !== null) {
                 parents.push(state);
                 Object.keys(state.node).forEach(function (key) {
                     path.push(key);
