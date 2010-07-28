@@ -13,6 +13,13 @@ Or check out the repository and link your development copy:
     cd js-traverse
     npm link .
 
+You can test traverse with "expresso":http://github.com/visionmedia/expresso
+(`npm install expresso`):
+    js-traverse $ expresso
+    
+    100% wahoo, your stuff is not broken!
+    
+
 Examples
 ========
 
