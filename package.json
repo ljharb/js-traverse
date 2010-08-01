@@ -4,6 +4,9 @@
     "description" : "Traverse and transform objects by visiting every node on a recursive walk.",
     "author" : "James Halliday",
     "main" : "./lib/traverse",
+    "directories" : {
+        "lib" : "./lib"
+    },
     "repository" : {
         "type" : "git",
         "url" : "http://github.com/substack/js-traverse.git"
