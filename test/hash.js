@@ -65,5 +65,12 @@ exports['hash traversal'] = function (assert) {
     assert.equal(merged.length, 4);
     assert.equal(hash3.items.c, 3);
     assert.equal(hash3.length, 3);
+    
+    var extracted = hash3.extract(['a','b']);
+    assert.equal(extracted.length, 2);
+    assert.equal(extracted.items.a, 0);
+    assert.equal(extracted.items.b, 2);
+    
+    assert.equal(hash3.valuesAt(['a','b']).join(' '), '0 2');
 };
 
