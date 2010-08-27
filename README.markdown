@@ -126,5 +126,5 @@ Hash supports map(), filter(), and reduce(). In the first style, you can chain
 together operations before the ".end". Each callback is executed like this:
     f.call(hash, value, key)
 
-See also "creationix's pattern/hash":http://github.com/creationix/pattern, which
-does a similar thing except with hash inputs and array outputs.
+See also [creationix's pattern/hash](http://github.com/creationix/pattern),
+which does a similar thing except with hash inputs and array outputs.
