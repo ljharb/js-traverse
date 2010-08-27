@@ -110,11 +110,16 @@ use.
 Hash Transforms
 ===============
 
-There's also a hash lib in this distribution for writing maps, filters, and
-folds over hashes.
+There's also a hash lib in this distribution with tons of useful functions to
+operate on hashes:
+map, forEach, filter, reduce, some, update, merge, tap, items, keys, values,
+clone, copy
+
+These work mostly like their array counterparts where available except they get
+an extra second argument, key.
 
     > var Hash = require('traverse/hash')
-    > Hash({ a : 1, b : 2 }).map(function (v) { return v + 1 }).end
+    > Hash({ a : 1, b : 2 }).map(function (v) { return v + 1 }).items
     { a: 2, b: 3 }
     
 To do the same thing without chaining:
@@ -122,9 +127,8 @@ To do the same thing without chaining:
     > Hash.map({ a : 1, b : 2 }, function (v) { return v + 1 })
     { a: 2, b: 3 }
 
-Hash supports map(), filter(), and reduce(). In the first style, you can chain
-together operations before the ".end". Each callback is executed like this:
-    f.call(hash, value, key)
+The 'this' context of the function calls is the same object that the chained
+functions return, so you can make nested chains.
 
 See also [creationix's pattern/hash](http://github.com/creationix/pattern),
 which does a similar thing except with hash inputs and array outputs.
