@@ -57,5 +57,13 @@ exports['hash traversal'] = function (assert) {
     assert.equal(ref1.a, 1);
     assert.equal(ref1.b, 2);
     
+    var merged = hash3.merge({ c : 3.14, d : 4 });
+    assert.equal(merged.items.a, 0);
+    assert.equal(merged.items.b, 2);
+    assert.equal(merged.items.c, 3.14);
+    assert.equal(merged.items.d, 4);
+    assert.equal(merged.length, 4);
+    assert.equal(hash3.items.c, 3);
+    assert.equal(hash3.length, 3);
 };
 
