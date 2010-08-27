@@ -30,5 +30,8 @@ exports['hash traversal'] = function (assert) {
     var ref3 = { a : 5, b : 2, c : 7, 1337 : 'leet' };
     var f1 = Hash.filter(ref3, function (v, k) { return v > 5 || k > 5 });
     assert.equal(Object.keys(f1).sort().join(' '), '1337 c');
+    
+    assert.equal(Hash(ref3).keys.sort().join(' '), '1337 a b c');
+    assert.equal(Hash(ref3).values.sort().join(' '), '2 5 7 leet');
 };
 
