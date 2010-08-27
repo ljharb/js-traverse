@@ -112,11 +112,25 @@ Hash Transforms
 
 There's also a hash lib in this distribution with tons of useful functions to
 operate on hashes:
-map, forEach, filter, reduce, some, update, merge, tap, items, keys, values,
-clone, copy
+
+map, forEach, filter, reduce, some, update, merge, tap, valuesAt, extract,
+items, keys, values, clone, copy
 
 These work mostly like their array counterparts where available except they get
 an extra second argument, key.
+
+Other functions like tap, valuesAt, merge, and update work like their ruby
+counterparts.
+
+The extract function creates a hash with only the supplied keys in it.
+
+The clone property makes a deep copy with Traversable.clone() and the copy
+property makes a shallow copy.
+
+The items property is the hash with the Hash() wrapper peeled away.
+
+
+
 
     > var Hash = require('traverse/hash')
     > Hash({ a : 1, b : 2 }).map(function (v) { return v + 1 }).items
