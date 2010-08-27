@@ -33,5 +33,7 @@ exports['hash traversal'] = function (assert) {
     
     assert.equal(Hash(ref3).keys.sort().join(' '), '1337 a b c');
     assert.equal(Hash(ref3).values.sort().join(' '), '2 5 7 leet');
+    
+    assert.equal(Hash(ref3).length, 4);
 };
 
