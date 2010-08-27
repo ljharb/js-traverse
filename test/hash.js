@@ -37,5 +37,25 @@ exports['hash traversal'] = function (assert) {
     assert.equal(Hash(ref3).values.sort().join(' '), '2 5 7 leet');
     
     assert.equal(Hash(ref3).length, 4);
+    
+    assert.equal(
+        Object.keys(Hash.concat([ ref1, ref2 ])).sort().join(' '),
+        'a b bar foo'
+    );
+    
+    var hash3 = Hash(ref1).clone;
+    var updated = hash3.update({ c : 3, a : 0 });
+    assert.equal(updated.keys.sort().join(' '), 'a b c');
+    assert.equal(updated.items.a, 0);
+    assert.equal(updated.items.b, 2);
+    assert.equal(updated.items.c, 3);
+    assert.equal(Object.keys(hash3.items).sort().join(' '), 'a b c');
+    assert.equal(hash3.items.a, 0);
+    assert.equal(hash3.items.b, 2);
+    assert.equal(hash3.items.c, 3);
+    assert.equal(Object.keys(ref1).sort().join(' '), 'a b');
+    assert.equal(ref1.a, 1);
+    assert.equal(ref1.b, 2);
+    
 };
 
