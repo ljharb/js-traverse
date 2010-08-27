@@ -106,3 +106,25 @@ use.
         , '55': { id: 55, f: [Function], path: [ 'foo', '3' ] }
         }
     */
+
+Hash Transforms
+===============
+
+There's also a hash lib in this distribution for writing maps, filters, and
+folds over hashes.
+
+    > var Hash = require('traverse/hash')
+    > Hash({ a : 1, b : 2 }).map(function (v) { return v + 1 }).end
+    { a: 2, b: 3 }
+    
+To do the same thing without chaining:
+
+    > Hash.map({ a : 1, b : 2 }, function (v) { return v + 1 })
+    { a: 2, b: 3 }
+
+Hash supports map(), filter(), and reduce(). In the first style, you can chain
+together operations before the ".end". Each callback is executed like this:
+    f.call(hash, value, key)
+
+See also "creationix's pattern/hash":http://github.com/creationix/pattern, which
+does a similar thing except with hash inputs and array outputs.
