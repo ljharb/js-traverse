@@ -13,7 +13,7 @@ exports['json test'] = function (assert) {
             this.update('[Function]');
             id++;
         }
-    }).get();
+    }).value;
     
     assert.equal(
         scrubbed.moo, '[Function]',
