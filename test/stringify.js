@@ -1,0 +1,38 @@
+#!/usr/bin/env node
+var Traverse = require('traverse');
+var sys = require('sys');
+
+exports.stringify = function (assert) {
+    //var obj = [ 5, 6, -3, [ 7, 8, -2, 1 ], { f : 10, g : -13 } ];
+    var obj = [ 5, 6, -3, [ 7, 8, -2, 11 ], { f : 10, g : -13 } ];
+    
+    var s = '';
+    Traverse(obj).forEach(function (node) {
+        if (Array.isArray(node)) {
+            this.before(function () { s += '[' });
+            this.post(function (child) {
+                if (!child.isLast) s += ',';
+            });
+            this.after(function () { s += ']' });
+        }
+        else if (typeof node == 'object') {
+            this.before(function () { s += '{' });
+            this.pre(function (x, key) {
+                s += '"' + key + '"' + ':';
+            });
+            this.post(function (child) {
+                if (!child.isLast) s += ',';
+            });
+            this.after(function () { s += '}' });
+        }
+        else if (typeof node == 'function') {
+            s += 'null';
+        }
+        else {
+            s += node.toString();
+        }
+    });
+    
+    assert.equal(s, JSON.stringify(obj));
+}
+
