@@ -3,8 +3,7 @@ var Traverse = require('traverse');
 var sys = require('sys');
 
 exports.stringify = function (assert) {
-    //var obj = [ 5, 6, -3, [ 7, 8, -2, 1 ], { f : 10, g : -13 } ];
-    var obj = [ 5, 6, -3, [ 7, 8, -2, 11 ], { f : 10, g : -13 } ];
+    var obj = [ 5, 6, -3, [ 7, 8, -2, 1 ], { f : 10, g : -13 } ];
     
     var s = '';
     Traverse(obj).forEach(function (node) {
