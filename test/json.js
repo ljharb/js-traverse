@@ -7,7 +7,7 @@ exports['json test'] = function (assert) {
     var callbacks = {};
     var obj = { moo : function () {}, foo : [2,3,4, function () {}] };
     
-    var scrubbed = Traverse(obj).modify(function (x) {
+    var scrubbed = Traverse(obj).map(function (x) {
         if (x instanceof Function) {
             callbacks[id] = { id : id, f : x, path : this.path };
             this.update('[Function]');
