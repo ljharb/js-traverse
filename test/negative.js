@@ -4,9 +4,9 @@ var sys = require('sys');
 
 exports['negative update test'] = function (assert) {
     var obj = [ 5, 6, -3, [ 7, 8, -2, 1 ], { f : 10, g : -13 } ];
-    var fixed = Traverse(obj).map(function (x) {
+    var fixed = Traverse.map(obj, function (x) {
         if (x < 0) this.update(x + 128);
-    }).value;
+    });
     
     assert.equal(
         sys.inspect(fixed),

@@ -28,7 +28,7 @@ These examples use node.js, but the module should work without it.
 Collect Leaf Nodes
 ------------------
     var sys = require('sys');
-    var Traverse = require('traverse').Traverse;
+    var Traverse = require('traverse');
     
     var acc = [];
     Traverse({
@@ -48,13 +48,12 @@ Collect Leaf Nodes
 Replace Negative Numbers
 ------------------------
     var sys = require('sys');
-    var Traverse = require('traverse').Traverse;
+    var Traverse = require('traverse');
     
-    var fixed = Traverse([
-        5, 6, -3, [ 7, 8, -2, 1 ], { f : 10, g : -13 }
-    ]).modify(function (x) {
-        if (x < 0) this.update(x + 128);
-    }).get()
+    var numbers = [ 5, 6, -3, [ 7, 8, -2, 1 ], { f : 10, g : -13 } ];
+    var fixed = Traverse.map(numbers, function (x) {
+        if (typeof x == 'number' && x < 0) this.update(x + 128);
+    });
     sys.puts(sys.inspect(fixed));
     
     /* Output:
@@ -83,19 +82,19 @@ structure may be JSON-ified. The functions are also collected for some other
 use.
     
     var sys = require('sys');
-    var Traverse = require('traverse').Traverse;
+    var Traverse = require('traverse');
     
     var id = 54;
     var callbacks = {};
     var obj = { moo : function () {}, foo : [2,3,4, function () {}] };
     
-    var scrubbed = Traverse(obj).modify(function (x) {
-        if (x instanceof Function) {
+    var scrubbed = Traverse.map(obj, function (x) {
+        if (typeof x == 'function') {
             callbacks[id] = { id : id, f : x, path : this.path };
             this.update('[Function]');
             id++;
         }
-    }).get();
+    });
     
     sys.puts(JSON.stringify(scrubbed));
     sys.puts(sys.inspect(callbacks));
