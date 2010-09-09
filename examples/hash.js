@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var Hash = require('traverse/hash');
 var sys = require('sys');
 
