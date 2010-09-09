@@ -115,6 +115,16 @@ exports.compact = function (assert) {
     assert.equal(compacted.items.f, hash.f);
 };
 
+exports.valuesAt = function (assert) {
+    var h = { a : 4, b : 5, c : 6 };
+    assert.equal(Hash(h).valuesAt('a'), 4);
+    assert.equal(Hash(h).valuesAt(['a'])[0], 4);
+    assert.equal(Hash(h).valuesAt(['a','b']).join(' '), '4 5');
+    assert.equal(Hash.valuesAt(h, 'a'), 4);
+    assert.equal(Hash.valuesAt(h, ['a'])[0], 4);
+    assert.equal(Hash.valuesAt(h, ['a','b']).join(' '), '4 5');
+};
+
 exports.zip = function (assert) {
     var xs = ['a','b','c'];
     var ys = [1,2,3,4];
@@ -126,5 +136,10 @@ exports.zip = function (assert) {
     assert.equal(h.items.c, 3);
     assert.equal(ys.join(' '), '1 2 3 4');
     h.items.b += 10;
-    assert.equal(h.valuesAt(['b'])[0], 12);
+    assert.equal(h.valuesAt('b'), 12);
+    
+    var zipped = Hash.zip(xs,ys);
+    assert.equal(zipped.a, 1);
+    assert.equal(zipped.b, 2);
+    assert.equal(zipped.c, 3);
 };
