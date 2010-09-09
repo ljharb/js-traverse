@@ -95,3 +95,22 @@ exports.extract = function (assert) {
     assert.equal(hash.valuesAt(['a','b']).join(' '), '1 2');
 };
 
+exports.compact = function (assert) {
+    var hash = {
+        a : 1,
+        b : undefined,
+        c : false,
+        d : 4,
+        e : [ undefined, 4 ],
+        f : null
+    };
+    var ins = sys.inspect(hash);
+    var compacted = Hash(hash).compact;
+    assert.equal(sys.inspect(hash), ins, 'compact modified the hash');
+    assert.equal(compacted.keys.sort().join(' '), 'a c d e f');
+    assert.equal(compacted.items.a, hash.a);
+    assert.equal(compacted.items.c, hash.c);
+    assert.equal(compacted.items.d, hash.d);
+    assert.equal(compacted.items.e.join(' '), hash.e.join(' '));
+    assert.equal(compacted.items.f, hash.f);
+};
