@@ -114,3 +114,17 @@ exports.compact = function (assert) {
     assert.equal(compacted.items.e.join(' '), hash.e.join(' '));
     assert.equal(compacted.items.f, hash.f);
 };
+
+exports.zip = function (assert) {
+    var xs = ['a','b','c'];
+    var ys = [1,2,3,4];
+    var h = Hash(xs,ys);
+    assert.equal(h.length, 3);
+    assert.equal(h.keys.sort().join(' '), 'a b c');
+    assert.equal(h.items.a, 1);
+    assert.equal(h.items.b, 2);
+    assert.equal(h.items.c, 3);
+    assert.equal(ys.join(' '), '1 2 3 4');
+    h.items.b += 10;
+    assert.equal(h.valuesAt(['b'])[0], 12);
+};
