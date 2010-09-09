@@ -143,3 +143,18 @@ exports.zip = function (assert) {
     assert.equal(zipped.b, 2);
     assert.equal(zipped.c, 3);
 };
+
+exports.has = function (assert) {
+    var h = { a : 4, b : 5 };
+    var hh = Hash(h);
+    
+    assert.ok(hh.has('a'));
+    assert.equal(hh.has('c'), false);
+    assert.ok(hh.has(['a','b']));
+    assert.equal(hh.has(['a','b','c']), false);
+    
+    assert.ok(Hash.has(h, 'a'));
+    assert.equal(Hash.has(h, 'c'), false);
+    assert.ok(Hash.has(h, ['a','b']));
+    assert.equal(Hash.has(h, ['a','b','c']), false);
+};
