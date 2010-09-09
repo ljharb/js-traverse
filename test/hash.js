@@ -47,6 +47,12 @@ exports['filter and values'] = function (assert) {
     assert.equal(Hash(ref).length, 4);
 };
 
+exports.length = function (assert) {
+    assert.equal(Hash({ a : 1, b : [2,3], c : 4 }).length, 3);
+    assert.equal(Hash({ a : 1, b : [2,3], c : 4 }).size, 3);
+    assert.equal(Hash.size({ a : 1, b : [2,3], c : 4 }), 3);
+};
+
 exports.concat = function (assert) {
     var ref1 = { a : 1, b : 2 };
     var ref2 = { foo : 100, bar : 200 };
@@ -122,6 +128,8 @@ exports.compact = function (assert) {
             f : null
         }
     );
+    var h = Hash.compact(hash);
+    assert.deepEqual(h, compacted.items);
 };
 
 exports.valuesAt = function (assert) {
