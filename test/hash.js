@@ -1,14 +1,13 @@
 #!/usr/bin/env node
-var sys = require('sys');
 var Hash = require('traverse/hash');
 
 exports.map = function (assert) {
     var ref = { a : 1, b : 2 };
-    var hash = Hash(ref).map(function (v) { return v + 1 }).end;
-    assert.equal(ref.a, 1);
-    assert.equal(ref.b, 2);
-    assert.equal(hash.a, 2);
-    assert.equal(hash.b, 3);
+    var items = Hash(ref).map(function (v) { return v + 1 }).items;
+    var hash = Hash.map(ref, function (v) { return v + 1 });
+    assert.deepEqual(ref, { a : 1, b : 2 });
+    assert.deepEqual(items, { a : 2, b : 3 });
+    assert.deepEqual(hash, { a : 2, b : 3 });
 };
 
 exports['cloned map'] = function (assert) {
@@ -16,10 +15,10 @@ exports['cloned map'] = function (assert) {
     var hash = Hash(ref).clone.map(
         function (v) { v.unshift(v[0] - 1); return v }
     ).items;
-    assert.equal(ref.foo.join(' '), '1 2');
-    assert.equal(ref.bar.join(' '), '4 5');
-    assert.equal(hash.foo.join(' '), '0 1 2');
-    assert.equal(hash.bar.join(' '), '3 4 5');
+    assert.deepEqual(ref.foo, [1,2]);
+    assert.deepEqual(ref.bar, [4,5]);
+    assert.deepEqual(hash.foo, [0,1,2]);
+    assert.deepEqual(hash.bar, [3,4,5]);
 };
 
 exports.reduce = function (assert) {
@@ -38,61 +37,58 @@ exports.reduce = function (assert) {
 
 exports['filter and values'] = function (assert) {
     var ref = { a : 5, b : 2, c : 7, 1337 : 'leet' };
-    var hash = Hash(ref).filter(function (v, k) { return v > 5 || k > 5 });
-    assert.equal(hash.keys.sort().join(' '), '1337 c');
-    assert.equal(Hash(ref).keys.sort().join(' '), '1337 a b c');
-    assert.equal(Hash(ref).values.sort().join(' '), '2 5 7 leet');
+    var items = Hash(ref).filter(function (v, k) {
+        return v > 5 || k > 5
+    }).items;
+    var hash = Hash.filter(ref, function (v, k) { return v > 5 || k > 5 });
+    assert.deepEqual(items, { 1337 : 'leet', c : 7 });
+    assert.deepEqual(hash, { 1337 : 'leet', c : 7 });
+    assert.deepEqual(ref, { a : 5, b : 2, c : 7, 1337 : 'leet' });
     assert.equal(Hash(ref).length, 4);
 };
 
 exports.concat = function (assert) {
     var ref1 = { a : 1, b : 2 };
     var ref2 = { foo : 100, bar : 200 };
+    var ref3 = { b : 3, c : 4, bar : 300 };
     
-    assert.equal(
-        Object.keys(Hash.concat([ ref1, ref2 ])).sort().join(' '),
-        'a b bar foo'
+    assert.deepEqual(
+        Hash.concat([ ref1, ref2 ]),
+        { a : 1, b : 2, foo : 100, bar : 200 }
+    );
+    
+    assert.deepEqual(
+        Hash.concat([ ref1, ref2, ref3 ]),
+        { a : 1, b : 3, c : 4, foo : 100, bar : 300 }
     );
 };
 
 exports.update = function (assert) {
     var ref = { a : 1, b : 2 };
-    var hash = Hash(ref).clone;
-    var updated = hash.update({ c : 3, a : 0 });
-    assert.equal(updated.keys.sort().join(' '), 'a b c');
-    assert.equal(updated.items.a, 0);
-    assert.equal(updated.items.b, 2);
-    assert.equal(updated.items.c, 3);
-    assert.equal(hash.keys.sort().join(' '), 'a b c');
-    assert.equal(hash.items.a, 0);
-    assert.equal(hash.items.b, 2);
-    assert.equal(hash.items.c, 3);
-    assert.equal(Object.keys(ref).sort().join(' '), 'a b');
-    assert.equal(ref.a, 1);
-    assert.equal(ref.b, 2);
+    var items = Hash(ref).clone.update({ c : 3, a : 0 }).items;
+    assert.deepEqual(ref, { a : 1, b : 2 });
+    assert.deepEqual(items, { a : 0, b : 2, c : 3 });
+    
+    var hash = Hash.update(ref, { c : 3, a : 0 });
+    assert.deepEqual(ref, hash);
+    assert.deepEqual(hash, { a : 0, b : 2, c : 3 });
 };
 
 exports.merge = function (assert) {
     var ref = { a : 1, b : 2 };
-    var hash = Hash(ref).clone;
-    var merged = hash.merge({ c : 3.14, d : 4 });
-    assert.equal(merged.items.a, 1);
-    assert.equal(merged.items.b, 2);
-    assert.equal(merged.items.c, 3.14);
-    assert.equal(merged.items.d, 4);
-    assert.equal(merged.length, 4);
-    assert.equal(hash.keys.sort().join(' '), 'a b');
-    assert.equal(hash.length, 2);
+    var items = Hash(ref).merge({ b : 3, c : 3.14 }).items;
+    var hash = Hash.merge(ref, { b : 3, c : 3.14 });
+    
+    assert.deepEqual(ref, { a : 1, b : 2 });
+    assert.deepEqual(items, { a : 1, b : 3, c : 3.14 });
+    assert.deepEqual(hash, { a : 1, b : 3, c : 3.14 });
 };
 
 exports.extract = function (assert) {
     var hash = Hash({ a : 1, b : 2, c : 3 }).clone;
     var extracted = hash.extract(['a','b']);
     assert.equal(extracted.length, 2);
-    assert.equal(extracted.items.a, 1);
-    assert.equal(extracted.items.b, 2);
-    
-    assert.equal(hash.valuesAt(['a','b']).join(' '), '1 2');
+    assert.deepEqual(extracted.items, { a : 1, b : 2 });
 };
 
 exports.compact = function (assert) {
@@ -104,25 +100,38 @@ exports.compact = function (assert) {
         e : [ undefined, 4 ],
         f : null
     };
-    var ins = sys.inspect(hash);
     var compacted = Hash(hash).compact;
-    assert.equal(sys.inspect(hash), ins, 'compact modified the hash');
-    assert.equal(compacted.keys.sort().join(' '), 'a c d e f');
-    assert.equal(compacted.items.a, hash.a);
-    assert.equal(compacted.items.c, hash.c);
-    assert.equal(compacted.items.d, hash.d);
-    assert.equal(compacted.items.e.join(' '), hash.e.join(' '));
-    assert.equal(compacted.items.f, hash.f);
+    assert.deepEqual(
+        {
+            a : 1,
+            b : undefined,
+            c : false,
+            d : 4,
+            e : [ undefined, 4 ],
+            f : null
+        },
+        hash, 'compact modified the hash'
+    );
+    assert.deepEqual(
+        compacted.items,
+        {
+            a : 1,
+            c : false,
+            d : 4,
+            e : [ undefined, 4 ],
+            f : null
+        }
+    );
 };
 
 exports.valuesAt = function (assert) {
     var h = { a : 4, b : 5, c : 6 };
     assert.equal(Hash(h).valuesAt('a'), 4);
     assert.equal(Hash(h).valuesAt(['a'])[0], 4);
-    assert.equal(Hash(h).valuesAt(['a','b']).join(' '), '4 5');
+    assert.deepEqual(Hash(h).valuesAt(['a','b']), [4,5]);
     assert.equal(Hash.valuesAt(h, 'a'), 4);
-    assert.equal(Hash.valuesAt(h, ['a'])[0], 4);
-    assert.equal(Hash.valuesAt(h, ['a','b']).join(' '), '4 5');
+    assert.deepEqual(Hash.valuesAt(h, ['a']), [4]);
+    assert.deepEqual(Hash.valuesAt(h, ['a','b']), [4,5]);
 };
 
 exports.zip = function (assert) {
@@ -130,18 +139,10 @@ exports.zip = function (assert) {
     var ys = [1,2,3,4];
     var h = Hash(xs,ys);
     assert.equal(h.length, 3);
-    assert.equal(h.keys.sort().join(' '), 'a b c');
-    assert.equal(h.items.a, 1);
-    assert.equal(h.items.b, 2);
-    assert.equal(h.items.c, 3);
-    assert.equal(ys.join(' '), '1 2 3 4');
-    h.items.b += 10;
-    assert.equal(h.valuesAt('b'), 12);
+    assert.deepEqual(h.items, { a : 1, b : 2, c : 3 });
     
     var zipped = Hash.zip(xs,ys);
-    assert.equal(zipped.a, 1);
-    assert.equal(zipped.b, 2);
-    assert.equal(zipped.c, 3);
+    assert.deepEqual(zipped, { a : 1, b : 2, c : 3 });
 };
 
 exports.has = function (assert) {
