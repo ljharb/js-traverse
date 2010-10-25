@@ -167,3 +167,13 @@ exports.has = function (assert) {
     assert.ok(Hash.has(h, ['a','b']));
     assert.equal(Hash.has(h, ['a','b','c']), false);
 };
+
+exports.detect = function (assert) {
+    var h = { a : 5, b : 6, c : 7, d : 8 };
+    var hh = Hash(h);
+    var gt6hh = hh.detect(function (x) { return x > 6 });
+    assert.ok(gt6hh == 7 || gt6hh == 8);
+    var gt6h = Hash.detect(h, function (x) { return x > 6 });
+    assert.ok(gt6h == 7 || gt6h == 8);
+    assert.equal(hh.detect(function (x) { return x > 100 }), undefined);
+};
