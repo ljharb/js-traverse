@@ -97,6 +97,13 @@ exports.extract = function (assert) {
     assert.deepEqual(extracted.items, { a : 1, b : 2 });
 };
 
+exports.exclude = function (assert) {
+    var hash = Hash({ a : 1, b : 2, c : 3 }).clone;
+    var extracted = hash.exclude(['a','b']);
+    assert.equal(extracted.length, 1);
+    assert.deepEqual(extracted.items, { c : 3 });
+};
+
 exports.compact = function (assert) {
     var hash = {
         a : 1,
