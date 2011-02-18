@@ -15,6 +15,17 @@ Traverse.prototype.forEach = function (cb) {
     return this.value;
 };
 
+Traverse.prototype.reduce = function (cb, init) {
+    var skip = arguments.length === 1;
+    var acc = skip ? this.value : init;
+    this.forEach(function (x) {
+        if (!this.isRoot || !skip) {
+            acc = cb.call(this, acc, x);
+        }
+    });
+    return acc;
+};
+
 Traverse.prototype.paths = function () {
     var acc = [];
     this.forEach(function (x) {

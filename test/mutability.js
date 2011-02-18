@@ -66,3 +66,23 @@ exports.cloneT = function () {
     obj.c.push(5);
     assert.eql(res.c, [ 3, 4 ]);
 };
+
+exports.reduce = function () {
+    var obj = { a : 1, b : 2, c : [ 3, 4 ] };
+    var res = Traverse(obj).reduce(function (acc, x) {
+        if (this.isLeaf) acc.push(x);
+        return acc;
+    }, []);
+    assert.eql(obj, { a : 1, b : 2, c : [ 3, 4 ] });
+    assert.eql(res, [ 1, 2, 3, 4 ]);
+};
+
+exports.reduceInit = function () {
+    var obj = { a : 1, b : 2, c : [ 3, 4 ] };
+    var res = Traverse(obj).reduce(function (acc, x) {
+        if (this.isRoot) assert.fail('got root');
+        return acc;
+    });
+    assert.eql(obj, { a : 1, b : 2, c : [ 3, 4 ] });
+    assert.eql(res, obj);
+};
