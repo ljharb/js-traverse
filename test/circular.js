@@ -55,7 +55,19 @@ exports.doubleCirc = function () {
     assert.eql(circs.length, 2);
 };
 
-exports.circDubUp = function () {
+exports.circDubUpForEach = function () {
+    var obj = { x : [ 1, 2, 3 ], y : [ 4, 5 ] };
+    obj.y[2] = obj;
+    obj.x.push(obj.y);
+    
+    Traverse(obj).forEach(function (x) {
+        if (this.circular) this.update('...');
+    });
+    
+    assert.eql(obj, { x : [ 1, 2, 3, [ 4, 5, '...' ] ], y : [ 4, 5, '...' ] });
+};
+
+exports.circDubUpMap = function () {
     var obj = { x : [ 1, 2, 3 ], y : [ 4, 5 ] };
     obj.y[2] = obj;
     obj.x.push(obj.y);
@@ -64,7 +76,5 @@ exports.circDubUp = function () {
         if (this.circular) this.update('...');
     });
     
-    console.dir(c);
-    
-    assert.eql(c, { x : [ 1, 2, 3, '...' ], y : [ 4, 5, '...' ] });
+    assert.eql(c, { x : [ 1, 2, 3, [ 4, 5, '...' ] ], y : [ 4, 5, '...' ] });
 };
