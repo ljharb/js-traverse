@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 var Traverse = require('traverse');
-var sys = require('sys');
 
 var obj = [ 'five', 6, -3, [ 7, 8, -2, 1 ], { f : 10, g : -13 } ];
 
