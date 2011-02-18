@@ -1,8 +1,7 @@
-#!/usr/bin/env node
+var assert = require('assert');
 var Traverse = require('traverse');
-var sys = require('sys');
 
-exports.stringify = function (assert) {
+exports.stringify = function () {
     var obj = [ 5, 6, -3, [ 7, 8, -2, 1 ], { f : 10, g : -13 } ];
     
     var s = '';

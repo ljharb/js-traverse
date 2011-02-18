@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-var sys = require('sys');
 var Traverse = require('traverse');
 
 exports['leaves test'] = function (assert) {

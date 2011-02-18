@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-var sys = require('sys');
 var Traverse = require('traverse');
 
 exports['json test'] = function (assert) {
