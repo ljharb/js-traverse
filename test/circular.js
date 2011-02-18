@@ -38,7 +38,6 @@ exports.doubleCirc = function () {
     var obj = { x : [ 1, 2, 3 ], y : [ 4, 5 ] };
     obj.y[2] = obj;
     obj.x.push(obj.y);
-    console.dir(obj);
     
     var circs = [];
     Traverse(obj).forEach(function (x) {
@@ -47,8 +46,8 @@ exports.doubleCirc = function () {
         }
     });
     
-    assert.eql(circs[0].self.path, [ 'x', 3 ]);
-    assert.eql(circs[0].circ.path, [ 'y' ]);
+    assert.eql(circs[0].self.path, [ 'x', 3, 2 ]);
+    assert.eql(circs[0].circ.path, []);
      
     assert.eql(circs[1].self.path, [ 'y', 2 ]);
     assert.eql(circs[1].circ.path, []);

@@ -100,10 +100,13 @@ function walk (root, cb) {
         
         if (typeof node == 'object' && node !== null) {
             state.isLeaf = Object.keys(node).length == 0
-            var circs = parents.filter(function (p) {
-                return node == p.node
-            });
-            if (circs.length) state.circular = circs[0];
+            
+            for (var i = 0; i < parents.length; i++) {
+                if (parents[i].node === node) {
+                    state.circular = parents[i];
+                    break;
+                }
+            }
         }
         else {
             state.isLeaf = true;
