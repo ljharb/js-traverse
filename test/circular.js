@@ -78,3 +78,19 @@ exports.circDubUpMap = function () {
     
     assert.eql(c, { x : [ 1, 2, 3, [ 4, 5, '...' ] ], y : [ 4, 5, '...' ] });
 };
+
+exports.circClone = function () {
+    var obj = { x : [ 1, 2, 3 ], y : [ 4, 5 ] };
+    obj.y[2] = obj;
+    obj.x.push(obj.y);
+    
+    var clone = Traverse.clone(obj);
+    assert.ok(obj !== clone);
+    
+    assert.ok(clone.y[2] === clone);
+    assert.ok(clone.y[2] !== obj);
+    assert.ok(clone.x[3][2] === clone);
+    assert.ok(clone.x[3][2] !== obj);
+    assert.eql(clone.x.slice(0,3), [1,2,3]);
+    assert.eql(clone.y.slice(0,2), [4,5]);
+};

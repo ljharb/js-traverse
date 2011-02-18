@@ -43,38 +43,31 @@ Traverse.prototype.nodes = function () {
 };
 
 Traverse.prototype.clone = function () {
-    // clone refObj for a properly immutable interface:
-    var refs = [];
-    var nodes = [];
+    var parents = [], nodes = [];
     
-    return (function clone (ref) {
-        if (typeof ref == 'object' && ref !== null) {
-            var node = Array.isArray(ref) ? [] : {};
-            refs.push(ref);
-            nodes.push(node);
+    return (function clone (src) {
+        for (var i = 0; i < parents.length; i++) {
+            if (parents[i] === src) {
+                return nodes[i];
+            }
+        }
+        
+        if (typeof src === 'object' && src !== null) {
+            var dst = Array.isArray(src) ? [] : Object.create(src.__proto__);
             
-            Object.keys(ref).forEach(function (key) {
-                var i = refs.indexOf(ref[key]);
-                if (i >= 0) {
-                    node[key] = nodes[i];
-                }
-                else {
-                    node[key] = clone(ref[key]);
-                }
-                
+            parents.push(src);
+            nodes.push(dst);
+            
+            Object.keys(src).forEach(function (key) {
+                dst[key] = clone(src[key]);
             });
             
-            refs.pop();
+            parents.pop();
             nodes.pop();
-            
-            // To make instanceof work:
-            if (!Array.isArray(ref)) node.__proto__ = ref.__proto__;
-            
-            // Probably there are other attributes worth copying
-            return node;
+            return dst;
         }
         else {
-            return ref;
+            return src;
         }
     })(this.value);
 };
