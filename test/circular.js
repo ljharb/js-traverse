@@ -54,3 +54,17 @@ exports.doubleCirc = function () {
     
     assert.eql(circs.length, 2);
 };
+
+exports.circDubUp = function () {
+    var obj = { x : [ 1, 2, 3 ], y : [ 4, 5 ] };
+    obj.y[2] = obj;
+    obj.x.push(obj.y);
+    
+    var c = Traverse(obj).map(function (x) {
+        if (this.circular) this.update('...');
+    });
+    
+    console.dir(c);
+    
+    assert.eql(c, { x : [ 1, 2, 3, '...' ], y : [ 4, 5, '...' ] });
+};
