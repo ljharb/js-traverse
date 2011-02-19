@@ -5,13 +5,11 @@ function Traverse (obj) {
 }
 
 Traverse.prototype.map = function (cb) {
-    var obj = Traverse.clone(this.value);
-    walk(obj, cb);
-    return obj;
+    return walk(this.clone(), cb);
 };
 
 Traverse.prototype.forEach = function (cb) {
-    walk(this.value, cb);
+    this.value = walk(this.value, cb);
     return this.value;
 };
 
@@ -84,7 +82,7 @@ function walk (root, cb) {
             path : [].concat(path),
             parent : parents.slice(-1)[0],
             key : path.slice(-1)[0],
-            isRoot : node === root,
+            isRoot : path.length === 0,
             level : path.length,
             circular : null,
             update : function (x) {
@@ -149,6 +147,8 @@ function walk (root, cb) {
         
         return state;
     })(root);
+    
+    return root;
 }
 
 Object.keys(Traverse.prototype).forEach(function (key) {
