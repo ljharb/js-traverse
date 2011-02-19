@@ -39,6 +39,8 @@ leaves.js
         if (this.isLeaf) acc.push(x);
         return acc;
     }, []);
+    
+    console.dir(leaves);
 
 output
     [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
