@@ -25,6 +25,11 @@ exports.dateMap = function () {
         if (typeof node === 'number') this.update(node + 100);
     });
     
-    assert.eql(res, { x : obj.x, y : 110, z : 5 });
+    assert.ok(obj.x !== res.x);
+    assert.eql(res, {
+        x : obj.x,
+        y : 110,
+        z : 105,
+    });
 };
 

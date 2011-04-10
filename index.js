@@ -51,7 +51,26 @@ Traverse.prototype.clone = function () {
         }
         
         if (typeof src === 'object' && src !== null) {
-            var dst = Array.isArray(src) ? [] : Object.create(src.__proto__);
+            var dst;
+            
+            if (Array.isArray(src)) {
+                dst = [];
+            }
+            else if (src instanceof Date) {
+                dst = new Date(src);
+            }
+            else if (src instanceof Boolean) {
+                dst = new Boolean(src);
+            }
+            else if (src instanceof Number) {
+                dst = new Number(src);
+            }
+            else if (src instanceof String) {
+                dst = new String(src);
+            }
+            else {
+                dst = Object.create(src.__proto__);
+            }
             
             parents.push(src);
             nodes.push(dst);
