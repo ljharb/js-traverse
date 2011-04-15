@@ -51,71 +51,83 @@ context
 Each method that takes a callback has a context (its `this` object) with these
 attributes:
 
-node
-----
+this.node
+---------
 
 The present node on the recursive walk
 
-path
-----
+this.path
+---------
 
 An array of string keys from the root to the present node
 
-parent
-------
+this.parent
+-----------
 
 The context of the node's parent.
 This is `undefined` for the root node.
 
-key
----
+this.key
+--------
 
 The name of the key of the present node in its parent.
 This is `undefined` for the root node.
 
-isRoot, notRoot
----------------
+this.isRoot, this.notRoot
+-------------------------
 
 Whether the present node is the root node
 
-isLeaf, notLeaf
----------------
+this.isLeaf, this.notLeaf
+-------------------------
 
 Whether or not the present node is a leaf node (has no children)
 
-level
------
+this.level
+----------
 
 Depth of the node within the traversal
 
-circular
---------
+this.circular
+-------------
 
 If the node equals one of its parents, the `circular` attribute is set to the
 context of that parent and the traversal progresses no deeper.
 
-update(value)
--------------
+this.update(value)
+------------------
 
 Set a new value for the present node.
 
-before(fn)
-----------
+this.remove()
+-------------
+
+Remove the current element from the output. If the node is in an Array it will
+be spliced off. Otherwise it will be deleted from its parent.
+
+this.delete()
+-------------
+
+Delete the current element from its parent in the output. Calls `delete` even on
+Arrays.
+
+this.before(fn)
+---------------
 
 Call this function before any of the children are traversed.
 
-after(fn)
----------
+this.after(fn)
+--------------
 
 Call this function after any of the children are traversed.
 
-pre(fn)
--------
+this.pre(fn)
+------------
 
 Call this function before each of the children are traversed.
 
-post(fn)
---------
+this.post(fn)
+-------------
 
 Call this function after each of the children are traversed.
 
