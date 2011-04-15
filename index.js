@@ -113,6 +113,17 @@ function walk (root, cb) {
                 }
                 state.node = x;
             },
+            delete : function () {
+                delete state.parent.node[state.key];
+            },
+            remove : function () {
+                if (Array.isArray(state.parent.node)) {
+                    state.parent.node.splice(state.key, 1);
+                }
+                else {
+                    delete state.parent.node[state.key];
+                }
+            },
             before : function (f) { modifiers.before = f },
             after : function (f) { modifiers.after = f },
             pre : function (f) { modifiers.pre = f },
