@@ -113,7 +113,7 @@ function walk (root, cb) {
                 }
                 state.node = x;
             },
-            delete : function () {
+            'delete' : function () {
                 delete state.parent.node[state.key];
             },
             remove : function () {
