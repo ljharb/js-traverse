@@ -1,6 +1,7 @@
+var assert = require('assert');
 var Traverse = require('traverse');
 
-exports['leaves test'] = function (assert) {
+exports['leaves test'] = function () {
     var acc = [];
     Traverse({
         a : [1,2,3],

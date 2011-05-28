@@ -1,7 +1,8 @@
+var assert = require('assert');
 var Traverse = require('traverse');
 var EventEmitter = require('events').EventEmitter;
 
-exports['check instanceof on node elems'] = function (assert) {
+exports['check instanceof on node elems'] = function () {
     
     var counts = { emitter : 0 };
     

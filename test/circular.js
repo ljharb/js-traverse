@@ -2,7 +2,7 @@ var assert = require('assert');
 var Traverse = require('traverse');
 var util = require('util');
 
-exports.circular = function (assert) {
+exports.circular = function () {
     var obj = { x : 3 };
     obj.y = obj;
     var foundY = false;

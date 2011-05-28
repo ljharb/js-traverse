@@ -1,6 +1,7 @@
+var assert = require('assert');
 var Traverse = require('traverse');
 
-exports['json test'] = function (assert) {
+exports['json test'] = function () {
     var id = 54;
     var callbacks = {};
     var obj = { moo : function () {}, foo : [2,3,4, function () {}] };
