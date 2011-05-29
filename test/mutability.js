@@ -8,8 +8,8 @@ exports.mutate = function () {
             this.update(x * 10);
         }
     });
-    assert.eql(obj, res);
-    assert.eql(obj, { a : 1, b : 20, c : [ 3, 40 ] });
+    assert.deepEqual(obj, res);
+    assert.deepEqual(obj, { a : 1, b : 20, c : [ 3, 40 ] });
 };
 
 exports.mutateT = function () {
@@ -19,8 +19,8 @@ exports.mutateT = function () {
             this.update(x * 10);
         }
     });
-    assert.eql(obj, res);
-    assert.eql(obj, { a : 1, b : 20, c : [ 3, 40 ] });
+    assert.deepEqual(obj, res);
+    assert.deepEqual(obj, { a : 1, b : 20, c : [ 3, 40 ] });
 };
 
 exports.map = function () {
@@ -30,8 +30,8 @@ exports.map = function () {
             this.update(x * 10);
         }
     });
-    assert.eql(obj, { a : 1, b : 2, c : [ 3, 4 ] });
-    assert.eql(res, { a : 1, b : 20, c : [ 3, 40 ] });
+    assert.deepEqual(obj, { a : 1, b : 2, c : [ 3, 4 ] });
+    assert.deepEqual(res, { a : 1, b : 20, c : [ 3, 40 ] });
 };
 
 exports.mapT = function () {
@@ -41,30 +41,30 @@ exports.mapT = function () {
             this.update(x * 10);
         }
     });
-    assert.eql(obj, { a : 1, b : 2, c : [ 3, 4 ] });
-    assert.eql(res, { a : 1, b : 20, c : [ 3, 40 ] });
+    assert.deepEqual(obj, { a : 1, b : 2, c : [ 3, 4 ] });
+    assert.deepEqual(res, { a : 1, b : 20, c : [ 3, 40 ] });
 };
 
 exports.clone = function () {
     var obj = { a : 1, b : 2, c : [ 3, 4 ] };
     var res = Traverse(obj).clone();
-    assert.eql(obj, res);
+    assert.deepEqual(obj, res);
     assert.ok(obj !== res);
     obj.a ++;
-    assert.eql(res.a, 1);
+    assert.deepEqual(res.a, 1);
     obj.c.push(5);
-    assert.eql(res.c, [ 3, 4 ]);
+    assert.deepEqual(res.c, [ 3, 4 ]);
 };
 
 exports.cloneT = function () {
     var obj = { a : 1, b : 2, c : [ 3, 4 ] };
     var res = Traverse.clone(obj);
-    assert.eql(obj, res);
+    assert.deepEqual(obj, res);
     assert.ok(obj !== res);
     obj.a ++;
-    assert.eql(res.a, 1);
+    assert.deepEqual(res.a, 1);
     obj.c.push(5);
-    assert.eql(res.c, [ 3, 4 ]);
+    assert.deepEqual(res.c, [ 3, 4 ]);
 };
 
 exports.reduce = function () {
@@ -73,8 +73,8 @@ exports.reduce = function () {
         if (this.isLeaf) acc.push(x);
         return acc;
     }, []);
-    assert.eql(obj, { a : 1, b : 2, c : [ 3, 4 ] });
-    assert.eql(res, [ 1, 2, 3, 4 ]);
+    assert.deepEqual(obj, { a : 1, b : 2, c : [ 3, 4 ] });
+    assert.deepEqual(res, [ 1, 2, 3, 4 ]);
 };
 
 exports.reduceInit = function () {
@@ -83,6 +83,6 @@ exports.reduceInit = function () {
         if (this.isRoot) assert.fail('got root');
         return acc;
     });
-    assert.eql(obj, { a : 1, b : 2, c : [ 3, 4 ] });
-    assert.eql(res, obj);
+    assert.deepEqual(obj, { a : 1, b : 2, c : [ 3, 4 ] });
+    assert.deepEqual(res, obj);
 };

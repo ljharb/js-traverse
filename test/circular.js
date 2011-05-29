@@ -25,13 +25,13 @@ exports.deepCirc = function () {
     var times = 0;
     Traverse(obj).forEach(function (x) {
         if (this.circular) {
-            assert.eql(this.circular.path, []);
-            assert.eql(this.path, [ 'y', 2 ]);
+            assert.deepEqual(this.circular.path, []);
+            assert.deepEqual(this.path, [ 'y', 2 ]);
             times ++;
         }
     });
     
-    assert.eql(times, 1);
+    assert.deepEqual(times, 1);
 };
 
 exports.doubleCirc = function () {
@@ -46,13 +46,13 @@ exports.doubleCirc = function () {
         }
     });
     
-    assert.eql(circs[0].self.path, [ 'x', 3, 2 ]);
-    assert.eql(circs[0].circ.path, []);
+    assert.deepEqual(circs[0].self.path, [ 'x', 3, 2 ]);
+    assert.deepEqual(circs[0].circ.path, []);
      
-    assert.eql(circs[1].self.path, [ 'y', 2 ]);
-    assert.eql(circs[1].circ.path, []);
+    assert.deepEqual(circs[1].self.path, [ 'y', 2 ]);
+    assert.deepEqual(circs[1].circ.path, []);
     
-    assert.eql(circs.length, 2);
+    assert.deepEqual(circs.length, 2);
 };
 
 exports.circDubForEach = function () {
@@ -64,7 +64,7 @@ exports.circDubForEach = function () {
         if (this.circular) this.update('...');
     });
     
-    assert.eql(obj, { x : [ 1, 2, 3, [ 4, 5, '...' ] ], y : [ 4, 5, '...' ] });
+    assert.deepEqual(obj, { x : [ 1, 2, 3, [ 4, 5, '...' ] ], y : [ 4, 5, '...' ] });
 };
 
 exports.circDubMap = function () {
@@ -78,7 +78,7 @@ exports.circDubMap = function () {
         }
     });
     
-    assert.eql(c, { x : [ 1, 2, 3, [ 4, 5, '...' ] ], y : [ 4, 5, '...' ] });
+    assert.deepEqual(c, { x : [ 1, 2, 3, [ 4, 5, '...' ] ], y : [ 4, 5, '...' ] });
 };
 
 exports.circClone = function () {
@@ -93,6 +93,6 @@ exports.circClone = function () {
     assert.ok(clone.y[2] !== obj);
     assert.ok(clone.x[3][2] === clone);
     assert.ok(clone.x[3][2] !== obj);
-    assert.eql(clone.x.slice(0,3), [1,2,3]);
-    assert.eql(clone.y.slice(0,2), [4,5]);
+    assert.deepEqual(clone.x.slice(0,3), [1,2,3]);
+    assert.deepEqual(clone.y.slice(0,2), [4,5]);
 };

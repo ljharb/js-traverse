@@ -5,11 +5,11 @@ function Traverse (obj) {
 }
 
 Traverse.prototype.map = function (cb) {
-    return walk(this.clone(), cb);
+    return walk(this.value, cb, true);
 };
 
 Traverse.prototype.forEach = function (cb) {
-    this.value = walk(this.value, cb);
+    this.value = walk(this.value, cb, false);
     return this.value;
 };
 
@@ -89,9 +89,10 @@ Traverse.prototype.clone = function () {
     })(this.value);
 };
 
-function walk (root, cb) {
+function walk (root, cb, immutable) {
     var path = [];
     var parents = [];
+    if (immutable) root = copy(root);
     
     (function walker (node) {
         var modifiers = {};
@@ -148,7 +149,7 @@ function walk (root, cb) {
         state.notRoot = !state.isRoot;
         
         // use return values to update if defined
-        var ret = cb.call(state, node);
+        var ret = cb.call(state, state.node);
         if (ret !== undefined && state.update) state.update(ret);
         if (modifiers.before) modifiers.before.call(state, state.node);
         
@@ -162,7 +163,11 @@ function walk (root, cb) {
                 
                 if (modifiers.pre) modifiers.pre.call(state, state.node[key], key);
                 
-                var child = walker(state.node[key]);
+                var child = walker(
+                    immutable ? copy(state.node[key]) : state.node[key]
+                );
+                if (immutable) state.node[child.key] = child.node;
+                
                 child.isLast = i == keys.length - 1;
                 child.isFirst = i == 0;
                 
@@ -188,3 +193,17 @@ Object.keys(Traverse.prototype).forEach(function (key) {
         return t[key].apply(t, args);
     };
 });
+
+function copy (node) {
+    if (Array.isArray(node)) {
+        return node.slice();
+    }
+    else if (typeof node === 'object') {
+        var cp = Object.create(node.__proto__);
+        Object.keys(node).forEach(function (key) {
+            cp[key] = node[key];
+        });
+        return cp;
+    }
+    else return node;
+}

@@ -11,7 +11,7 @@ exports.dateEach = function () {
         counts[t] = (counts[t] || 0) + 1;
     });
     
-    assert.eql(counts, {
+    assert.deepEqual(counts, {
         object : 1,
         Date : 1,
         number : 2,
@@ -26,7 +26,7 @@ exports.dateMap = function () {
     });
     
     assert.ok(obj.x !== res.x);
-    assert.eql(res, {
+    assert.deepEqual(res, {
         x : obj.x,
         y : 110,
         z : 105,
