@@ -114,7 +114,7 @@ function walk (root, cb, immutable) {
             state.isLeaf = Object.keys(node).length == 0
             
             for (var i = 0; i < parents.length; i++) {
-                if (parents[i].node === node) {
+                if (parents[i].node_ === node_) {
                     state.circular = parents[i];
                     break;
                 }
