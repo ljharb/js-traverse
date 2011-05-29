@@ -51,26 +51,7 @@ Traverse.prototype.clone = function () {
         }
         
         if (typeof src === 'object' && src !== null) {
-            var dst;
-            
-            if (Array.isArray(src)) {
-                dst = [];
-            }
-            else if (src instanceof Date) {
-                dst = new Date(src);
-            }
-            else if (src instanceof Boolean) {
-                dst = new Boolean(src);
-            }
-            else if (src instanceof Number) {
-                dst = new Number(src);
-            }
-            else if (src instanceof String) {
-                dst = new String(src);
-            }
-            else {
-                dst = Object.create(src.__proto__);
-            }
+            var dst = copy(src);
             
             parents.push(src);
             nodes.push(dst);
@@ -92,13 +73,14 @@ Traverse.prototype.clone = function () {
 function walk (root, cb, immutable) {
     var path = [];
     var parents = [];
-    if (immutable) root = copy(root);
     
-    (function walker (node) {
+    return (function walker (node_) {
+        var node = immutable ? copy(node_) : node_;
         var modifiers = {};
         
         var state = {
             node : node,
+            node_ : node_,
             path : [].concat(path),
             parent : parents.slice(-1)[0],
             key : path.slice(-1)[0],
@@ -106,10 +88,7 @@ function walk (root, cb, immutable) {
             level : path.length,
             circular : null,
             update : function (x) {
-                if (state.isRoot) {
-                    root = x;
-                }
-                else {
+                if (!state.isRoot) {
                     state.parent.node[state.key] = x;
                 }
                 state.node = x;
@@ -163,10 +142,8 @@ function walk (root, cb, immutable) {
                 
                 if (modifiers.pre) modifiers.pre.call(state, state.node[key], key);
                 
-                var child = walker(
-                    immutable ? copy(state.node[key]) : state.node[key]
-                );
-                if (immutable) state.node[child.key] = child.node;
+                var child = walker(state.node[key]);
+                if (immutable) state.node[key] = child.node;
                 
                 child.isLast = i == keys.length - 1;
                 child.isFirst = i == 0;
@@ -181,9 +158,7 @@ function walk (root, cb, immutable) {
         if (modifiers.after) modifiers.after.call(state, state.node);
         
         return state;
-    })(root);
-    
-    return root;
+    })(root).node;
 }
 
 Object.keys(Traverse.prototype).forEach(function (key) {
@@ -194,16 +169,33 @@ Object.keys(Traverse.prototype).forEach(function (key) {
     };
 });
 
-function copy (node) {
-    if (Array.isArray(node)) {
-        return node.slice();
-    }
-    else if (typeof node === 'object') {
-        var cp = Object.create(node.__proto__);
-        Object.keys(node).forEach(function (key) {
-            cp[key] = node[key];
+function copy (src) {
+    if (typeof src === 'object' && src !== null) {
+        var dst;
+        
+        if (Array.isArray(src)) {
+            dst = [];
+        }
+        else if (src instanceof Date) {
+            dst = new Date(src);
+        }
+        else if (src instanceof Boolean) {
+            dst = new Boolean(src);
+        }
+        else if (src instanceof Number) {
+            dst = new Number(src);
+        }
+        else if (src instanceof String) {
+            dst = new String(src);
+        }
+        else {
+            dst = Object.create(src.__proto__);
+        }
+        
+        Object.keys(src).forEach(function (key) {
+            dst[key] = src[key];
         });
-        return cp;
+        return dst;
     }
-    else return node;
+    else return src;
 }
