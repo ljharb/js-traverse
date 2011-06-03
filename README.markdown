@@ -10,39 +10,47 @@ transform negative numbers in-place
 -----------------------------------
 
 negative.js
-    var Traverse = require('traverse');
-    var obj = [ 5, 6, -3, [ 7, 8, -2, 1 ], { f : 10, g : -13 } ];
-    
-    Traverse(obj).forEach(function (x) {
-        if (x < 0) this.update(x + 128);
-    });
-    
-    console.dir(obj);
 
-output
+````javascript
+var traverse = require('traverse');
+var obj = [ 5, 6, -3, [ 7, 8, -2, 1 ], { f : 10, g : -13 } ];
+
+traverse(obj).forEach(function (x) {
+    if (x < 0) this.update(x + 128);
+});
+
+console.dir(obj);
+````
+
+Output:
+
     [ 5, 6, 125, [ 7, 8, 126, 1 ], { f: 10, g: 115 } ]
 
 collect leaf nodes
 ------------------
 
 leaves.js
-    var Traverse = require('traverse');
 
-    var obj = {
-        a : [1,2,3],
-        b : 4,
-        c : [5,6],
-        d : { e : [7,8], f : 9 },
-    };
+````javascript
+var traverse = require('traverse');
 
-    var leaves = Traverse(obj).reduce(function (acc, x) {
-        if (this.isLeaf) acc.push(x);
-        return acc;
-    }, []);
-    
-    console.dir(leaves);
+var obj = {
+    a : [1,2,3],
+    b : 4,
+    c : [5,6],
+    d : { e : [7,8], f : 9 },
+};
 
-output
+var leaves = traverse(obj).reduce(function (acc, x) {
+    if (this.isLeaf) acc.push(x);
+    return acc;
+}, []);
+
+console.dir(leaves);
+````
+
+Output:
+
     [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
 
 context
