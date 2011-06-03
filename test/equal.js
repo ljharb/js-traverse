@@ -36,6 +36,13 @@ exports.deepCircular = function () {
         traverse.deepEqual(a, c),
         'circular refs are structurally the same here'
     );
+    
+    var d = [1];
+    d.push(a); // c = [ 1, [ 1, *d ] ]
+    assert.ok(
+        traverse.deepEqual(b, d),
+        'non-root circular ref structural comparison'
+    );
 };
 
 exports.deepInstances = function () {
