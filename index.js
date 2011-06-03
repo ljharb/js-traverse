@@ -24,6 +24,68 @@ Traverse.prototype.reduce = function (cb, init) {
     return acc;
 };
 
+Traverse.prototype.deepEqual = function (obj) {
+    var equal = true;
+    var node = obj;
+    
+    this.forEach(function (y) {
+        var notEqual = (function () {
+            equal = false;
+            //this.stop();
+        }).bind(this);
+        
+        if (this.key) node = node[this.key];
+        var x = node;
+        
+        this.post(function () {
+            node = x;
+        });
+        
+        var toS = function (o) {
+            return Object.prototype.toString.call(o);
+        };
+        
+        if (typeof x !== typeof y) {
+            notEqual();
+        }
+        else if (x.__proto__ !== y.__proto__) {
+            notEqual();
+        }
+        else if (x === y) {
+            // nop
+        }
+        else if (typeof y === 'object') {
+            if (x === null || y === null) {
+                if (x !== y) notEqual();
+            }
+            else if (toS(y) === '[object Arguments]'
+            || toS(x) === '[object Arguments]') {
+                if (toS(x) !== toS(y)) {
+                    notEqual();
+                }
+            }
+            else if (x instanceof Date && y instanceof Date) {
+                if (x.getTime() !== y.getTime()) {
+                    notEqual();
+                }
+            }
+            else {
+                var kx = Object.keys(x);
+                var ky = Object.keys(y);
+                if (kx.length !== ky.length) return false;
+                for (var i = 0; i < kx.length; i++) {
+                    var k = kx[i];
+                    if (!Object.hasOwnProperty.call(y, k)) {
+                        notEqual();
+                    }
+                }
+            }
+        }
+    });
+    
+    return equal;
+};
+
 Traverse.prototype.paths = function () {
     var acc = [];
     this.forEach(function (x) {

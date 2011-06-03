@@ -10,7 +10,7 @@ exports.deepDates = function () {
     
     var d0 = new Date;
     setTimeout(function () {
-        assert.ok(traverse.deepEqual(
+        assert.ok(!traverse.deepEqual(
             { d : d0, x : [ 1, 2, 3 ], },
             { d : new Date, x : [ 1, 2, 3 ] },
             'microseconds should count in date equality'
