@@ -156,6 +156,49 @@ with the return value of `fn(acc, node)`.
 If `acc` isn't specified, `acc` is set to the root object for the first step
 and the root element is skipped.
 
+.deepEqual(obj)
+---------------
+
+Returns a boolean, whether the instance value is equal to the supplied object
+along a deep traversal using some opinionated choices.
+
+Some notes:
+
+* RegExps are equal if their .toString()s match, but not functions since
+functions can close over different variables.
+
+* Date instances are compared using `.getTime()` just like `assert.deepEqual()`.
+
+* Circular references must refer to the same paths within the data structure for
+both objects. For instance, in this snippet:
+
+````javascript
+var a = [1];
+a.push(a); // a = [ 1, *a ]
+
+var b = [1];
+b.push(a); // b = [ 1, [ 1, *a ] ]
+````
+
+`a` is not the same as `b` since even though the expansion is the same, the
+circular references in each refer to different paths into the data structure.
+
+However, in:
+
+````javascript
+var c = [1];
+c.push(c); // c = [ 1, *c ];
+````
+
+`c` is equal to `a` in a `deepEqual()` because they have the same terminal node
+structure.
+
+* Arguments objects are not arrays and neither are they the same as regular
+objects.
+
+* Instances created with `new` of String, Boolean, and Number types are never
+equal to the native versions.
+
 .paths()
 --------
 
