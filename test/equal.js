@@ -20,14 +20,21 @@ exports.deepDates = function () {
 
 exports.deepCircular = function () {
     var a = [1];
-    a.push(a); // a = [ 1, a ]
+    a.push(a); // a = [ 1, *a ]
     
     var b = [1];
-    b.push(a); // b = [ 1, [ 1, a ] ]
+    b.push(a); // b = [ 1, [ 1, *a ] ]
     
     assert.ok(
         !traverse.deepEqual(a, b),
         'circular ref mount points count towards equality'
+    );
+    
+    var c = [1];
+    c.push(c); // c = [ 1, *c ]
+    assert.ok(
+        traverse.deepEqual(a, c),
+        'circular refs are structurally the same here'
     );
 };
 
