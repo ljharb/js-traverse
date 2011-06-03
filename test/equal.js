@@ -64,7 +64,7 @@ exports.deepInstances = function () {
     ));
     
     var f = function (x) { return x * 2 };
-    assert.ok(!traverse.deepEqual(
+    assert.ok(traverse.deepEqual(
         [ f ], [ f ],
         'these functions are actually equal'
     ));

@@ -86,6 +86,7 @@ Traverse.prototype.deepEqual = function (obj) {
                 // both regexps on account of the __proto__ check
                 if (x.toString() != y.toString()) notEqual();
             }
+            else if (x !== y) notEqual();
         }
         else if (typeof x === 'object') {
             if (x === null || y === null) {
