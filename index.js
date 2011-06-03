@@ -7,11 +7,12 @@ function Traverse (obj) {
 Traverse.prototype.get = function (ps) {
     var node = this.value;
     for (var i = 0; i < ps.length; i ++) {
+        var key = ps[i];
         if (!Object.hasOwnProperty.call(node, key)) {
             node = undefined;
             break;
         }
-        node = node[ps[i]];
+        node = node[key];
     }
     return node;
 };
@@ -68,7 +69,10 @@ Traverse.prototype.deepEqual = function (obj) {
             return Object.prototype.toString.call(o);
         };
         
-        if (typeof x !== typeof y) {
+        if (this.circular) {
+            if (Traverse(obj).get(this.circular.path) !== x) notEqual();
+        }
+        else if (typeof x !== typeof y) {
             notEqual();
         }
         else if (x.__proto__ !== y.__proto__) {
