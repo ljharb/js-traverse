@@ -81,7 +81,13 @@ Traverse.prototype.deepEqual = function (obj) {
         else if (x === y) {
             // nop
         }
-        else if (typeof y === 'object') {
+        else if (typeof x === 'function') {
+            if (x instanceof RegExp) {
+                // both regexps on account of the __proto__ check
+                if (x.toString() != y.toString()) notEqual();
+            }
+        }
+        else if (typeof x === 'object') {
             if (x === null || y === null) {
                 if (x !== y) notEqual();
             }
@@ -91,8 +97,9 @@ Traverse.prototype.deepEqual = function (obj) {
                     notEqual();
                 }
             }
-            else if (x instanceof Date && y instanceof Date) {
-                if (x.getTime() !== y.getTime()) {
+            else if (x instanceof Date || y instanceof Date) {
+                if (!(x instanceof Date) || !(y instanceof Date)
+                || x.getTime() !== y.getTime()) {
                     notEqual();
                 }
             }

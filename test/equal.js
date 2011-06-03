@@ -48,14 +48,12 @@ exports.deepInstances = function () {
     ));
     
     assert.ok(traverse.deepEqual(
-        [ new RegExp('x') ]
-        [ /x/ ],
+        [ new RegExp('x') ], [ /x/ ],
         'regexp instances are real regexps'
     ));
     
     assert.ok(!traverse.deepEqual(
-        [ new RegExp(/./) ]
-        [ /../ ],
+        [ new RegExp(/./) ], [ /../ ],
         'these regexps aren\'t the same'
     ));
     
