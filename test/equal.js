@@ -37,24 +37,24 @@ exports.deepInstances = function () {
         'boolean instances are not real booleans'
     ));
     
-    assert.ok(traverse.deepEqual(
+    assert.ok(!traverse.deepEqual(
         [ new String('x') ], [ 'x' ],
         'string instances are not real strings'
     ));
     
-    assert.ok(traverse.deepEqual(
+    assert.ok(!traverse.deepEqual(
         [ new Number(4) ], [ 4 ],
         'number instances are not real numbers'
     ));
     
     assert.ok(traverse.deepEqual(
-        [ new Regexp('x') ]
+        [ new RegExp('x') ]
         [ /x/ ],
         'regexp instances are real regexps'
     ));
     
     assert.ok(!traverse.deepEqual(
-        [ new Regexp(/./) ]
+        [ new RegExp(/./) ]
         [ /../ ],
         'these regexps aren\'t the same'
     ));
