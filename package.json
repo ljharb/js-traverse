@@ -10,8 +10,7 @@
         "url" : "http://github.com/substack/js-traverse.git"
     },
     "devDependencies" : {
-        "seq" : ">=0.1.7",
-        "expresso" : ">=0.6.0"
+        "expresso" : "0.7.x"
     },
     "scripts" : {
         "test" : "expresso"
