@@ -86,3 +86,22 @@ exports.reduceInit = function () {
     assert.deepEqual(obj, { a : 1, b : 2, c : [ 3, 4 ] });
     assert.deepEqual(res, obj);
 };
+
+exports.remove = function () {
+    var obj = { a : 1, b : 2, c : [ 3, 4 ] };
+    Traverse(obj).forEach(function (x) {
+        if (this.isLeaf && x % 2 == 0) this.remove();
+    });
+    
+    assert.deepEqual(obj, { a : 1, c : [ 3 ] });
+};
+
+exports.removeMap = function () {
+    var obj = { a : 1, b : 2, c : [ 3, 4 ] };
+    var res = Traverse(obj).map(function (x) {
+        if (this.isLeaf && x % 2 == 0) this.remove();
+    });
+    
+    assert.deepEqual(obj, { a : 1, b : 2, c : [ 3, 4 ] });
+    assert.deepEqual(res, { a : 1, c : [ 3 ] });
+};
