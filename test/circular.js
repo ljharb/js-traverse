@@ -96,3 +96,19 @@ exports.circClone = function () {
     assert.deepEqual(clone.x.slice(0,3), [1,2,3]);
     assert.deepEqual(clone.y.slice(0,2), [4,5]);
 };
+
+exports.circMapScrub = function () {
+    var obj = { a : 1, b : 2 };
+    obj.c = obj;
+    
+    var scrubbed = Traverse(obj).map(function (node) {
+        if (this.circular) this.remove();
+    });
+    assert.deepEqual(
+        Object.keys(scrubbed).sort(),
+        [ 'a', 'b' ]
+    );
+    Traverse.deepEqual(scrubbed, { a : 1, b : 2 });
+    
+    assert.equal(obj.c, obj);
+};
