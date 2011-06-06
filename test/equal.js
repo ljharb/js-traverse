@@ -92,6 +92,71 @@ exports.deepEqual = function () {
     ));
 };
 
+exports.falsy = function () {
+    assert.ok(!traverse.deepEqual(
+        [ undefined ],
+        [ null ],
+        'null is not undefined!'
+    ));
+    
+    assert.ok(!traverse.deepEqual(
+        [ null ],
+        [ undefined ],
+        'undefined is not null!'
+    ));
+    
+    assert.ok(!traverse.deepEqual(
+        { a : 1, b : 2, c : [ 3, undefined, 5 ] },
+        { a : 1, b : 2, c : [ 3, null, 5 ] },
+        'undefined is not null, however deeply!'
+    ));
+    
+    assert.ok(!traverse.deepEqual(
+        { a : 1, b : 2, c : [ 3, undefined, 5 ] },
+        { a : 1, b : 2, c : [ 3, null, 5 ] },
+        'null is not undefined, however deeply!'
+    ));
+    
+    assert.ok(!traverse.deepEqual(
+        { a : 1, b : 2, c : [ 3, undefined, 5 ] },
+        { a : 1, b : 2, c : [ 3, null, 5 ] },
+        'null is not undefined, however deeply!'
+    ));
+    
+    var xs = [ 1, 2, 3, 4 ];
+    delete xs[2];
+    
+    assert.ok(traverse.deepEqual(
+        xs,
+        [ 1, 2, undefined, 4 ],
+        'deleted array elements can be undefined'
+    ));
+    
+    assert.ok(!traverse.deepEqual(
+        xs,
+        [ 1, 2, null, 4 ],
+        'deleted array elements cannot be null'
+    ));
+    
+    var obj = { a : 1, b : 2, c : 3 };
+    delete obj.c;
+    
+    assert.ok(traverse.deepEqual(
+        obj, { a : 1, b : 2 },
+        'deleted object elements should not show up'
+    ));
+    
+    assert.ok(!traverse.deepEqual(
+        obj, { a : 1, b : 2, c : undefined },
+        'deleted object elements are not undefined'
+    ));
+    
+    assert.ok(!traverse.deepEqual(
+        obj, { a : 1, b : 2, c : null },
+        'deleted object elements are not null'
+    ));
+};
+
 exports.deepArguments = function () {
     assert.ok(!traverse.deepEqual(
         [ 4, 5, 6 ],
