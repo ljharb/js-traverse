@@ -240,7 +240,9 @@ function walk (root, cb, immutable) {
                 if (modifiers.pre) modifiers.pre.call(state, state.node[key], key);
                 
                 var child = walker(state.node[key]);
-                if (immutable) state.node[key] = child.node;
+                if (immutable && Object.hasOwnProperty.call(state.node, key)) {
+                    state.node[key] = child.node;
+                }
                 
                 child.isLast = i == keys.length - 1;
                 child.isFirst = i == 0;
