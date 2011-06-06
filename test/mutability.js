@@ -112,9 +112,39 @@ exports.delete = function () {
         if (this.isLeaf && x % 2 == 0) this.delete();
     });
     
+    assert.ok(!Traverse.deepEqual(
+        obj, { a : 1, c : [ 3, undefined ] }
+    ));
+    
     assert.ok(Traverse.deepEqual(
-        obj,
-        { a : 1, c : [ 3, undefined ] }
+        obj, { a : 1, c : [ 3 ] }
+    ));
+    
+    assert.ok(!Traverse.deepEqual(
+        obj, { a : 1, c : [ 3, null ] }
+    ));
+};
+
+exports.deleteRedux = function () {
+    var obj = { a : 1, b : 2, c : [ 3, 4, 5 ] };
+    Traverse(obj).forEach(function (x) {
+        if (this.isLeaf && x % 2 == 0) this.delete();
+    });
+    
+    assert.ok(!Traverse.deepEqual(
+        obj, { a : 1, c : [ 3, undefined, 5 ] }
+    ));
+    
+    assert.ok(Traverse.deepEqual(
+        obj, { a : 1, c : [ 3 ,, 5 ] }
+    ));
+    
+    assert.ok(!Traverse.deepEqual(
+        obj, { a : 1, c : [ 3, null, 5 ] }
+    ));
+    
+    assert.ok(!Traverse.deepEqual(
+        obj, { a : 1, c : [ 3, 5 ] }
     ));
 };
 
@@ -161,6 +191,10 @@ exports.deleteMapRedux = function () {
     
     assert.ok(Traverse.deepEqual(
         res, { a : 1, c : xs }
+    ));
+    
+    assert.ok(!Traverse.deepEqual(
+        res, { a : 1, c : [ 3, 5 ] }
     ));
     
     assert.ok(Traverse.deepEqual(
