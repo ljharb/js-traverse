@@ -122,14 +122,27 @@ exports.falsy = function () {
         { a : 1, b : 2, c : [ 3, null, 5 ] },
         'null is not undefined, however deeply!'
     ));
-    
+};
+
+exports.deletedArrayEqual = function () {
     var xs = [ 1, 2, 3, 4 ];
     delete xs[2];
     
+    var ys = Object.create(Array.prototype);
+    ys[0] = 1;
+    ys[1] = 2;
+    ys[3] = 4;
+    
     assert.ok(traverse.deepEqual(
+        xs, ys,
+        'arrays with deleted elements are only equal to'
+        + ' arrays with similarly deleted elements'
+    ));
+    
+    assert.ok(!traverse.deepEqual(
         xs,
         [ 1, 2, undefined, 4 ],
-        'deleted array elements can be undefined'
+        'deleted array elements cannot be undefined'
     ));
     
     assert.ok(!traverse.deepEqual(
@@ -137,7 +150,9 @@ exports.falsy = function () {
         [ 1, 2, null, 4 ],
         'deleted array elements cannot be null'
     ));
-    
+};
+
+exports.deletedObjectEqual = function () {
     var obj = { a : 1, b : 2, c : 3 };
     delete obj.c;
     
@@ -154,6 +169,12 @@ exports.falsy = function () {
     assert.ok(!traverse.deepEqual(
         obj, { a : 1, b : 2, c : null },
         'deleted object elements are not null'
+    ));
+};
+
+exports.emptyKeyEqual = function () {
+    assert.ok(!traverse.deepEqual(
+        { a : 1 }, { a : 1, '' : 55 }
     ));
 };
 

@@ -56,9 +56,18 @@ Traverse.prototype.deepEqual = function (obj) {
         var notEqual = (function () {
             equal = false;
             //this.stop();
+            return undefined;
         }).bind(this);
         
-        if (this.key) node = node[this.key];
+        if (!this.isRoot) {
+        /*
+            if (!Object.hasOwnProperty.call(node, this.key)) {
+                return notEqual();
+            }
+        */
+            node = node[this.key];
+        }
+        
         var x = node;
         
         this.post(function () {
@@ -107,7 +116,7 @@ Traverse.prototype.deepEqual = function (obj) {
             else {
                 var kx = Object.keys(x);
                 var ky = Object.keys(y);
-                if (kx.length !== ky.length) return false;
+                if (kx.length !== ky.length) return notEqual();
                 for (var i = 0; i < kx.length; i++) {
                     var k = kx[i];
                     if (!Object.hasOwnProperty.call(y, k)) {
@@ -207,8 +216,8 @@ function walk (root, cb, immutable) {
             post : function (f) { modifiers.post = f }
         };
         
-        if (typeof node == 'object' && node !== null) {
-            state.isLeaf = Object.keys(node).length == 0
+        if (typeof node === 'object' && node !== null) {
+            state.isLeaf = Object.keys(node).length == 0;
             
             for (var i = 0; i < parents.length; i++) {
                 if (parents[i].node_ === node_) {
