@@ -105,3 +105,31 @@ exports.removeMap = function () {
     assert.deepEqual(obj, { a : 1, b : 2, c : [ 3, 4 ] });
     assert.deepEqual(res, { a : 1, c : [ 3 ] });
 };
+
+exports.delete = function () {
+    var obj = { a : 1, b : 2, c : [ 3, 4 ] };
+    Traverse(obj).forEach(function (x) {
+        if (this.isLeaf && x % 2 == 0) this.delete();
+    });
+    
+    assert.ok(Traverse.deepEqual(
+        obj,
+        { a : 1, c : [ 3, undefined ] }
+    ));
+};
+
+exports.deleteMap = function () {
+    var obj = { a : 1, b : 2, c : [ 3, 4 ] };
+    var res = Traverse(obj).map(function (x) {
+        if (this.isLeaf && x % 2 == 0) this.delete();
+    });
+    
+    assert.ok(Traverse.deepEqual(
+        res,
+        { a : 1, b : 2, c : [ 3, 4 ] }
+    ));
+    assert.ok(Traverse.deepEqual(
+        res,
+        { a : 1, c : [ 3, undefined ] }
+    ));
+};

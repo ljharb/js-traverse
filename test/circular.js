@@ -108,7 +108,7 @@ exports.circMapScrub = function () {
         Object.keys(scrubbed).sort(),
         [ 'a', 'b' ]
     );
-    Traverse.deepEqual(scrubbed, { a : 1, b : 2 });
+    assert.ok(Traverse.deepEqual(scrubbed, { a : 1, b : 2 }));
     
     assert.equal(obj.c, obj);
 };
