@@ -125,11 +125,45 @@ exports.deleteMap = function () {
     });
     
     assert.ok(Traverse.deepEqual(
-        res,
+        obj,
         { a : 1, b : 2, c : [ 3, 4 ] }
     ));
+    
+    var xs = [ 3, 4 ];
+    delete xs[1];
+    
     assert.ok(Traverse.deepEqual(
-        res,
-        { a : 1, c : [ 3, undefined ] }
+        res, { a : 1, c : xs }
+    ));
+    
+    assert.ok(Traverse.deepEqual(
+        res, { a : 1, c : [ 3, ] }
+    ));
+    
+    assert.ok(Traverse.deepEqual(
+        res, { a : 1, c : [ 3 ] }
+    ));
+};
+
+exports.deleteMapRedux = function () {
+    var obj = { a : 1, b : 2, c : [ 3, 4, 5 ] };
+    var res = Traverse(obj).map(function (x) {
+        if (this.isLeaf && x % 2 == 0) this.delete();
+    });
+    
+    assert.ok(Traverse.deepEqual(
+        obj,
+        { a : 1, b : 2, c : [ 3, 4, 5 ] }
+    ));
+    
+    var xs = [ 3, 4, 5 ];
+    delete xs[1];
+    
+    assert.ok(Traverse.deepEqual(
+        res, { a : 1, c : xs }
+    ));
+    
+    assert.ok(Traverse.deepEqual(
+        res, { a : 1, c : [ 3 ,, 5 ] }
     ));
 };
