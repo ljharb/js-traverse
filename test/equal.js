@@ -192,9 +192,14 @@ exports.deepArguments = function () {
     ));
 };
 
-exports.deepUndef = function () {
+exports.deepUn = function () {
     assert.ok(!traverse.deepEqual({ a : 1, b : 2 }, undefined));
     assert.ok(!traverse.deepEqual({ a : 1, b : 2 }, {}));
     assert.ok(!traverse.deepEqual(undefined, { a : 1, b : 2 }));
     assert.ok(!traverse.deepEqual({}, { a : 1, b : 2 }));
+};
+
+exports.deepLevels = function () {
+    var xs = [ 1, 2, [ 3, 4, [ 5, 6 ] ] ];
+    assert.ok(!traverse.deepEqual(xs, []));
 };
