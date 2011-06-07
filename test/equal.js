@@ -191,3 +191,10 @@ exports.deepArguments = function () {
         'arguments should equal'
     ));
 };
+
+exports.deepUndef = function () {
+    assert.ok(!traverse.deepEqual({ a : 1, b : 2 }, undefined));
+    assert.ok(!traverse.deepEqual({ a : 1, b : 2 }, {}));
+    assert.ok(!traverse.deepEqual(undefined, { a : 1, b : 2 }));
+    assert.ok(!traverse.deepEqual({}, { a : 1, b : 2 }));
+};
