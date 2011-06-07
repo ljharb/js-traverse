@@ -197,6 +197,9 @@ exports.deepUn = function () {
     assert.ok(!traverse.deepEqual({ a : 1, b : 2 }, {}));
     assert.ok(!traverse.deepEqual(undefined, { a : 1, b : 2 }));
     assert.ok(!traverse.deepEqual({}, { a : 1, b : 2 }));
+    assert.ok(traverse.deepEqual(undefined, undefined));
+    assert.ok(traverse.deepEqual(null, null));
+    assert.ok(!traverse.deepEqual(undefined, null));
 };
 
 exports.deepLevels = function () {

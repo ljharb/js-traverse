@@ -59,12 +59,15 @@ Traverse.prototype.deepEqual = function (obj) {
             return undefined;
         }).bind(this);
         
+        //if (node === undefined || node === null) return notEqual();
+        
         if (!this.isRoot) {
         /*
             if (!Object.hasOwnProperty.call(node, this.key)) {
                 return notEqual();
             }
         */
+            if (typeof node !== 'object') return notEqual();
             node = node[this.key];
         }
         
@@ -84,6 +87,9 @@ Traverse.prototype.deepEqual = function (obj) {
         else if (typeof x !== typeof y) {
             notEqual();
         }
+        else if (x === null || y === null || x === undefined || y === undefined) {
+            if (x !== y) notEqual();
+        }
         else if (x.__proto__ !== y.__proto__) {
             notEqual();
         }
@@ -98,10 +104,7 @@ Traverse.prototype.deepEqual = function (obj) {
             else if (x !== y) notEqual();
         }
         else if (typeof x === 'object') {
-            if (x === null || y === null) {
-                if (x !== y) notEqual();
-            }
-            else if (toS(y) === '[object Arguments]'
+            if (toS(y) === '[object Arguments]'
             || toS(x) === '[object Arguments]') {
                 if (toS(x) !== toS(y)) {
                     notEqual();
