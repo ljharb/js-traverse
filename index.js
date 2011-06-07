@@ -49,6 +49,12 @@ Traverse.prototype.reduce = function (cb, init) {
 };
 
 Traverse.prototype.deepEqual = function (obj) {
+    if (arguments.length !== 1) {
+        throw new Error(
+            'deepEqual requires exactly one object to compare against'
+        );
+    }
+    
     var equal = true;
     var node = obj;
     
