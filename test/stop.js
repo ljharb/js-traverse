@@ -12,3 +12,14 @@ exports.stop = function () {
     
     assert.equal(visits, 5);
 };
+
+exports.stopMap = function () {
+    var s = traverse('abcdefghij'.split('')).map(function (node) {
+        if (typeof node === 'string') {
+            if (node === 'e') this.stop()
+            return node.toUpperCase();
+        }
+    }).join('');
+    
+    assert.equal(s, 'ABCDEfghij');
+};
