@@ -23,3 +23,19 @@ exports.stopMap = function () {
     
     assert.equal(s, 'ABCDEfghij');
 };
+
+exports.stopReduce = function () {
+    var obj = {
+        a : [ 4, 5 ],
+        b : [ 6, [ 7, 8, 9 ] ]
+    };
+    var xs = traverse(obj).reduce(function (acc, node) {
+        if (this.isLeaf) {
+            if (node === 7) this.stop();
+            else acc.push(node)
+        }
+        return acc;
+    }, []);
+    
+    assert.deepEqual(xs, [ 4, 5, 6 ]);
+};
