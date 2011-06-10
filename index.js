@@ -188,6 +188,7 @@ Traverse.prototype.clone = function () {
 function walk (root, cb, immutable) {
     var path = [];
     var parents = [];
+    var alive = true;
     
     return (function walker (node_) {
         var node = immutable ? copy(node_) : node_;
@@ -222,8 +223,11 @@ function walk (root, cb, immutable) {
             before : function (f) { modifiers.before = f },
             after : function (f) { modifiers.after = f },
             pre : function (f) { modifiers.pre = f },
-            post : function (f) { modifiers.post = f }
+            post : function (f) { modifiers.post = f },
+            stop : function () { alive = false }
         };
+        
+        if (!alive) return state;
         
         if (typeof node === 'object' && node !== null) {
             state.isLeaf = Object.keys(node).length == 0;
