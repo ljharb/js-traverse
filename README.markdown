@@ -102,10 +102,13 @@ this.circular
 If the node equals one of its parents, the `circular` attribute is set to the
 context of that parent and the traversal progresses no deeper.
 
-this.update(value)
-------------------
+this.update(value, stopHere=false)
+----------------------------------
 
 Set a new value for the present node.
+
+All the elements in `value` will be recursively traversed unless `stopHere` is
+true.
 
 this.remove()
 -------------
