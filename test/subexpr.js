@@ -8,4 +8,11 @@ exports.subexpr = function () {
             this.update([ x - 0.1, x, x + 0.1 ]);
         }
     });
+    
+    assert.deepEqual(obj, [ 'a', 4, 'b', 5, 'c', 6 ]);
+    assert.deepEqual(r, [
+        'a', [ 3.9, 4, 4.1 ],
+        'b', [ 4.9, 5, 5.1 ],
+        'c', [ 5.9, 6, 6.1 ],
+    ]);
 };
