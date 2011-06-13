@@ -228,7 +228,7 @@ function walk (root, cb, immutable) {
             pre : function (f) { modifiers.pre = f },
             post : function (f) { modifiers.post = f },
             stop : function () { alive = false },
-            block : function () { keepGoing = false },
+            block : function () { keepGoing = false }
         };
         
         if (!alive) return state;
