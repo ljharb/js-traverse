@@ -297,7 +297,7 @@ function copy (src) {
             dst = new String(src);
         }
         else {
-            dst = Object.create(src.__proto__);
+            dst = Object.create(Object.getPrototypeOf(src));
         }
         
         Object.keys(src).forEach(function (key) {
