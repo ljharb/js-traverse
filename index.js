@@ -253,6 +253,7 @@ function walk (root, cb, immutable) {
         // use return values to update if defined
         var ret = cb.call(state, state.node);
         if (ret !== undefined && state.update) state.update(ret);
+        state.keys = null;
         if (modifiers.before) modifiers.before.call(state, state.node);
         
         if (!keepGoing) return state;
@@ -261,7 +262,7 @@ function walk (root, cb, immutable) {
         && state.node !== null && !state.circular) {
             parents.push(state);
             
-            var keys = Object.keys(state.node);
+            var keys = state.keys || Object.keys(state.node);
             keys.forEach(function (key, i) {
                 path.push(key);
                 
