@@ -127,6 +127,8 @@ this.before(fn)
 
 Call this function before any of the children are traversed.
 
+You can assign into `this.keys` here to traverse in a custom order.
+
 this.after(fn)
 --------------
 
