@@ -201,6 +201,7 @@ function walk (root, cb, immutable) {
             node_ : node_,
             path : [].concat(path),
             parent : parents[parents.length - 1],
+            parents : parents,
             key : path.slice(-1)[0],
             isRoot : path.length === 0,
             level : path.length,
