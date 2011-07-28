@@ -27,4 +27,3 @@ exports['sort test'] = function () {
         'Traversal in a custom order'
     );
 };
-
