@@ -228,6 +228,7 @@ function walk (root, cb, immutable) {
                     delete state.parent.node[state.key];
                 }
             },
+            keys : null,
             before : function (f) { modifiers.before = f },
             after : function (f) { modifiers.after = f },
             pre : function (f) { modifiers.pre = f },
@@ -239,7 +240,9 @@ function walk (root, cb, immutable) {
         if (!alive) return state;
         
         if (typeof node === 'object' && node !== null) {
-            state.isLeaf = Object.keys(node).length == 0;
+            state.keys = Object.keys(node);
+            
+            state.isLeaf = state.keys.length == 0;
             
             for (var i = 0; i < parents.length; i++) {
                 if (parents[i].node_ === node_) {
@@ -258,7 +261,7 @@ function walk (root, cb, immutable) {
         // use return values to update if defined
         var ret = cb.call(state, state.node);
         if (ret !== undefined && state.update) state.update(ret);
-        state.keys = null;
+        
         if (modifiers.before) modifiers.before.call(state, state.node);
         
         if (!keepGoing) return state;
@@ -267,8 +270,7 @@ function walk (root, cb, immutable) {
         && state.node !== null && !state.circular) {
             parents.push(state);
             
-            var keys = state.keys || Object.keys(state.node);
-            keys.forEach(function (key, i) {
+            state.keys.forEach(function (key, i) {
                 path.push(key);
                 
                 if (modifiers.pre) modifiers.pre.call(state, state.node[key], key);
@@ -278,7 +280,7 @@ function walk (root, cb, immutable) {
                     state.node[key] = child.node;
                 }
                 
-                child.isLast = i == keys.length - 1;
+                child.isLast = i == state.keys.length - 1;
                 child.isFirst = i == 0;
                 
                 if (modifiers.post) modifiers.post.call(state, child);
