@@ -80,7 +80,7 @@ Traverse.prototype.clone = function () {
             parents.push(src);
             nodes.push(dst);
             
-            Object_keys(src).forEach(function (key) {
+            forEach(Object_keys(src), function (key) {
                 dst[key] = clone(src[key]);
             });
             
@@ -175,7 +175,7 @@ function walk (root, cb, immutable) {
         && state.node !== null && !state.circular) {
             parents.push(state);
             
-            state.keys.forEach(function (key, i) {
+            forEach(state.keys, function (key, i) {
                 path.push(key);
                 
                 if (modifiers.pre) modifiers.pre.call(state, state.node[key], key);
@@ -200,23 +200,6 @@ function walk (root, cb, immutable) {
         return state;
     })(root).node;
 }
-
-var Object_keys = Object.keys || function keys (obj) {
-    var res = [];
-    for (var key in obj) res.push(key)
-    return res;
-};
-
-var Array_isArray = Array.isArray || function isArray (xs) {
-    return Object.prototype.toString.call(xs) === '[object Array]';
-};
-Object_keys(Traverse.prototype).forEach(function (key) {
-    Traverse[key] = function (obj) {
-        var args = [].slice.call(arguments, 1);
-        var t = Traverse(obj);
-        return t[key].apply(t, args);
-    };
-});
 
 function copy (src) {
     if (typeof src === 'object' && src !== null) {
@@ -248,10 +231,35 @@ function copy (src) {
             if (!dst.__proto__) dst.__proto__ = proto;
         }
         
-        Object_keys(src).forEach(function (key) {
+        forEach(Object_keys(src), function (key) {
             dst[key] = src[key];
         });
         return dst;
     }
     else return src;
 }
+
+var Object_keys = Object.keys || function keys (obj) {
+    var res = [];
+    for (var key in obj) res.push(key)
+    return res;
+};
+
+var Array_isArray = Array.isArray || function isArray (xs) {
+    return Object.prototype.toString.call(xs) === '[object Array]';
+};
+
+var forEach = function (xs, fn) {
+    if (xs.forEach) return xs.forEach(fn)
+    else for (var i = 0; i < xs.length; i++) {
+        fn(xs[i], i, xs);
+    }
+};
+
+forEach(Object_keys(Traverse.prototype), function (key) {
+    Traverse[key] = function (obj) {
+        var args = [].slice.call(arguments, 1);
+        var t = Traverse(obj);
+        return t[key].apply(t, args);
+    };
+});

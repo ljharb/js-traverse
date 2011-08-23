@@ -1,6 +1,6 @@
 {
     "name" : "traverse",
-    "version" : "0.4.6",
+    "version" : "0.5.0",
     "description" : "Traverse and transform objects by visiting every node on a recursive walk",
     "author" : "James Halliday",
     "license" : "MIT/X11",
