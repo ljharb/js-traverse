@@ -223,8 +223,8 @@ function copy (src) {
         else if (Object.create && Object.getPrototypeOf) {
             dst = Object.create(Object.getPrototypeOf(src));
         }
-        else if (obj.__proto__ || obj.constructor.prototype) {
-            var proto = obj.__proto__ || obj.constructor.prototype || {};
+        else if (src.__proto__ || src.constructor.prototype) {
+            var proto = src.__proto__ || src.constructor.prototype || {};
             var T = function () {};
             T.prototype = proto;
             dst = new T;
