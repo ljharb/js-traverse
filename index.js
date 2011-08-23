@@ -80,7 +80,7 @@ Traverse.prototype.clone = function () {
             parents.push(src);
             nodes.push(dst);
             
-            Object.keys(src).forEach(function (key) {
+            Object_keys(src).forEach(function (key) {
                 dst[key] = clone(src[key]);
             });
             
@@ -126,7 +126,7 @@ function walk (root, cb, immutable) {
                 delete state.parent.node[state.key];
             },
             remove : function () {
-                if (Array.isArray(state.parent.node)) {
+                if (Array_isArray(state.parent.node)) {
                     state.parent.node.splice(state.key, 1);
                 }
                 else {
@@ -145,7 +145,7 @@ function walk (root, cb, immutable) {
         if (!alive) return state;
         
         if (typeof node === 'object' && node !== null) {
-            state.keys = Object.keys(node);
+            state.keys = Object_keys(node);
             
             state.isLeaf = state.keys.length == 0;
             
@@ -201,7 +201,16 @@ function walk (root, cb, immutable) {
     })(root).node;
 }
 
-Object.keys(Traverse.prototype).forEach(function (key) {
+var Object_keys = Object.keys || function keys (obj) {
+    var res = [];
+    for (var key in obj) res.push(key)
+    return res;
+};
+
+var Array_isArray = Array.isArray || function isArray (xs) {
+    return Object.prototype.toString.call(xs) === '[object Array]';
+};
+Object_keys(Traverse.prototype).forEach(function (key) {
     Traverse[key] = function (obj) {
         var args = [].slice.call(arguments, 1);
         var t = Traverse(obj);
@@ -213,7 +222,7 @@ function copy (src) {
     if (typeof src === 'object' && src !== null) {
         var dst;
         
-        if (Array.isArray(src)) {
+        if (Array_isArray(src)) {
             dst = [];
         }
         else if (src instanceof Date) {
@@ -228,11 +237,18 @@ function copy (src) {
         else if (src instanceof String) {
             dst = new String(src);
         }
-        else {
+        else if (Object.create && Object.getPrototypeOf) {
             dst = Object.create(Object.getPrototypeOf(src));
         }
+        else if (obj.__proto__ || obj.constructor.prototype) {
+            var proto = obj.__proto__ || obj.constructor.prototype || {};
+            var T = function () {};
+            T.prototype = proto;
+            dst = new T;
+            if (!dst.__proto__) dst.__proto__ = proto;
+        }
         
-        Object.keys(src).forEach(function (key) {
+        Object_keys(src).forEach(function (key) {
             dst[key] = src[key];
         });
         return dst;
