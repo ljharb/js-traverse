@@ -1,5 +1,5 @@
 var assert = require('assert');
-var traverse = require('traverse');
+var traverse = require('../');
 
 exports.siblings = function () {
     var obj = { a : 1, b : 2, c : [ 4, 5, 6 ] };

@@ -1,5 +1,5 @@
 var assert = require('assert');
-var traverse = require('traverse');
+var traverse = require('../');
 var deepEqual = require('./lib/deep_equal');
 
 exports.deepDates = function () {

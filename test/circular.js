@@ -1,5 +1,5 @@
 var assert = require('assert');
-var Traverse = require('traverse');
+var Traverse = require('../');
 var deepEqual = require('./lib/deep_equal');
 var util = require('util');
 
