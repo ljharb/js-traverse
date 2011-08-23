@@ -1,5 +1,6 @@
 var assert = require('assert');
 var Traverse = require('traverse');
+var deepEqual = require('./lib/deep_equal');
 
 exports.mutate = function () {
     var obj = { a : 1, b : 2, c : [ 3, 4 ] };
@@ -112,15 +113,15 @@ exports.delete = function () {
         if (this.isLeaf && x % 2 == 0) this.delete();
     });
     
-    assert.ok(!Traverse.deepEqual(
+    assert.ok(!deepEqual(
         obj, { a : 1, c : [ 3, undefined ] }
     ));
     
-    assert.ok(Traverse.deepEqual(
+    assert.ok(deepEqual(
         obj, { a : 1, c : [ 3 ] }
     ));
     
-    assert.ok(!Traverse.deepEqual(
+    assert.ok(!deepEqual(
         obj, { a : 1, c : [ 3, null ] }
     ));
 };
@@ -131,19 +132,19 @@ exports.deleteRedux = function () {
         if (this.isLeaf && x % 2 == 0) this.delete();
     });
     
-    assert.ok(!Traverse.deepEqual(
+    assert.ok(!deepEqual(
         obj, { a : 1, c : [ 3, undefined, 5 ] }
     ));
     
-    assert.ok(Traverse.deepEqual(
+    assert.ok(deepEqual(
         obj, { a : 1, c : [ 3 ,, 5 ] }
     ));
     
-    assert.ok(!Traverse.deepEqual(
+    assert.ok(!deepEqual(
         obj, { a : 1, c : [ 3, null, 5 ] }
     ));
     
-    assert.ok(!Traverse.deepEqual(
+    assert.ok(!deepEqual(
         obj, { a : 1, c : [ 3, 5 ] }
     ));
 };
@@ -154,7 +155,7 @@ exports.deleteMap = function () {
         if (this.isLeaf && x % 2 == 0) this.delete();
     });
     
-    assert.ok(Traverse.deepEqual(
+    assert.ok(deepEqual(
         obj,
         { a : 1, b : 2, c : [ 3, 4 ] }
     ));
@@ -162,15 +163,15 @@ exports.deleteMap = function () {
     var xs = [ 3, 4 ];
     delete xs[1];
     
-    assert.ok(Traverse.deepEqual(
+    assert.ok(deepEqual(
         res, { a : 1, c : xs }
     ));
     
-    assert.ok(Traverse.deepEqual(
+    assert.ok(deepEqual(
         res, { a : 1, c : [ 3, ] }
     ));
     
-    assert.ok(Traverse.deepEqual(
+    assert.ok(deepEqual(
         res, { a : 1, c : [ 3 ] }
     ));
 };
@@ -181,7 +182,7 @@ exports.deleteMapRedux = function () {
         if (this.isLeaf && x % 2 == 0) this.delete();
     });
     
-    assert.ok(Traverse.deepEqual(
+    assert.ok(deepEqual(
         obj,
         { a : 1, b : 2, c : [ 3, 4, 5 ] }
     ));
@@ -189,15 +190,15 @@ exports.deleteMapRedux = function () {
     var xs = [ 3, 4, 5 ];
     delete xs[1];
     
-    assert.ok(Traverse.deepEqual(
+    assert.ok(deepEqual(
         res, { a : 1, c : xs }
     ));
     
-    assert.ok(!Traverse.deepEqual(
+    assert.ok(!deepEqual(
         res, { a : 1, c : [ 3, 5 ] }
     ));
     
-    assert.ok(Traverse.deepEqual(
+    assert.ok(deepEqual(
         res, { a : 1, c : [ 3 ,, 5 ] }
     ));
 };
