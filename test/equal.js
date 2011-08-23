@@ -1,5 +1,5 @@
 var assert = require('assert');
-var traverse = require('traverse');
+var traverse = require('../');
 
 exports.deepDates = function () {
     var now = new Date;

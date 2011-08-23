@@ -1,5 +1,5 @@
 var assert = require('assert');
-var Traverse = require('traverse');
+var Traverse = require('../');
 
 exports.mutate = function () {
     var obj = { a : 1, b : 2, c : [ 3, 4 ] };
