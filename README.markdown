@@ -249,25 +249,32 @@ Return an `Array` of every node in the object.
 
 Create a deep clone of the object.
 
-installation
-============
+install
+=======
 
-Using npm:
-    npm install traverse
+Using [npm](http://npmjs.org) do:
 
-Or check out the repository and link your development copy:
-    git clone http://github.com/substack/js-traverse.git
-    cd js-traverse
-    npm link .
+    $ npm install traverse
 
-You can test traverse with "expresso":http://github.com/visionmedia/expresso
-(`npm install expresso`):
-    js-traverse $ expresso
+test
+====
+
+Using [expresso](http://github.com/visionmedia/expresso) do:
+
+    $ expresso
     
     100% wahoo, your stuff is not broken!
 
-hash transforms
-===============
+in the browser
+==============
 
-This library formerly had a hash transformation component. It has been
-[moved to the hashish package](https://github.com/substack/node-hashish).
+Use [browserify](https://github.com/substack/node-browserify) to run traverse in
+the browser.
+
+traverse has been tested and works with:
+
+* Internet Explorer 5.5, 6.0, 7.0, 8.0, 9.0
+* Firefox 3.5
+* Chrome 6.0
+* Opera 10.6
+* Safari 5.0
