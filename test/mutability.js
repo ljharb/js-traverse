@@ -98,19 +98,19 @@ exports.remove = function () {
 };
 
 exports.removeNoStop = function() {
-    var obj = { a : 1, b : 2, c : { d: 3, e: 4 } };
+    var obj = { a : 1, b : 2, c : { d: 3, e: 4 }, f: 5 };
     
-    var keysWithoutStop = [];
+    var keys = [];
     Traverse(obj).forEach(function (x) {
-        keysWithoutStop.push(this.key)
+        keys.push(this.key)
         if (this.key == 'c') this.remove();
     });
 
-    assert.deepEqual(keysWithoutStop, [undefined, 'a', 'b', 'c', 'd', 'e'])
+    assert.deepEqual(keys, [undefined, 'a', 'b', 'c', 'd', 'e', 'f'])
 }
 
 exports.removeStop = function() {
-    var obj = { a : 1, b : 2, c : { d: 3, e: 4 } };
+    var obj = { a : 1, b : 2, c : { d: 3, e: 4 }, f: 5 };
     
     var keys = [];
     Traverse(obj).forEach(function (x) {
@@ -118,7 +118,7 @@ exports.removeStop = function() {
         if (this.key == 'c') this.remove(true);
     });
 
-    assert.deepEqual(keys, [undefined, 'a', 'b', 'c'])
+    assert.deepEqual(keys, [undefined, 'a', 'b', 'c', 'f'])
 }
 
 exports.removeMap = function () {
