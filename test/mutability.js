@@ -97,6 +97,30 @@ exports.remove = function () {
     assert.deepEqual(obj, { a : 1, c : [ 3 ] });
 };
 
+exports.removeNoStop = function() {
+    var obj = { a : 1, b : 2, c : { d: 3, e: 4 } };
+    
+    var keysWithoutStop = [];
+    Traverse(obj).forEach(function (x) {
+        keysWithoutStop.push(this.key)
+        if (this.key == 'c') this.remove();
+    });
+
+    assert.deepEqual(keysWithoutStop, [undefined, 'a', 'b', 'c', 'd', 'e'])
+}
+
+exports.removeStop = function() {
+    var obj = { a : 1, b : 2, c : { d: 3, e: 4 } };
+    
+    var keys = [];
+    Traverse(obj).forEach(function (x) {
+        keys.push(this.key)
+        if (this.key == 'c') this.remove(true);
+    });
+
+    assert.deepEqual(keys, [undefined, 'a', 'b', 'c'])
+}
+
 exports.removeMap = function () {
     var obj = { a : 1, b : 2, c : [ 3, 4 ] };
     var res = Traverse(obj).map(function (x) {
@@ -125,6 +149,30 @@ exports.delete = function () {
         obj, { a : 1, c : [ 3, null ] }
     ));
 };
+
+exports.deleteNoStop = function() {
+    var obj = { a : 1, b : 2, c : { d: 3, e: 4 } };
+    
+    var keys = [];
+    Traverse(obj).forEach(function (x) {
+        keys.push(this.key)
+        if (this.key == 'c') this.delete();
+    });
+
+    assert.deepEqual(keys, [undefined, 'a', 'b', 'c', 'd', 'e'])
+}
+
+exports.deleteStop = function() {
+    var obj = { a : 1, b : 2, c : { d: 3, e: 4 } };
+    
+    var keys = [];
+    Traverse(obj).forEach(function (x) {
+        keys.push(this.key)
+        if (this.key == 'c') this.delete(true);
+    });
+
+    assert.deepEqual(keys, [undefined, 'a', 'b', 'c'])
+}
 
 exports.deleteRedux = function () {
     var obj = { a : 1, b : 2, c : [ 3, 4, 5 ] };

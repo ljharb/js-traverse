@@ -122,16 +122,18 @@ function walk (root, cb, immutable) {
                 state.node = x;
                 if (stopHere) keepGoing = false;
             },
-            'delete' : function () {
+            'delete' : function (stopHere) {
                 delete state.parent.node[state.key];
+                if (stopHere) keepGoing = false;
             },
-            remove : function () {
+            remove : function (stopHere) {
                 if (Array_isArray(state.parent.node)) {
                     state.parent.node.splice(state.key, 1);
                 }
                 else {
                     delete state.parent.node[state.key];
                 }
+                if (stopHere) keepGoing = false;
             },
             keys : null,
             before : function (f) { modifiers.before = f },
