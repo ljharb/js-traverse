@@ -131,13 +131,13 @@ Set a new value for the present node.
 All the elements in `value` will be recursively traversed unless `stopHere` is
 true.
 
-this.remove()
+this.remove(stopHere=false)
 -------------
 
 Remove the current element from the output. If the node is in an Array it will
 be spliced off. Otherwise it will be deleted from its parent.
 
-this.delete()
+this.delete(stopHere=false)
 -------------
 
 Delete the current element from its parent in the output. Calls `delete` even on
