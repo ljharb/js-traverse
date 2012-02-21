@@ -17,6 +17,18 @@ Traverse.prototype.get = function (ps) {
     return node;
 };
 
+Traverse.prototype.has = function (ps) {
+    var node = this.value;
+    for (var i = 0; i < ps.length; i ++) {
+        var key = ps[i];
+        if (!Object.hasOwnProperty.call(node, key)) {
+            return false;
+        }
+        node = node[key];
+    }
+    return true;
+};
+
 Traverse.prototype.set = function (ps, value) {
     var node = this.value;
     for (var i = 0; i < ps.length - 1; i ++) {

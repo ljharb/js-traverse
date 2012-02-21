@@ -30,7 +30,7 @@ exports['methods added to the prototype are available'] = function () {
 
 exports['every method has a static form'] = function () {
     var names = [
-        'get', 'set', 'map', 'forEach',
+        'get', 'has', 'set', 'map', 'forEach',
         'reduce', 'paths', 'nodes', 'clone'
     ];
     names.forEach(function (name) {
@@ -43,6 +43,7 @@ exports['every method has a static form'] = function () {
 
     var obj = { a : { b : 1 } };
     assert.equal(Traverse.get(obj, [ 'a', 'b' ]), 1);
+    assert.equal(Traverse.has(obj, [ 'a', 'b' ]), true);
     assert.equal(Traverse.set(obj, [ 'a', 'c' ], 2), 2);
     assert.equal(obj.a.c, 2);
     assert.deepEqual(Traverse.paths(obj), [ [], [ 'a' ], [ 'a', 'b' ], [ 'a', 'c' ] ]);
