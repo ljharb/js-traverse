@@ -74,6 +74,65 @@ output:
 
     { a: 1, b: 2, c: [ 3, 4 ] }
 
+methods
+=======
+
+Each method that takes an `fn` uses the context documented below in the context
+section.
+
+.map(fn)
+--------
+
+Execute `fn` for each node in the object and return a new object with the
+results of the walk. To update nodes in the result use `this.update(value)`.
+
+.forEach(fn)
+------------
+
+Execute `fn` for each node in the object but unlike `.map()`, when
+`this.update()` is called it updates the object in-place.
+
+.reduce(fn, acc)
+----------------
+
+For each node in the object, perform a
+[left-fold](http://en.wikipedia.org/wiki/Fold_(higher-order_function))
+with the return value of `fn(acc, node)`.
+
+If `acc` isn't specified, `acc` is set to the root object for the first step
+and the root element is skipped.
+
+.paths()
+--------
+
+Return an `Array` of every possible non-cyclic path in the object.
+Paths are `Array`s of string keys.
+
+.nodes()
+--------
+
+Return an `Array` of every node in the object.
+
+.clone()
+--------
+
+Create a deep clone of the object.
+
+.get(path)
+----------
+
+Get the element at the array `path`.
+
+.set(path, value)
+-----------------
+
+Set the element at the array `path` to `value`.
+
+.has(path)
+----------
+
+Return whether the element at the array `path` exists.
+
 context
 =======
 
@@ -165,46 +224,6 @@ this.post(fn)
 
 Call this function after each of the children are traversed.
 
-methods
-=======
-
-.map(fn)
---------
-
-Execute `fn` for each node in the object and return a new object with the
-results of the walk. To update nodes in the result use `this.update(value)`.
-
-.forEach(fn)
-------------
-
-Execute `fn` for each node in the object but unlike `.map()`, when
-`this.update()` is called it updates the object in-place.
-
-.reduce(fn, acc)
-----------------
-
-For each node in the object, perform a
-[left-fold](http://en.wikipedia.org/wiki/Fold_(higher-order_function))
-with the return value of `fn(acc, node)`.
-
-If `acc` isn't specified, `acc` is set to the root object for the first step
-and the root element is skipped.
-
-.paths()
---------
-
-Return an `Array` of every possible non-cyclic path in the object.
-Paths are `Array`s of string keys.
-
-.nodes()
---------
-
-Return an `Array` of every node in the object.
-
-.clone()
---------
-
-Create a deep clone of the object.
 
 install
 =======
