@@ -225,6 +225,9 @@ function copy (src) {
         else if (src instanceof Date) {
             dst = new Date(src);
         }
+        else if (src instanceof Error) {
+            dst = { message: src.message };
+        }
         else if (src instanceof Boolean) {
             dst = new Boolean(src);
         }
