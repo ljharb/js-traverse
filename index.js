@@ -244,7 +244,11 @@ function copy (src) {
             dst = new T;
             if (!dst.__proto__) dst.__proto__ = proto;
         }
-        
+
+        // an Error's message is usually its own non-enumerable property,
+        // so the keys below leave it out
+        if (src instanceof Error) dst.message = src.message;
+
         forEach(Object_keys(src), function (key) {
             dst[key] = src[key];
         });
