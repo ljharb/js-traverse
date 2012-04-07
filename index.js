@@ -116,6 +116,10 @@ Traverse.prototype.deepEqual = function (obj) {
                     notEqual();
                 }
             }
+            else if (toS(y) === '[object RegExp]'
+            || toS(x) === '[object RegExp]') {
+                if (!x || !y || x.toString() !== y.toString()) notEqual();
+            }
             else if (x instanceof Date || y instanceof Date) {
                 if (!(x instanceof Date) || !(y instanceof Date)
                 || x.getTime() !== y.getTime()) {
@@ -285,7 +289,7 @@ function walk (root, cb, immutable) {
 Object.keys(Traverse.prototype).forEach(function (key) {
     Traverse[key] = function (obj) {
         var args = [].slice.call(arguments, 1);
-        var t = Traverse(obj);
+        var t = new Traverse(obj);
         return t[key].apply(t, args);
     };
 });
