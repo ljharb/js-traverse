@@ -222,16 +222,19 @@ function copy (src) {
         if (Array_isArray(src)) {
             dst = [];
         }
-        else if (src instanceof Date) {
+        else if (isDate(src)) {
             dst = new Date(src);
         }
-        else if (src instanceof Boolean) {
+        else if (isRegExp(src)) {
+            dst = new RegExp(src);
+        }
+        else if (isBoolean(src)) {
             dst = new Boolean(src);
         }
-        else if (src instanceof Number) {
+        else if (isNumber(src)) {
             dst = new Number(src);
         }
-        else if (src instanceof String) {
+        else if (isString(src)) {
             dst = new String(src);
         }
         else if (Object.create && Object.getPrototypeOf) {
@@ -247,7 +250,7 @@ function copy (src) {
 
         // an Error's message is usually its own non-enumerable property,
         // so the keys below leave it out
-        if (src instanceof Error) dst.message = src.message;
+        if (isError(src)) dst.message = src.message;
 
         forEach(Object_keys(src), function (key) {
             dst[key] = src[key];
@@ -262,6 +265,14 @@ var Object_keys = Object.keys || function keys (obj) {
     for (var key in obj) res.push(key)
     return res;
 };
+
+function toS (obj) { return Object.prototype.toString.call(obj) }
+function isDate (obj) { return toS(obj) === '[object Date]' }
+function isRegExp (obj) { return toS(obj) === '[object RegExp]' }
+function isError (obj) { return toS(obj) === '[object Error]' }
+function isBoolean (obj) { return toS(obj) === '[object Boolean]' }
+function isNumber (obj) { return toS(obj) === '[object Number]' }
+function isString (obj) { return toS(obj) === '[object String]' }
 
 var Array_isArray = Array.isArray || function isArray (xs) {
     return Object.prototype.toString.call(xs) === '[object Array]';
