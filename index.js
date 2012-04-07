@@ -1,6 +1,8 @@
-module.exports = Traverse;
+var traverse = module.exports = function (obj) {
+    return new Traverse(obj);
+};
+
 function Traverse (obj) {
-    if (!(this instanceof Traverse)) return new Traverse(obj);
     this.value = obj;
 }
 
@@ -274,9 +276,9 @@ var forEach = function (xs, fn) {
 };
 
 forEach(Object_keys(Traverse.prototype), function (key) {
-    Traverse[key] = function (obj) {
+    traverse[key] = function (obj) {
         var args = [].slice.call(arguments, 1);
-        var t = Traverse(obj);
+        var t = new Traverse(obj);
         return t[key].apply(t, args);
     };
 });
