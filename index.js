@@ -277,7 +277,7 @@ var forEach = function (xs, fn) {
 forEach(Object_keys(Traverse.prototype), function (key) {
     Traverse[key] = function (obj) {
         var args = [].slice.call(arguments, 1);
-        var t = Traverse(obj);
+        var t = new Traverse(obj);
         return t[key].apply(t, args);
     };
 });
