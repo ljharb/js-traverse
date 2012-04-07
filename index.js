@@ -1,6 +1,8 @@
-module.exports = Traverse;
+module.exports = function (obj) {
+    return new Traverse(obj);
+};
+
 function Traverse (obj) {
-    if (!(this instanceof Traverse)) return new Traverse(obj);
     this.value = obj;
 }
 
