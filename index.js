@@ -252,26 +252,35 @@ function walk (root, cb, immutable) {
         };
         
         if (!alive) return state;
-        
-        if (typeof node === 'object' && node !== null) {
-            state.keys = objectKeys(node);
-            
-            state.isLeaf = state.keys.length == 0;
-            
-            for (var i = 0; i < parents.length; i++) {
-                if (parents[i].node_ === node_) {
-                    state.circular = parents[i];
-                    break;
+
+        function updateState() {
+            if (typeof state.node === 'object' && state.node !== null) {
+                var nodeKeys = objectKeys(state.node);
+                // keys assigned by the callback are kept unless it replaced the node with a new object
+                if (!state.keys || (state.node !== node && state.node !== node_)) {
+                    state.keys = nodeKeys;
+                }
+
+                // a node whose children the callback chose not to visit is still not a leaf
+                state.isLeaf = nodeKeys.length == 0;
+
+                for (var i = 0; i < parents.length; i++) {
+                    if (parents[i].node_ === node_) {
+                        state.circular = parents[i];
+                        break;
+                    }
                 }
             }
+            else {
+                state.isLeaf = true;
+            }
+
+            state.notLeaf = !state.isLeaf;
+            state.notRoot = !state.isRoot;
         }
-        else {
-            state.isLeaf = true;
-        }
-        
-        state.notLeaf = !state.isLeaf;
-        state.notRoot = !state.isRoot;
-        
+
+        updateState();
+
         // use return values to update if defined
         var ret = cb.call(state, state.node);
         if (ret !== undefined && state.update) state.update(ret);
@@ -282,10 +291,11 @@ function walk (root, cb, immutable) {
         
         if (typeof state.node == 'object'
         && state.node !== null && !state.circular) {
+            // before this node is among the parents, so it is not its own circular
+            updateState();
+
             parents.push(state);
-            
-            if (!state.keys) state.keys = objectKeys(state.node);
-            
+
             forEach(state.keys, function (key, i) {
                 path.push(key);
                 
