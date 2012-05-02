@@ -159,26 +159,30 @@ function walk (root, cb, immutable) {
         };
         
         if (!alive) return state;
-        
-        if (typeof node === 'object' && node !== null) {
-            state.keys = Object_keys(node);
-            
-            state.isLeaf = state.keys.length == 0;
-            
-            for (var i = 0; i < parents.length; i++) {
-                if (parents[i].node_ === node_) {
-                    state.circular = parents[i];
-                    break;
+
+        function updateState() {
+            if (typeof state.node === 'object' && state.node !== null) {
+                state.keys = Object_keys(state.node);
+
+                state.isLeaf = state.keys.length == 0;
+
+                for (var i = 0; i < parents.length; i++) {
+                    if (parents[i].node_ === node_) {
+                        state.circular = parents[i];
+                        break;
+                    }
                 }
             }
+            else {
+                state.isLeaf = true;
+            }
+
+            state.notLeaf = !state.isLeaf;
+            state.notRoot = !state.isRoot;
         }
-        else {
-            state.isLeaf = true;
-        }
-        
-        state.notLeaf = !state.isLeaf;
-        state.notRoot = !state.isRoot;
-        
+
+        updateState();
+
         // use return values to update if defined
         var ret = cb.call(state, state.node);
         if (ret !== undefined && state.update) state.update(ret);
@@ -190,9 +194,9 @@ function walk (root, cb, immutable) {
         if (typeof state.node == 'object'
         && state.node !== null && !state.circular) {
             parents.push(state);
-            
-            if (!state.keys) state.keys = Object_keys(state.node);
-            
+
+            updateState();
+
             forEach(state.keys, function (key, i) {
                 path.push(key);
                 
