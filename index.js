@@ -191,6 +191,8 @@ function walk (root, cb, immutable) {
         && state.node !== null && !state.circular) {
             parents.push(state);
             
+            if (!state.keys) state.keys = Object_keys(state.node);
+            
             forEach(state.keys, function (key, i) {
                 path.push(key);
                 
