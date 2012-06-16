@@ -139,7 +139,7 @@ function walk (root, cb, immutable) {
                 if (stopHere) keepGoing = false;
             },
             remove : function (stopHere) {
-                if (Array_isArray(state.parent.node)) {
+                if (isArray(state.parent.node)) {
                     state.parent.node.splice(state.key, 1);
                 }
                 else {
@@ -219,7 +219,7 @@ function copy (src) {
     if (typeof src === 'object' && src !== null) {
         var dst;
         
-        if (Array_isArray(src)) {
+        if (isArray(src)) {
             dst = [];
         }
         else if (isDate(src)) {
@@ -240,12 +240,18 @@ function copy (src) {
         else if (Object.create && Object.getPrototypeOf) {
             dst = Object.create(Object.getPrototypeOf(src));
         }
-        else if (src.__proto__ || src.constructor.prototype) {
-            var proto = src.__proto__ || src.constructor.prototype || {};
+        else if (src.constructor === Object) {
+            dst = {};
+        }
+        else {
+            var proto =
+                (src.constructor && src.constructor.prototype)
+                || src.__proto__
+                || {}
+            ;
             var T = function () {};
             T.prototype = proto;
             dst = new T;
-            if (!dst.__proto__) dst.__proto__ = proto;
         }
 
         // an Error's message is usually its own non-enumerable property,
@@ -274,7 +280,7 @@ function isBoolean (obj) { return toS(obj) === '[object Boolean]' }
 function isNumber (obj) { return toS(obj) === '[object Number]' }
 function isString (obj) { return toS(obj) === '[object String]' }
 
-var Array_isArray = Array.isArray || function isArray (xs) {
+var isArray = Array.isArray || function isArray (xs) {
     return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
