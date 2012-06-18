@@ -250,3 +250,28 @@ exports.deleteMapRedux = function () {
         res, { a : 1, c : [ 3 ,, 5 ] }
     ));
 };
+
+exports.objectToString = function () {
+    var obj = { a : 1, b : 2, c : [ 3, 4 ] };
+    var res = Traverse(obj).forEach(function (x) {
+        if (typeof x === 'object' && !this.isRoot) {
+            this.update(JSON.stringify(x));
+        }
+    });
+    assert.deepEqual(obj, res);
+    assert.deepEqual(obj, { a : 1, b : 2, c : "[3,4]" });
+};
+
+exports.stringToObject = function () {
+    var obj = { a : 1, b : 2, c : "[3,4]" };
+    var res = Traverse(obj).forEach(function (x) {
+        if (typeof x === 'string') {
+            this.update(JSON.parse(x));
+        }
+				else if (typeof x === 'number' && x % 2 === 0) {
+            this.update(x * 10);
+        }
+    });
+    assert.deepEqual(obj, res);
+    assert.deepEqual(obj, { a : 1, b : 20, c : [ 3, 40 ] });
+};
