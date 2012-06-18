@@ -162,7 +162,9 @@ function walk (root, cb, immutable) {
 
         function updateState() {
             if (typeof state.node === 'object' && state.node !== null) {
-                state.keys = Object_keys(state.node);
+                if (!state.keys || state.node_ !== state.node) {
+                    state.keys = Object_keys(state.node)
+                }
 
                 state.isLeaf = state.keys.length == 0;
 
@@ -175,6 +177,7 @@ function walk (root, cb, immutable) {
             }
             else {
                 state.isLeaf = true;
+                state.keys = null;
             }
 
             state.notLeaf = !state.isLeaf;
