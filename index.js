@@ -273,6 +273,7 @@ function walk (root, cb, immutable) {
             }
             else {
                 state.isLeaf = true;
+                state.keys = null;
             }
 
             state.notLeaf = !state.isLeaf;
