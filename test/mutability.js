@@ -271,3 +271,30 @@ test('deleteMapRedux', function (t) {
     
     t.end();
 });
+
+test('objectToString', function (t) {
+    var obj = { a : 1, b : 2, c : [ 3, 4 ] };
+    var res = traverse(obj).forEach(function (x) {
+        if (typeof x === 'object' && !this.isRoot) {
+            this.update(JSON.stringify(x));
+        }
+    });
+    t.same(obj, res);
+    t.same(obj, { a : 1, b : 2, c : "[3,4]" });
+    t.end();
+});
+
+test('stringToObject', function (t) {
+    var obj = { a : 1, b : 2, c : "[3,4]" };
+    var res = traverse(obj).forEach(function (x) {
+        if (typeof x === 'string') {
+            this.update(JSON.parse(x));
+        }
+        else if (typeof x === 'number' && x % 2 === 0) {
+            this.update(x * 10);
+        }
+    });
+    t.deepEqual(obj, res);
+    t.deepEqual(obj, { a : 1, b : 20, c : [ 3, 40 ] });
+    t.end();
+});
