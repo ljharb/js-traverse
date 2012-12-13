@@ -8,7 +8,7 @@ Traverse.prototype.get = function (ps) {
     var node = this.value;
     for (var i = 0; i < ps.length; i ++) {
         var key = ps[i];
-        if (!hasOwnProperty.call(node, key)) {
+        if (!node || !hasOwnProperty.call(node, key)) {
             node = undefined;
             break;
         }
@@ -21,7 +21,7 @@ Traverse.prototype.has = function (ps) {
     var node = this.value;
     for (var i = 0; i < ps.length; i ++) {
         var key = ps[i];
-        if (!hasOwnProperty.call(node, key)) {
+        if (!node || !hasOwnProperty.call(node, key)) {
             return false;
         }
         node = node[key];
