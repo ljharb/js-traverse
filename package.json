@@ -1,16 +1,15 @@
 {
     "name" : "traverse",
-    "version" : "0.6.3",
+    "version" : "0.6.4",
     "description" : "traverse and transform objects by visiting every node on a recursive walk",
     "main" : "index.js",
-    "bin" : {},
     "directories" : {
         "example" : "example",
         "test" : "test"
     },
-    "dependencies" : {},
     "devDependencies" : {
-        "tap" : "~0.2.5"
+        "tap" : "~0.3.3",
+        "tape" : "~0.1.1"
     },
     "scripts" : {
         "test" : "tap test/*.js"
@@ -34,6 +33,5 @@
         "email" : "mail@substack.net",
         "url" : "http://substack.net"
     },
-    "license" : "MIT",
-    "engine" : { "node" : ">=0.6" }
+    "license" : "MIT"
 }
