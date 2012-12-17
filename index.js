@@ -8,7 +8,7 @@ Traverse.prototype.get = function (ps) {
     var node = this.value;
     for (var i = 0; i < ps.length; i ++) {
         var key = ps[i];
-        if (!Object.hasOwnProperty.call(node, key)) {
+        if (!hasOwnProperty.call(node, key)) {
             node = undefined;
             break;
         }
@@ -21,7 +21,7 @@ Traverse.prototype.has = function (ps) {
     var node = this.value;
     for (var i = 0; i < ps.length; i ++) {
         var key = ps[i];
-        if (!Object.hasOwnProperty.call(node, key)) {
+        if (!hasOwnProperty.call(node, key)) {
             return false;
         }
         node = node[key];
@@ -33,7 +33,7 @@ Traverse.prototype.set = function (ps, value) {
     var node = this.value;
     for (var i = 0; i < ps.length - 1; i ++) {
         var key = ps[i];
-        if (!Object.hasOwnProperty.call(node, key)) node[key] = {};
+        if (!hasOwnProperty.call(node, key)) node[key] = {};
         node = node[key];
     }
     node[ps[i]] = value;
@@ -303,7 +303,7 @@ function walk (root, cb, immutable) {
                 if (modifiers.pre) modifiers.pre.call(state, state.node[key], key);
                 
                 var child = walker(state.node[key]);
-                if (immutable && Object.hasOwnProperty.call(state.node, key)) {
+                if (immutable && hasOwnProperty.call(state.node, key)) {
                     state.node[key] = child.node;
                 }
                 
@@ -406,3 +406,7 @@ forEach(objectKeys(Traverse.prototype), function (key) {
         return t[key].apply(t, args);
     };
 });
+
+var hasOwnProperty = Object.hasOwnProperty || function (obj, key) {
+    return key in obj;
+};
