@@ -2,6 +2,8 @@
 
 Traverse and transform objects by visiting every node on a recursive walk.
 
+[![browser support](http://ci.testling.com/substack/js-traverse.png)](http://ci.testling.com/substack/js-traverse)
+
 [![build status](https://secure.travis-ci.org/substack/js-traverse.png)](http://travis-ci.org/substack/js-traverse)
 
 # examples
