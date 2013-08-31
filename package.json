@@ -8,11 +8,10 @@
         "test" : "test"
     },
     "devDependencies" : {
-        "tap" : "~0.3.3",
-        "tape" : "~0.1.1"
+        "tape" : "~1.0.4"
     },
     "scripts" : {
-        "test" : "tap test/*.js"
+        "test" : "tape test/*.js"
     },
     "testling" : {
         "files" : "test/*.js",
