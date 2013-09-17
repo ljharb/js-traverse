@@ -234,7 +234,7 @@ function copy (src) {
             dst = [];
         }
         else if (isDate(src)) {
-            dst = new Date(src);
+            dst = new Date(src.getTime());
         }
         else if (isRegExp(src)) {
             dst = new RegExp(src);
