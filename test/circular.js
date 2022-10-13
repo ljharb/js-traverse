@@ -26,8 +26,8 @@ test('deepCirc', function (t) {
     var times = 0;
     traverse(obj).forEach(function (x) {
         if (this.circular) {
-            t.same(this.circular.path, []);
-            t.same(this.path, [ 'y', 2 ]);
+            t.deepEqual(this.circular.path, []);
+            t.deepEqual(this.path, [ 'y', '2' ]);
         }
     });
 });
@@ -44,13 +44,13 @@ test('doubleCirc', function (t) {
         }
     });
     
-    t.same(circs[0].self.path, [ 'x', 3, 2 ]);
-    t.same(circs[0].circ.path, []);
+    t.deepEqual(circs[0].self.path, [ 'x', '3', '2' ]);
+    t.deepEqual(circs[0].circ.path, []);
      
-    t.same(circs[1].self.path, [ 'y', 2 ]);
-    t.same(circs[1].circ.path, []);
+    t.deepEqual(circs[1].self.path, [ 'y', '2' ]);
+    t.deepEqual(circs[1].circ.path, []);
     
-    t.same(circs.length, 2);
+    t.deepEqual(circs.length, 2);
     t.end();
 });
 
