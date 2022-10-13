@@ -1,24 +1,7 @@
+'use strict';
+
 var test = require('tape');
-var traverse = require('../');
 var deepEqual = require('./lib/deep_equal');
-
-test('super_deep', function (t) {
-	var util = require('util');
-	var a0 = make();
-	var a1 = make();
-	t.ok(deepEqual(a0, a1));
-
-	a0.c.d.moo = true;
-	t.ok(!deepEqual(a0, a1));
-
-	a1.c.d.moo = true;
-	t.ok(deepEqual(a0, a1));
-
-	// TODO: this one
-	// a0.c.a = a1;
-	// t.ok(!deepEqual(a0, a1));
-	t.end();
-});
 
 function make() {
 	var a = { self: 'a' };
@@ -54,3 +37,20 @@ function make() {
 
 	return a;
 }
+
+test('super_deep', function (t) {
+	var a0 = make();
+	var a1 = make();
+	t.ok(deepEqual(a0, a1));
+
+	a0.c.d.moo = true;
+	t.ok(!deepEqual(a0, a1));
+
+	a1.c.d.moo = true;
+	t.ok(deepEqual(a0, a1));
+
+	// TODO: this one
+	// a0.c.a = a1;
+	// t.ok(!deepEqual(a0, a1));
+	t.end();
+});

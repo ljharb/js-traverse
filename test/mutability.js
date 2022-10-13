@@ -1,4 +1,7 @@
+'use strict';
+
 var test = require('tape');
+var assert = require('assert');
 var traverse = require('../');
 var deepEqual = require('./lib/deep_equal');
 
@@ -55,7 +58,7 @@ test('clone', function (t) {
 	var res = traverse(obj).clone();
 	t.same(obj, res);
 	t.ok(obj !== res);
-	obj.a++;
+	obj.a += 1;
 	t.same(res.a, 1);
 	obj.c.push(5);
 	t.same(res.c, [3, 4]);
@@ -67,7 +70,7 @@ test('cloneT', function (t) {
 	var res = traverse.clone(obj);
 	t.same(obj, res);
 	t.ok(obj !== res);
-	obj.a++;
+	obj.a += 1;
 	t.same(res.a, 1);
 	obj.c.push(5);
 	t.same(res.c, [3, 4]);
@@ -77,7 +80,7 @@ test('cloneT', function (t) {
 test('reduce', function (t) {
 	var obj = { a: 1, b: 2, c: [3, 4] };
 	var res = traverse(obj).reduce(function (acc, x) {
-		if (this.isLeaf) acc.push(x);
+		if (this.isLeaf) { acc.push(x); }
 		return acc;
 	}, []);
 	t.same(obj, { a: 1, b: 2, c: [3, 4] });
@@ -87,8 +90,8 @@ test('reduce', function (t) {
 
 test('reduceInit', function (t) {
 	var obj = { a: 1, b: 2, c: [3, 4] };
-	var res = traverse(obj).reduce(function (acc, x) {
-		if (this.isRoot) assert.fail('got root');
+	var res = traverse(obj).reduce(function (acc) {
+		if (this.isRoot) { assert.fail('got root'); }
 		return acc;
 	});
 	t.same(obj, { a: 1, b: 2, c: [3, 4] });
@@ -99,43 +102,43 @@ test('reduceInit', function (t) {
 test('remove', function (t) {
 	var obj = { a: 1, b: 2, c: [3, 4] };
 	traverse(obj).forEach(function (x) {
-		if (this.isLeaf && x % 2 == 0) this.remove();
+		if (this.isLeaf && x % 2 === 0) { this.remove(); }
 	});
 
 	t.same(obj, { a: 1, c: [3] });
 	t.end();
 });
 
-exports.removeNoStop = function () {
+test('removeNoStop', function (t) {
 	var obj = { a: 1, b: 2, c: { d: 3, e: 4 }, f: 5 };
 
 	var keys = [];
-	traverse(obj).forEach(function (x) {
-		keys.push(this.key)
-		if (this.key == 'c') this.remove();
+	traverse(obj).forEach(function () {
+		keys.push(this.key);
+		if (this.key === 'c') { this.remove(); }
 	});
 
-	t.same(keys, [undefined, 'a', 'b', 'c', 'd', 'e', 'f'])
+	t.same(keys, [undefined, 'a', 'b', 'c', 'd', 'e', 'f']);
 	t.end();
-}
+});
 
-exports.removeStop = function () {
+test('removeStop', function (t) {
 	var obj = { a: 1, b: 2, c: { d: 3, e: 4 }, f: 5 };
 
 	var keys = [];
-	traverse(obj).forEach(function (x) {
-		keys.push(this.key)
-		if (this.key == 'c') this.remove(true);
+	traverse(obj).forEach(function () {
+		keys.push(this.key);
+		if (this.key === 'c') { this.remove(true); }
 	});
 
-	t.same(keys, [undefined, 'a', 'b', 'c', 'f'])
+	t.same(keys, [undefined, 'a', 'b', 'c', 'f']);
 	t.end();
-}
+});
 
 test('removeMap', function (t) {
 	var obj = { a: 1, b: 2, c: [3, 4] };
 	var res = traverse(obj).map(function (x) {
-		if (this.isLeaf && x % 2 == 0) this.remove();
+		if (this.isLeaf && x % 2 === 0) { this.remove(); }
 	});
 
 	t.same(obj, { a: 1, b: 2, c: [3, 4] });
@@ -146,7 +149,7 @@ test('removeMap', function (t) {
 test('delete', function (t) {
 	var obj = { a: 1, b: 2, c: [3, 4] };
 	traverse(obj).forEach(function (x) {
-		if (this.isLeaf && x % 2 == 0) this.delete();
+		if (this.isLeaf && x % 2 === 0) { this.delete(); }
 	});
 
 	t.ok(!deepEqual(obj, { a: 1, c: [3, undefined] }));
@@ -161,12 +164,12 @@ test('deleteNoStop', function (t) {
 	var obj = { a: 1, b: 2, c: { d: 3, e: 4 } };
 
 	var keys = [];
-	traverse(obj).forEach(function (x) {
-		keys.push(this.key)
-		if (this.key == 'c') this.delete();
+	traverse(obj).forEach(function () {
+		keys.push(this.key);
+		if (this.key === 'c') { this.delete(); }
 	});
 
-	t.same(keys, [undefined, 'a', 'b', 'c', 'd', 'e'])
+	t.same(keys, [undefined, 'a', 'b', 'c', 'd', 'e']);
 	t.end();
 });
 
@@ -174,19 +177,19 @@ test('deleteStop', function (t) {
 	var obj = { a: 1, b: 2, c: { d: 3, e: 4 } };
 
 	var keys = [];
-	traverse(obj).forEach(function (x) {
-		keys.push(this.key)
-		if (this.key == 'c') this.delete(true);
+	traverse(obj).forEach(function () {
+		keys.push(this.key);
+		if (this.key === 'c') { this.delete(true); }
 	});
 
-	t.same(keys, [undefined, 'a', 'b', 'c'])
+	t.same(keys, [undefined, 'a', 'b', 'c']);
 	t.end();
 });
 
 test('deleteRedux', function (t) {
 	var obj = { a: 1, b: 2, c: [3, 4, 5] };
 	traverse(obj).forEach(function (x) {
-		if (this.isLeaf && x % 2 == 0) this.delete();
+		if (this.isLeaf && x % 2 === 0) { this.delete(); }
 	});
 
 	t.ok(!deepEqual(obj, { a: 1, c: [3, undefined, 5] }));
@@ -203,7 +206,7 @@ test('deleteRedux', function (t) {
 test('deleteMap', function (t) {
 	var obj = { a: 1, b: 2, c: [3, 4] };
 	var res = traverse(obj).map(function (x) {
-		if (this.isLeaf && x % 2 == 0) this.delete();
+		if (this.isLeaf && x % 2 === 0) { this.delete(); }
 	});
 
 	t.ok(deepEqual(
@@ -226,7 +229,7 @@ test('deleteMap', function (t) {
 test('deleteMapRedux', function (t) {
 	var obj = { a: 1, b: 2, c: [3, 4, 5] };
 	var res = traverse(obj).map(function (x) {
-		if (this.isLeaf && x % 2 == 0) this.delete();
+		if (this.isLeaf && x % 2 === 0) { this.delete(); }
 	});
 
 	t.ok(deepEqual(
@@ -254,17 +257,16 @@ test('objectToString', function (t) {
 		}
 	});
 	t.same(obj, res);
-	t.same(obj, { a: 1, b: 2, c: "[3,4]" });
+	t.same(obj, { a: 1, b: 2, c: '[3,4]' });
 	t.end();
 });
 
 test('stringToObject', function (t) {
-	var obj = { a: 1, b: 2, c: "[3,4]" };
+	var obj = { a: 1, b: 2, c: '[3,4]' };
 	var res = traverse(obj).forEach(function (x) {
 		if (typeof x === 'string') {
 			this.update(JSON.parse(x));
-		}
-		else if (typeof x === 'number' && x % 2 === 0) {
+		} else if (typeof x === 'number' && x % 2 === 0) {
 			this.update(x * 10);
 		}
 	});

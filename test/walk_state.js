@@ -1,17 +1,19 @@
+'use strict';
+
 var test = require('tape');
 var traverse = require('../');
 
 function idFirst(a, b) {
-	a = [a === 'id' ? 0 : 1, a];
-	b = [b === 'id' ? 0 : 1, b];
-	return a < b ? -1 : a > b ? 1 : 0;
+	var aA = [a === 'id' ? 0 : 1, a];
+	var bA = [b === 'id' ? 0 : 1, b];
+	return aA < bA ? -1 : aA > bA ? 1 : 0;
 }
 
 function leaves(t, method, cb) {
 	var acc = [];
 	t[method](function (node) {
 		cb.call(this, node);
-		if (this.isLeaf) acc.push(node);
+		if (this.isLeaf) { acc.push(node); }
 	});
 	return acc.join(' ');
 }
@@ -19,10 +21,12 @@ function leaves(t, method, cb) {
 test('keys assigned in before() are honoured', function (t) {
 	['forEach', 'map'].forEach(function (method) {
 		var obj = { a: 30, b: 22, id: 9 };
-		t.equal(leaves(traverse(obj), method, function (node) {
-			if (this.isRoot) this.before(function (n) {
-				this.keys = Object.keys(n).sort(idFirst);
-			});
+		t.equal(leaves(traverse(obj), method, function () {
+			if (this.isRoot) {
+				this.before(function (n) {
+					this.keys = Object.keys(n).sort(idFirst);
+				});
+			}
 		}), '9 30 22', method);
 	});
 	t.end();
@@ -31,8 +35,8 @@ test('keys assigned in before() are honoured', function (t) {
 test('keys assigned in the callback are honoured', function (t) {
 	['forEach', 'map'].forEach(function (method) {
 		var obj = { a: 30, b: 22, id: 9 };
-		t.equal(leaves(traverse(obj), method, function (node) {
-			if (this.isRoot) this.keys = ['id'];
+		t.equal(leaves(traverse(obj), method, function () {
+			if (this.isRoot) { this.keys = ['id']; }
 		}), '9', method);
 	});
 	t.end();
@@ -43,14 +47,14 @@ test('a replaced node is walked with its own keys', function (t) {
 		var visited = [];
 		var res = traverse({ a: { x: 1 } })[method](function (node) {
 			visited.push(this.path.join('.') + '=' + JSON.stringify(node));
-			if (this.key === 'a') this.update({ y: 2, z: 3 });
+			if (this.key === 'a') { this.update({ y: 2, z: 3 }); }
 		});
 		t.same(res, { a: { y: 2, z: 3 } }, method);
 		t.same(visited, [
 			'={"a":{"x":1}}',
 			'a={"x":1}',
 			'a.y=2',
-			'a.z=3'
+			'a.z=3',
 		], method);
 	});
 	t.end();
@@ -73,7 +77,7 @@ test('a node is not its own circular', function (t) {
 			'a.b parent:null',
 			'a.b:null',
 			'a:null',
-			':null'
+			':null',
 		], method);
 	});
 

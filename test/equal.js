@@ -1,5 +1,6 @@
+'use strict';
+
 var test = require('tape');
-var traverse = require('../');
 var deepEqual = require('./lib/deep_equal');
 
 test('deepDates', function (t) {
@@ -7,18 +8,18 @@ test('deepDates', function (t) {
 
 	t.ok(
 		deepEqual(
-			{ d: new Date, x: [1, 2, 3] },
-			{ d: new Date, x: [1, 2, 3] }
+			{ d: new Date(), x: [1, 2, 3] },
+			{ d: new Date(), x: [1, 2, 3] }
 		),
 		'dates should be equal'
 	);
 
-	var d0 = new Date;
+	var d0 = new Date();
 	setTimeout(function () {
 		t.ok(
 			!deepEqual(
-				{ d: d0, x: [1, 2, 3], },
-				{ d: new Date, x: [1, 2, 3] }
+				{ d: d0, x: [1, 2, 3] },
+				{ d: new Date(), x: [1, 2, 3] }
 			),
 			'microseconds should count in date equality'
 		);
@@ -56,17 +57,17 @@ test('deepCircular', function (t) {
 
 test('deepInstances', function (t) {
 	t.ok(
-		!deepEqual([new Boolean(false)], [false]),
+		!deepEqual([Object(false)], [false]),
 		'boolean instances are not real booleans'
 	);
 
 	t.ok(
-		!deepEqual([new String('x')], ['x']),
+		!deepEqual([Object('x')], ['x']),
 		'string instances are not real strings'
 	);
 
 	t.ok(
-		!deepEqual([new Number(4)], [4]),
+		!deepEqual([Object(4)], [4]),
 		'number instances are not real numbers'
 	);
 
@@ -82,13 +83,13 @@ test('deepInstances', function (t) {
 
 	t.ok(
 		!deepEqual(
-			[function (x) { return x * 2 }],
-			[function (x) { return x * 2 }]
+			[function (x) { return x * 2; }],
+			[function (x) { return x * 2; }]
 		),
 		'functions with the same .toString() aren\'t necessarily the same'
 	);
 
-	var f = function (x) { return x * 2 };
+	function f(x) { return x * 2; }
 	t.ok(
 		deepEqual([f], [f]),
 		'these functions are actually equal'
@@ -154,8 +155,7 @@ test('deletedArrayEqual', function (t) {
 
 	t.ok(
 		deepEqual(xs, ys),
-		'arrays with deleted elements are only equal to'
-        + ' arrays with similarly deleted elements'
+		'arrays with deleted elements are only equal to arrays with similarly deleted elements'
 	);
 
 	t.ok(
@@ -203,15 +203,15 @@ test('deepArguments', function (t) {
 	t.ok(
 		!deepEqual(
 			[4, 5, 6],
-			(function () { return arguments })(4, 5, 6)
+			(function () { return arguments; }(4, 5, 6))
 		),
 		'arguments are not arrays'
 	);
 
 	t.ok(
 		deepEqual(
-			(function () { return arguments })(4, 5, 6),
-			(function () { return arguments })(4, 5, 6)
+			(function () { return arguments; }(4, 5, 6)),
+			(function () { return arguments; }(4, 5, 6))
 		),
 		'arguments should equal'
 	);

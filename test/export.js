@@ -1,3 +1,5 @@
+'use strict';
+
 var test = require('tape');
 var traverse = require('../');
 
@@ -24,8 +26,7 @@ test('methods added to the prototype are available', function (t) {
 	try {
 		t.equal(traverse({ a: [1, 2], b: 3 }).leafCount(), 3);
 		t.equal(new traverse([1]).leafCount(), 1); // eslint-disable-line new-cap
-	}
-	finally {
+	} finally {
 		delete traverse.prototype.leafCount;
 	}
 
@@ -35,7 +36,7 @@ test('methods added to the prototype are available', function (t) {
 test('every method has a static form', function (t) {
 	var names = [
 		'get', 'has', 'set', 'map', 'forEach',
-		'reduce', 'paths', 'nodes', 'clone'
+		'reduce', 'paths', 'nodes', 'clone',
 	];
 	names.forEach(function (name) {
 		t.equal(typeof traverse.prototype[name], 'function', name);
