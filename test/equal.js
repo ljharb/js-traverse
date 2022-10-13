@@ -1,10 +1,12 @@
+'use strict';
+
 var test = require('tape');
 var traverse = require('../');
 
 test('deepDates', function (t) {
 	t.plan(2);
 
-	var now = new Date;
+	var now = new Date();
 	t.ok(
 		traverse.deepEqual(
 			{ d: new Date(now), x: [1, 2, 3] },
@@ -13,12 +15,12 @@ test('deepDates', function (t) {
 		'dates should be equal'
 	);
 
-	var d0 = new Date;
+	var d0 = new Date();
 	setTimeout(function () {
 		t.ok(
 			!traverse.deepEqual(
-				{ d: d0, x: [1, 2, 3], },
-				{ d: new Date, x: [1, 2, 3] }
+				{ d: d0, x: [1, 2, 3] },
+				{ d: new Date(), x: [1, 2, 3] }
 			),
 			'microseconds should count in date equality'
 		);
@@ -56,17 +58,17 @@ test('deepCircular', function (t) {
 
 test('deepInstances', function (t) {
 	t.ok(
-		!traverse.deepEqual([new Boolean(false)], [false]),
+		!traverse.deepEqual([Object(false)], [false]),
 		'boolean instances are not real booleans'
 	);
 
 	t.ok(
-		!traverse.deepEqual([new String('x')], ['x']),
+		!traverse.deepEqual([Object('x')], ['x']),
 		'string instances are not real strings'
 	);
 
 	t.ok(
-		!traverse.deepEqual([new Number(4)], [4]),
+		!traverse.deepEqual([Object(4)], [4]),
 		'number instances are not real numbers'
 	);
 
@@ -82,13 +84,13 @@ test('deepInstances', function (t) {
 
 	t.ok(
 		!traverse.deepEqual(
-			[function (x) { return x * 2 }],
-			[function (x) { return x * 2 }]
+			[function (x) { return x * 2; }],
+			[function (x) { return x * 2; }]
 		),
 		'functions with the same .toString() aren\'t necessarily the same'
 	);
 
-	var f = function (x) { return x * 2 };
+	function f(x) { return x * 2; }
 	t.ok(
 		traverse.deepEqual([f], [f]),
 		'these functions are actually equal'
@@ -154,8 +156,7 @@ test('deletedArrayEqual', function (t) {
 
 	t.ok(
 		traverse.deepEqual(xs, ys),
-		'arrays with deleted elements are only equal to'
-        + ' arrays with similarly deleted elements'
+		'arrays with deleted elements are only equal to arrays with similarly deleted elements'
 	);
 
 	t.ok(
@@ -203,15 +204,15 @@ test('deepArguments', function (t) {
 	t.ok(
 		!traverse.deepEqual(
 			[4, 5, 6],
-			(function () { return arguments })(4, 5, 6)
+			(function () { return arguments; }(4, 5, 6))
 		),
 		'arguments are not arrays'
 	);
 
 	t.ok(
 		traverse.deepEqual(
-			(function () { return arguments })(4, 5, 6),
-			(function () { return arguments })(4, 5, 6)
+			(function () { return arguments; }(4, 5, 6)),
+			(function () { return arguments; }(4, 5, 6))
 		),
 		'arguments should equal'
 	);

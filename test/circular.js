@@ -1,3 +1,5 @@
+'use strict';
+
 var test = require('tape');
 var traverse = require('../');
 var util = require('util');
@@ -7,8 +9,8 @@ test('circular', function (t) {
 
 	var obj = { x: 3 };
 	obj.y = obj;
-	traverse(obj).forEach(function (x) {
-		if (this.path.join('') == 'y') {
+	traverse(obj).forEach(function () {
+		if (this.path.join('') === 'y') {
 			t.equal(
 				util.inspect(this.circular.node),
 				util.inspect(obj)
@@ -22,8 +24,7 @@ test('deepCirc', function (t) {
 	var obj = { x: [1, 2, 3], y: [4, 5] };
 	obj.y[2] = obj;
 
-	var times = 0;
-	traverse(obj).forEach(function (x) {
+	traverse(obj).forEach(function () {
 		if (this.circular) {
 			t.deepEqual(this.circular.path, []);
 			t.deepEqual(this.path, ['y', '2']);
@@ -58,8 +59,8 @@ test('circDubForEach', function (t) {
 	obj.y[2] = obj;
 	obj.x.push(obj.y);
 
-	traverse(obj).forEach(function (x) {
-		if (this.circular) this.update('...');
+	traverse(obj).forEach(function () {
+		if (this.circular) { this.update('...'); }
 	});
 
 	t.same(obj, { x: [1, 2, 3, [4, 5, '...']], y: [4, 5, '...'] });
@@ -71,7 +72,7 @@ test('circDubMap', function (t) {
 	obj.y[2] = obj;
 	obj.x.push(obj.y);
 
-	var c = traverse(obj).map(function (x) {
+	var c = traverse(obj).map(function () {
 		if (this.circular) {
 			this.update('...');
 		}
@@ -102,8 +103,8 @@ test('circMapScrub', function (t) {
 	var obj = { a: 1, b: 2 };
 	obj.c = obj;
 
-	var scrubbed = traverse(obj).map(function (node) {
-		if (this.circular) this.remove();
+	var scrubbed = traverse(obj).map(function () {
+		if (this.circular) { this.remove(); }
 	});
 	t.same(
 		Object.keys(scrubbed).sort(),
