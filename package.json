@@ -1,6 +1,6 @@
 {
 	"name": "traverse",
-	"version": "0.6.6",
+	"version": "0.6.7",
 	"description": "traverse and transform objects by visiting every node on a recursive walk",
 	"main": "index.js",
 	"directories": {

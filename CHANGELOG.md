@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.6.7](https://github.com/ljharb/js-traverse/compare/v0.6.6...v0.6.7) - 2022-10-12
+
+### Commits
+
+- [eslint] fix indentation and whitespace [`89fc65c`](https://github.com/ljharb/js-traverse/commit/89fc65c5c9f2778cb63d583b1fcd83a31ca104f4)
+- [eslint] cleanup [`1921966`](https://github.com/ljharb/js-traverse/commit/1921966fff1933e086d413acc44c2cf43a130fae)
+- [meta] add `auto-changelog` [`c291ed2`](https://github.com/ljharb/js-traverse/commit/c291ed225c7b5257372a3d30951eaefc186107e7)
+- [actions] add reusable workflows [`9a8fd34`](https://github.com/ljharb/js-traverse/commit/9a8fd34a6111f3f6dff43a7f22d272c46243d68f)
+- [Dev Deps] update `tape` [`afd6a95`](https://github.com/ljharb/js-traverse/commit/afd6a95c5ab6b8ed2e29d044b5ff8724ed992c4d)
+- [eslint] add eslint [`559372e`](https://github.com/ljharb/js-traverse/commit/559372ec96b460c45953c4c00f931f7fee36dce7)
+- [readme] rename, add badges [`0e613fd`](https://github.com/ljharb/js-traverse/commit/0e613fdf7d3712e9b18a678d45cadd639233c79e)
+- [meta] create FUNDING.yml; add `funding` in package.json [`26a9ae3`](https://github.com/ljharb/js-traverse/commit/26a9ae3a2e6ff06a3af9f1301ec4ef08ceb99bec)
+- [meta] use `npmignore` to autogenerate an npmignore file [`0e09fe6`](https://github.com/ljharb/js-traverse/commit/0e09fe6105466f5e11ff4e1d12fa5cb77848b900)
+- Only apps should have lockfiles [`e1ac253`](https://github.com/ljharb/js-traverse/commit/e1ac253acfa4917617c01b7d76d80741cbe379ce)
+- [meta] update URLs [`035e2c0`](https://github.com/ljharb/js-traverse/commit/035e2c05c52acde26d5c13599748a901d1bbf237)
+- [meta] add `safe-publish-latest` [`c2797ac`](https://github.com/ljharb/js-traverse/commit/c2797ac1218e9c8da1a9dd3863ecf3698e57878f)
+- [Tests] add `aud` in `posttest` [`ff93f53`](https://github.com/ljharb/js-traverse/commit/ff93f5380201ccbd0bf22188ed4943b739174589)
+
 ## [v0.6.6](https://github.com/ljharb/js-traverse/compare/v0.6.5...v0.6.6) - 2013-09-23
 
 ### Commits
