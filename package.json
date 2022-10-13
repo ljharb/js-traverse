@@ -10,10 +10,14 @@
 	"devDependencies": {
 		"@ljharb/eslint-config": "^22.2.5",
 		"eslint": "^10.12.0",
+		"in-publish": "^2.0.1",
 		"jiti": "^0.0.0",
+		"safe-publish-latest": "^2.0.0",
 		"tape": "^5.10.2"
 	},
 	"scripts": {
+		"prepublishOnly": "safe-publish-latest",
+		"prepublish": "not-in-publish || npm run prepublishOnly",
 		"lint": "eslint .",
 		"pretest": "npm run lint",
 		"tests-only": "tape 'test/**/*.js'",
