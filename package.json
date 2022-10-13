@@ -41,9 +41,9 @@
     },
     "repository": {
         "type": "git",
-        "url": "git://github.com/substack/js-traverse.git"
+        "url": "git://github.com/ljharb/js-traverse.git"
     },
-    "homepage": "https://github.com/substack/js-traverse",
+    "homepage": "https://github.com/ljharb/js-traverse",
     "keywords": [
         "traverse",
         "walk",
