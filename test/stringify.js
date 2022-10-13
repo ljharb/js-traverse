@@ -1,3 +1,5 @@
+'use strict';
+
 var test = require('tape');
 var traverse = require('../');
 
@@ -7,26 +9,23 @@ test('stringify', function (t) {
 	var s = '';
 	traverse(obj).forEach(function (node) {
 		if (Array.isArray(node)) {
-			this.before(function () { s += '[' });
+			this.before(function () { s += '['; });
 			this.post(function (child) {
-				if (!child.isLast) s += ',';
+				if (!child.isLast) { s += ','; }
 			});
-			this.after(function () { s += ']' });
-		}
-		else if (typeof node == 'object') {
-			this.before(function () { s += '{' });
+			this.after(function () { s += ']'; });
+		} else if (typeof node === 'object') {
+			this.before(function () { s += '{'; });
 			this.pre(function (x, key) {
-				s += '"' + key + '"' + ':';
+				s += '"' + key + '":';
 			});
 			this.post(function (child) {
-				if (!child.isLast) s += ',';
+				if (!child.isLast) { s += ','; }
 			});
-			this.after(function () { s += '}' });
-		}
-		else if (typeof node == 'function') {
+			this.after(function () { s += '}'; });
+		} else if (typeof node === 'function') {
 			s += 'null';
-		}
-		else {
+		} else {
 			s += node.toString();
 		}
 	});

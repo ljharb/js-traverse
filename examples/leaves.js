@@ -1,3 +1,5 @@
+'use strict';
+
 var traverse = require('traverse');
 
 var obj = {
@@ -8,7 +10,7 @@ var obj = {
 };
 
 var leaves = traverse(obj).reduce(function (acc, x) {
-	if (this.isLeaf) acc.push(x);
+	if (this.isLeaf) { acc.push(x); }
 	return acc;
 }, []);
 

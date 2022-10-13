@@ -1,3 +1,5 @@
+'use strict';
+
 var test = require('tape');
 var traverse = require('../');
 
@@ -7,9 +9,9 @@ test('leaves test', function (t) {
 		a: [1, 2, 3],
 		b: 4,
 		c: [5, 6],
-		d: { e: [7, 8], f: 9 }
+		d: { e: [7, 8], f: 9 },
 	}).forEach(function (x) {
-		if (this.isLeaf) acc.push(x);
+		if (this.isLeaf) { acc.push(x); }
 	});
 
 	t.equal(
