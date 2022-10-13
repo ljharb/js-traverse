@@ -1,3 +1,5 @@
+'use strict';
+
 var test = require('tape');
 var traverse = require('../');
 
@@ -10,7 +12,7 @@ test('json test', function (t) {
 		if (typeof x === 'function') {
 			callbacks[id] = { id: id, f: x, path: this.path };
 			this.update('[Function]');
-			id++;
+			id += 1;
 		}
 	});
 

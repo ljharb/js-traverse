@@ -1,3 +1,5 @@
+'use strict';
+
 var test = require('tape');
 var traverse = require('../');
 
@@ -6,19 +8,19 @@ test('sort test', function (t) {
 	traverse({
 		a: 30,
 		b: 22,
-		id: 9
+		id: 9,
 	}).forEach(function (node) {
-		if ((!Array.isArray(node)) && typeof node === 'object') {
-			this.before(function (node) {
-				this.keys = Object.keys(node);
+		if (!Array.isArray(node) && typeof node === 'object') {
+			this.before(function (beforeNode) {
+				this.keys = Object.keys(beforeNode);
 				this.keys.sort(function (a, b) {
-					a = [a === "id" ? 0 : 1, a];
-					b = [b === "id" ? 0 : 1, b];
-					return a < b ? -1 : a > b ? 1 : 0;
+					var aA = [a === 'id' ? 0 : 1, a];
+					var bA = [b === 'id' ? 0 : 1, b];
+					return aA < bA ? -1 : aA > bA ? 1 : 0;
 				});
 			});
 		}
-		if (this.isLeaf) acc.push(node);
+		if (this.isLeaf) { acc.push(node); }
 	});
 
 	t.equal(

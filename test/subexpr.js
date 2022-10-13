@@ -1,3 +1,5 @@
+'use strict';
+
 var traverse = require('../');
 var test = require('tape');
 
@@ -22,8 +24,11 @@ test('block', function (t) {
 	var obj = [[1], [2], [3]];
 	var r = traverse(obj).map(function (x) {
 		if (Array.isArray(x) && !this.isRoot) {
-			if (x[0] === 5) this.block()
-			else this.update([[x[0] + 1]])
+			if (x[0] === 5) {
+				this.block();
+			} else {
+				this.update([[x[0] + 1]]);
+			}
 		}
 	});
 
