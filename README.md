@@ -1,10 +1,13 @@
-# traverse
+# traverse <sup>[![Version Badge][npm-version-svg]][package-url]</sup>
+
+[![github actions][actions-image]][actions-url]
+[![coverage][codecov-image]][codecov-url]
+[![License][license-image]][license-url]
+[![Downloads][downloads-image]][downloads-url]
+
+[![npm badge][npm-badge-png]][package-url]
 
 Traverse and transform objects by visiting every node on a recursive walk.
-
-[![browser support](http://ci.testling.com/ljharb/js-traverse.png)](http://ci.testling.com/ljharb/js-traverse)
-
-[![build status](https://secure.travis-ci.org/ljharb/js-traverse.png)](http://travis-ci.org/ljharb/js-traverse)
 
 # examples
 
@@ -207,3 +210,19 @@ Using [npm](http://npmjs.org) do:
 # license
 
 MIT
+
+[package-url]: https://npmjs.org/package/traverse
+[npm-version-svg]: https://versionbadg.es/ljharb/traverse.svg
+[deps-svg]: https://david-dm.org/ljharb/traverse.svg
+[deps-url]: https://david-dm.org/ljharb/traverse
+[dev-deps-svg]: https://david-dm.org/ljharb/traverse/dev-status.svg
+[dev-deps-url]: https://david-dm.org/ljharb/traverse#info=devDependencies
+[npm-badge-png]: https://nodei.co/npm/traverse.png?downloads=true&stars=true
+[license-image]: https://img.shields.io/npm/l/traverse.svg
+[license-url]: LICENSE
+[downloads-image]: https://img.shields.io/npm/dm/traverse.svg
+[downloads-url]: https://npm-stat.com/charts.html?package=traverse
+[codecov-image]: https://codecov.io/gh/ljharb/traverse/branch/main/graphs/badge.svg
+[codecov-url]: https://app.codecov.io/gh/ljharb/traverse/
+[actions-image]: https://img.shields.io/endpoint?url=https://github-actions-badge-u3jn4tfpocch.runkit.sh/ljharb/traverse
+[actions-url]: https://github.com/ljharb/traverse/actions
