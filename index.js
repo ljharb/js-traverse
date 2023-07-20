@@ -49,7 +49,7 @@ function copy(src) {
 			dst = { message: src.message };
 		} else if (isBoolean(src) || isNumber(src) || isString(src)) {
 			dst = Object(src);
-		} else if (src instanceof Buffer) {
+		} else if (typeof Buffer !== 'undefined' && typeof Buffer.isBuffer === 'function' && Buffer.isBuffer(src)) {
 			dst = Buffer.alloc(src.length, src);
 		} else if (src instanceof Uint8Array || src instanceof ArrayBuffer) {
 			dst = src.slice(0);
