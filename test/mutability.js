@@ -95,7 +95,7 @@ test('cloneUint8Array', function (t) {
 	t.end();
 });
 
-test('cloneArrayBuffer', function (t) {
+test('cloneArrayBuffer', { skip: typeof ArrayBuffer !== 'function' }, function (t) {
 	var obj = { buffer: new ArrayBuffer(10) };
 	var res = traverse.clone(obj);
 	t.same(obj, res);
