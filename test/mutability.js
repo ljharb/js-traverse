@@ -86,7 +86,7 @@ test('cloneBuffer', function (t) {
 	t.end();
 });
 
-test('cloneUint8Array', function (t) {
+test('cloneUint8Array', { skip: typeof TextEncoder !== 'function' }, function (t) {
 	var obj = { buffer: new TextEncoder().encode('hi') };
 	var res = traverse.clone(obj);
 	t.same(new TextDecoder().decode(res.buffer), 'hi');
