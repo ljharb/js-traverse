@@ -8,6 +8,7 @@ function isError(obj) { return toS(obj) === '[object Error]'; }
 function isBoolean(obj) { return toS(obj) === '[object Boolean]'; }
 function isNumber(obj) { return toS(obj) === '[object Number]'; }
 function isString(obj) { return toS(obj) === '[object String]'; }
+function isBuffer(obj) { return typeof Buffer !== 'undefined' && typeof Buffer.isBuffer === 'function' && Buffer.isBuffer(obj); }
 
 // TODO: use isarray
 var isArray = Array.isArray || function isArray(xs) {
@@ -49,10 +50,8 @@ function copy(src) {
 			dst = { message: src.message };
 		} else if (isBoolean(src) || isNumber(src) || isString(src)) {
 			dst = Object(src);
-		} else if (typeof Buffer !== 'undefined' && typeof Buffer.isBuffer === 'function' && Buffer.isBuffer(src)) {
+		} else if (isBuffer(src)) {
 			dst = Buffer.alloc(src.length, src);
-		} else if (src instanceof Uint8Array || src instanceof ArrayBuffer) {
-			dst = src.slice(0);
 		} else if (Object.create && Object.getPrototypeOf) {
 			dst = Object.create(Object.getPrototypeOf(src));
 		} else if (src.constructor === Object) {

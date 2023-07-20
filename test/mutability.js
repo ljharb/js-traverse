@@ -86,23 +86,6 @@ test('cloneBuffer', function (t) {
 	t.end();
 });
 
-test('cloneUint8Array', { skip: typeof TextEncoder !== 'function' }, function (t) {
-	var obj = { buffer: new TextEncoder().encode('hi') };
-	var res = traverse.clone(obj);
-	t.same(new TextDecoder().decode(res.buffer), 'hi');
-	t.same(obj, res);
-	t.ok(obj !== res);
-	t.end();
-});
-
-test('cloneArrayBuffer', { skip: typeof ArrayBuffer !== 'function' }, function (t) {
-	var obj = { buffer: new ArrayBuffer(10) };
-	var res = traverse.clone(obj);
-	t.same(obj, res);
-	t.ok(obj !== res);
-	t.end();
-});
-
 test('reduce', function (t) {
 	var obj = { a: 1, b: 2, c: [3, 4] };
 	var res = traverse(obj).reduce(function (acc, x) {
