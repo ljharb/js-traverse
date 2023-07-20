@@ -51,7 +51,7 @@ function copy(src) {
 		} else if (isBoolean(src) || isNumber(src) || isString(src)) {
 			dst = Object(src);
 		} else if (isBuffer(src)) {
-			dst = Buffer.alloc(src.length, src);
+			dst = Buffer.from(src);
 		} else if (Object.create && Object.getPrototypeOf) {
 			dst = Object.create(Object.getPrototypeOf(src));
 		} else if (src.constructor === Object) {
