@@ -8,12 +8,25 @@ function isError(obj) { return toS(obj) === '[object Error]'; }
 function isBoolean(obj) { return toS(obj) === '[object Boolean]'; }
 function isNumber(obj) { return toS(obj) === '[object Number]'; }
 function isString(obj) { return toS(obj) === '[object String]'; }
-function isBuffer(obj) { return typeof Buffer !== 'undefined' && typeof Buffer.isBuffer === 'function' && Buffer.isBuffer(obj); }
 
 // TODO: use isarray
 var isArray = Array.isArray || function isArray(xs) {
 	return Object.prototype.toString.call(xs) === '[object Array]';
 };
+
+function isBuffer(x) {
+	if (!x || typeof x !== 'object' || typeof x.length !== 'number') {
+		return false;
+	}
+	if (typeof x.copy !== 'function' || typeof x.slice !== 'function') {
+		return false;
+	}
+	if (x.length > 0 && typeof x[0] !== 'number') {
+		return false;
+	}
+
+	return !!(x.constructor && x.constructor.isBuffer && x.constructor.isBuffer(x));
+}
 
 // TODO: use for-each?
 function forEach(xs, fn) {
