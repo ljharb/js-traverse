@@ -11,7 +11,7 @@ export default [
 			'func-style': ['error', 'declaration'],
 			'global-require': 'warn',
 			'max-lines-per-function': 'off',
-			'max-statements-per-line': 'warn',
+			'max-statements-per-line': ['warn', { max: 2 }],
 			'multiline-comment-style': 'off',
 			'no-invalid-this': 'off',
 			'no-proto': 'off',
@@ -25,6 +25,7 @@ export default [
 		files: ['examples/**'],
 		rules: {
 			'no-console': 'off',
+			'no-magic-numbers': 'off',
 			'no-plusplus': 'off',
 		},
 	},
@@ -32,6 +33,17 @@ export default [
 		files: ['index.js'],
 		rules: {
 			strict: 'off',
+		},
+	},
+	{
+		files: [
+			'test/typed-array.js',
+			'test/mutability.js',
+		],
+		languageOptions: {
+			globals: {
+				Uint8Array: false,
+			},
 		},
 	},
 ];

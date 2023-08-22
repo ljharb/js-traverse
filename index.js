@@ -1,3 +1,6 @@
+var whichTypedArray = require('which-typed-array');
+var taSlice = require('typedarray.prototype.slice');
+
 // TODO: use call-bind, is-date, is-regex, is-string, is-boolean-object, is-number-object
 function toS(obj) { return Object.prototype.toString.call(obj); }
 function isDate(obj) { return toS(obj) === '[object Date]'; }
@@ -64,17 +67,22 @@ function copy(src) {
 			dst = new RegExp(src);
 		} else if (isBoolean(src) || isNumber(src) || isString(src)) {
 			dst = Object(src);
-		} else if (Object.create && Object.getPrototypeOf) {
-			dst = Object.create(Object.getPrototypeOf(src));
-		} else if (src.constructor === Object) {
-			dst = {};
 		} else {
-			var proto = (src.constructor && src.constructor.prototype)
-				|| src.__proto__
-				|| {};
-			var T = function T() {}; // eslint-disable-line func-style, func-name-matching
-			T.prototype = proto;
-			dst = new T();
+			var ta = whichTypedArray(src);
+			if (ta) {
+				return taSlice(src);
+			} else if (Object.create && Object.getPrototypeOf) {
+				dst = Object.create(Object.getPrototypeOf(src));
+			} else if (src.constructor === Object) {
+				dst = {};
+			} else {
+				var proto = (src.constructor && src.constructor.prototype)
+					|| src.__proto__
+					|| {};
+				var T = function T() {}; // eslint-disable-line func-style, func-name-matching
+				T.prototype = proto;
+				dst = new T();
+			}
 		}
 
 		// an Error's message is usually its own non-enumerable property,
@@ -291,6 +299,10 @@ Traverse.prototype.nodes = function () {
 Traverse.prototype.clone = function () {
 	var parents = [];
 	var nodes = [];
+
+	if (whichTypedArray(this.value)) {
+		return taSlice(this.value);
+	}
 
 	return (function clone(src) {
 		for (var i = 0; i < parents.length; i++) {
