@@ -91,6 +91,10 @@
 			".github/workflows"
 		]
 	},
+	"dependencies": {
+		"typedarray.prototype.slice": "^1.0.1",
+		"which-typed-array": "^1.1.11"
+	},
 	"engines": {
 		"node": ">= 0.4"
 	}
