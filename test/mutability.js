@@ -76,6 +76,19 @@ test('cloneT', function (t) {
 	t.end();
 });
 
+test('cloneTypedArray', { skip: typeof Uint8Array !== 'function' }, function (t) {
+	var obj = new Uint8Array([1]);
+	var res = traverse.clone(obj);
+
+	t.same(obj, res);
+	t.ok(obj !== res);
+	obj.set([2], 0);
+	res.set([3], 0);
+	t.same(obj, new Uint8Array([2]));
+	t.same(res, new Uint8Array([3]));
+	t.end();
+});
+
 test('reduce', function (t) {
 	var obj = { a: 1, b: 2, c: [3, 4] };
 	var res = traverse(obj).reduce(function (acc, x) {
@@ -193,6 +206,7 @@ test('deleteRedux', function (t) {
 
 	t.ok(!traverse.deepEqual(obj, { a: 1, c: [3, undefined, 5] }));
 
+	// eslint-disable-next-line no-sparse-arrays
 	t.ok(traverse.deepEqual(obj, { a: 1, c: [3,, 5] }));
 
 	t.ok(!traverse.deepEqual(obj, { a: 1, c: [3, null, 5] }));
@@ -218,7 +232,8 @@ test('deleteMap', function (t) {
 
 	t.ok(traverse.deepEqual(res, { a: 1, c: xs }));
 
-	t.ok(traverse.deepEqual(res, { a: 1, c: [3,,] })); // eslint-disable-line comma-spacing
+	// eslint-disable-next-line no-sparse-arrays
+	t.ok(traverse.deepEqual(res, { a: 1, c: [3,,] }));
 
 	t.ok(traverse.deepEqual(res, { a: 1, c: [3] }));
 
@@ -243,6 +258,7 @@ test('deleteMapRedux', function (t) {
 
 	t.ok(!traverse.deepEqual(res, { a: 1, c: [3, 5] }));
 
+	// eslint-disable-next-line no-sparse-arrays
 	t.ok(traverse.deepEqual(res, { a: 1, c: [3,, 5] }));
 
 	t.end();
