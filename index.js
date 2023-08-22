@@ -1,5 +1,7 @@
 'use strict';
 
+var whichTypedArray = require('which-typed-array');
+
 // TODO: use call-bind, is-date, is-regex, is-string, is-boolean-object, is-number-object
 function toS(obj) { return Object.prototype.toString.call(obj); }
 function isDate(obj) { return toS(obj) === '[object Date]'; }
@@ -68,17 +70,22 @@ function copy(src) {
 			dst = { message: src.message };
 		} else if (isBoolean(src) || isNumber(src) || isString(src)) {
 			dst = Object(src);
-		} else if (Object.create && Object.getPrototypeOf) {
-			dst = Object.create(Object.getPrototypeOf(src));
-		} else if (src.constructor === Object) {
-			dst = {};
 		} else {
-			var proto = (src.constructor && src.constructor.prototype)
-				|| src.__proto__
-				|| {};
-			var T = function T() {}; // eslint-disable-line func-style, func-name-matching
-			T.prototype = proto;
-			dst = new T();
+			var ta = whichTypedArray(src);
+			if (ta) {
+				dst = global[ta].from(src);
+			} else if (Object.create && Object.getPrototypeOf) {
+				dst = Object.create(Object.getPrototypeOf(src));
+			} else if (src.constructor === Object) {
+				dst = {};
+			} else {
+				var proto = (src.constructor && src.constructor.prototype)
+					|| src.__proto__
+					|| {};
+				var T = function T() {}; // eslint-disable-line func-style, func-name-matching
+				T.prototype = proto;
+				dst = new T();
+			}
 		}
 
 		forEach(ownEnumerableKeys(src), function (key) {

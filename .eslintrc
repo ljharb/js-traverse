@@ -11,7 +11,7 @@
 		"func-style": [2, "declaration"],
 		"global-require": 1,
 		"max-lines-per-function": 0,
-		"max-statements-per-line": 1,
+		"max-statements-per-line": [1, {"max": 2}],
 		"multiline-comment-style": 0,
 		"no-proto": 0,
 		"no-sparse-arrays": 1,
@@ -27,7 +27,17 @@
 			"rules": {
 				"no-console": 0,
 				"no-plusplus": 0,
+				"no-magic-numbers": 0,
 			},
 		},
+		{
+			"files": [
+				"test/typed-array.js",
+				"test/mutability.js",
+			],
+			"globals": {
+				"Uint8Array": false
+			},
+		}
 	],
 }
