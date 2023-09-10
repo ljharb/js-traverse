@@ -2,10 +2,11 @@ var assert = require('assert');
 var traverse = require('traverse');
 
 exports.deepDates = function () {
+    var now = new Date;
     assert.ok(
         traverse.deepEqual(
-            { d : new Date, x : [ 1, 2, 3 ] },
-            { d : new Date, x : [ 1, 2, 3 ] }
+            { d : new Date(now), x : [ 1, 2, 3 ] },
+            { d : new Date(now), x : [ 1, 2, 3 ] }
         ),
         'dates should be equal'
     );
