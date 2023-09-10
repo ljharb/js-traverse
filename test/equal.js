@@ -6,10 +6,11 @@ var deepEqual = require('./lib/deep_equal');
 test('deepDates', function (t) {
 	t.plan(2);
 
+	var now = new Date();
 	t.ok(
 		deepEqual(
-			{ d: new Date(), x: [1, 2, 3] },
-			{ d: new Date(), x: [1, 2, 3] }
+			{ d: new Date(now), x: [1, 2, 3] },
+			{ d: new Date(now), x: [1, 2, 3] }
 		),
 		'dates should be equal'
 	);
