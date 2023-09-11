@@ -55,8 +55,8 @@ function copy(src) {
 			dst = {};
 		} else {
 			var proto = (src.constructor && src.constructor.prototype)
-                || src.__proto__
-                || {};
+				|| src.__proto__
+				|| {};
 			var T = function T() {}; // eslint-disable-line func-style, func-name-matching
 			T.prototype = proto;
 			dst = new T();

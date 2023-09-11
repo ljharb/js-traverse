@@ -16,8 +16,8 @@
 		"no-proto": 0,
 		"no-sparse-arrays": 1,
 		"no-underscore-dangle": 0,
-        "no-invalid-this": 0,
-        "object-curly-newline": 0,
+		"no-invalid-this": 0,
+		"object-curly-newline": 0,
 		"sort-keys": 0,
 	},
 
@@ -26,7 +26,7 @@
 			"files": "examples/**",
 			"rules": {
 				"no-console": 0,
-                "no-plusplus": 0,
+				"no-plusplus": 0,
 			},
 		},
 	],
