@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.6.8](https://github.com/ljharb/js-traverse/compare/v0.6.7...v0.6.8) - 2023-12-20
+
+### Commits
+
+- [New] support enumerable Symbol properties [`7d659e7`](https://github.com/ljharb/js-traverse/commit/7d659e78d43e69e6afc604e12b3ba3a5def0e46f)
+- [actions] use reusable rebase action [`8a04a68`](https://github.com/ljharb/js-traverse/commit/8a04a68ea1b9651a4f07a2c87fb58c98633a9714)
+- [meta] update license text so GitHub can identify it [`f94bda4`](https://github.com/ljharb/js-traverse/commit/f94bda4e5734f76891d8c3455b136ec615c9e6ce)
+- [eslint] fix indentation [`7c907d6`](https://github.com/ljharb/js-traverse/commit/7c907d6d9cc476a02672c0b198e99205fca8e739)
+- [Dev Deps] update `@ljharb/eslint-config`, `aud`, `npmignore`, `tape` [`8ca47dc`](https://github.com/ljharb/js-traverse/commit/8ca47dcbab9210716b0085f03771c8bb60a83c15)
+- [Tests] Stop equal Dates from being flaky [`b5a9d3a`](https://github.com/ljharb/js-traverse/commit/b5a9d3a20ab64a3231b3ef5ac63b92f078d52946)
+- [meta] add missing `engines.node` [`22952cf`](https://github.com/ljharb/js-traverse/commit/22952cf05165fc1ea1e148b2ddc2217ef1ecaa7e)
+- [actions] update checkout action [`17d9faa`](https://github.com/ljharb/js-traverse/commit/17d9faa97c3b532d9b29ce44b13421c11e839629)
+- [actions] update checkout action [`5462b41`](https://github.com/ljharb/js-traverse/commit/5462b4187387a625ce4efd564c4fb85e7d6c922f)
+
 ## [v0.6.7](https://github.com/ljharb/js-traverse/compare/v0.6.6...v0.6.7) - 2022-10-12
 
 ### Commits
