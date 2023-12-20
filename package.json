@@ -10,6 +10,7 @@
 	"devDependencies": {
 		"@ljharb/eslint-config": "^22.2.5",
 		"auto-changelog": "^2.7.0",
+		"es-value-fixtures": "^1.7.1",
 		"eslint": "^10.12.0",
 		"in-publish": "^2.0.1",
 		"jiti": "^0.0.0",
