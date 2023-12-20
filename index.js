@@ -28,6 +28,25 @@ var objectKeys = Object.keys || function keys(obj) {
 	return res;
 };
 
+var propertyIsEnumerable = Object.prototype.propertyIsEnumerable;
+var getOwnPropertySymbols = Object.getOwnPropertySymbols; // eslint-disable-line id-length
+
+// TODO: use reflect.ownkeys and filter out non-enumerables
+function ownEnumerableKeys(obj) {
+	var res = objectKeys(obj);
+
+	// Include enumerable symbol properties.
+	if (getOwnPropertySymbols) {
+		var symbols = getOwnPropertySymbols(obj);
+		for (var i = 0; i < symbols.length; i++) {
+			if (propertyIsEnumerable.call(obj, symbols[i])) {
+				res.push(symbols[i]);
+			}
+		}
+	}
+	return res;
+}
+
 // TODO: use object.hasown
 var hasOwnProperty = Object.prototype.hasOwnProperty || function (obj, key) {
 	return key in obj;
@@ -62,7 +81,7 @@ function copy(src) {
 		// so the keys below leave it out
 		if (isError(src)) { dst.message = src.message; }
 
-		forEach(objectKeys(src), function (key) {
+		forEach(ownEnumerableKeys(src), function (key) {
 			dst[key] = src[key];
 		});
 		return dst;
@@ -123,7 +142,7 @@ function walk(root, cb, immutable) {
 
 		function updateState() {
 			if (typeof state.node === 'object' && state.node !== null) {
-				var nodeKeys = objectKeys(state.node);
+				var nodeKeys = ownEnumerableKeys(state.node);
 				// keys assigned by the callback are kept unless it replaced the node with a new object
 				if (!state.keys || (state.node !== node && state.node !== node_)) {
 					state.keys = nodeKeys;
@@ -286,7 +305,7 @@ Traverse.prototype.clone = function () {
 			parents.push(src);
 			nodes.push(dst);
 
-			forEach(objectKeys(src), function (key) {
+			forEach(ownEnumerableKeys(src), function (key) {
 				dst[key] = clone(src[key]);
 			});
 
@@ -301,7 +320,7 @@ Traverse.prototype.clone = function () {
 };
 
 // TODO: replace with object.assign?
-forEach(objectKeys(Traverse.prototype), function (key) {
+forEach(ownEnumerableKeys(Traverse.prototype), function (key) {
 	Traverse[key] = function (obj) {
 		var args = [].slice.call(arguments, 1);
 		var t = new Traverse(obj);
