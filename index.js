@@ -14,6 +14,20 @@ var isArray = Array.isArray || function isArray(xs) {
 	return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
+function isBuffer(x) {
+	if (!x || typeof x !== 'object' || typeof x.length !== 'number') {
+		return false;
+	}
+	if (typeof x.copy !== 'function' || typeof x.slice !== 'function') {
+		return false;
+	}
+	if (x.length > 0 && typeof x[0] !== 'number') {
+		return false;
+	}
+
+	return !!(x.constructor && x.constructor.isBuffer && x.constructor.isBuffer(x));
+}
+
 // TODO: use for-each?
 function forEach(xs, fn) {
 	if (xs.forEach) { return xs.forEach(fn); }
@@ -68,6 +82,8 @@ function copy(src) {
 			dst = { message: src.message };
 		} else if (isBoolean(src) || isNumber(src) || isString(src)) {
 			dst = Object(src);
+		} else if (isBuffer(src)) {
+			dst = Buffer.from(src);
 		} else if (Object.create && Object.getPrototypeOf) {
 			dst = Object.create(Object.getPrototypeOf(src));
 		} else if (src.constructor === Object) {
