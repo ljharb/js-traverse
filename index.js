@@ -57,6 +57,11 @@ var hasOwnProperty = Object.prototype.hasOwnProperty || function (obj, key) {
 	return key in obj;
 };
 
+function isWritable(object, key) {
+	var descriptor = Object.getOwnPropertyDescriptor(object, key);
+	return descriptor && !descriptor.writable;
+}
+
 function copy(src) {
 	if (typeof src === 'object' && src !== null) {
 		var dst;
@@ -200,7 +205,11 @@ function walk(root, cb) {
 				if (modifiers.pre) { modifiers.pre.call(state, state.node[key], key); }
 
 				var child = walker(state.node[key]);
-				if (immutable && hasOwnProperty.call(state.node, key)) {
+				if (
+					immutable
+					&& hasOwnProperty.call(state.node, key)
+					&& !isWritable(state.node, key)
+				) {
 					state.node[key] = child.node;
 				}
 
