@@ -91,6 +91,7 @@
 		]
 	},
 	"dependencies": {
+		"gopd": "^1.2.0",
 		"typedarray.prototype.slice": "^1.0.6",
 		"which-typed-array": "^1.1.24"
 	},
