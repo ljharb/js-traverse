@@ -2,6 +2,7 @@
 
 var whichTypedArray = require('which-typed-array');
 var taSlice = require('typedarray.prototype.slice');
+var gopd = require('gopd');
 
 // TODO: use call-bind, is-date, is-regex, is-string, is-boolean-object, is-number-object
 function toS(obj) { return Object.prototype.toString.call(obj); }
@@ -58,8 +59,11 @@ var hasOwnProperty = Object.prototype.hasOwnProperty || function (obj, key) {
 };
 
 function isWritable(object, key) {
-	var descriptor = Object.getOwnPropertyDescriptor(object, key);
-	return descriptor && !descriptor.writable;
+	if (typeof gopd !== 'function') {
+		return true;
+	}
+
+	return !gopd(object, key).writable;
 }
 
 function copy(src) {
