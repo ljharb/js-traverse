@@ -64,7 +64,7 @@ function isWritable(object, key) {
 	return !gopd(object, key).writable;
 }
 
-function copy(src) {
+function copy(src, options) {
 	if (typeof src === 'object' && src !== null) {
 		var dst;
 
@@ -98,7 +98,8 @@ function copy(src) {
 		// so the keys below leave it out
 		if (isError(src)) { dst.message = src.message; }
 
-		forEach(ownEnumerableKeys(src), function (key) {
+		var iteratorFunction = options.includeSymbols ? ownEnumerableKeys : objectKeys;
+		forEach(iteratorFunction(src), function (key) {
 			dst[key] = src[key];
 		});
 		return dst;
@@ -106,6 +107,7 @@ function copy(src) {
 	return src;
 }
 
+/** @type {TraverseOptions} */
 var emptyNull = { __proto__: null };
 
 function walk(root, cb) {
@@ -113,10 +115,11 @@ function walk(root, cb) {
 	var parents = [];
 	var alive = true;
 	var options = arguments.length > 2 ? arguments[2] : emptyNull;
+	var iteratorFunction = options.includeSymbols ? ownEnumerableKeys : objectKeys;
 	var immutable = !!options.immutable;
 
 	return (function walker(node_) {
-		var node = immutable ? copy(node_) : node_;
+		var node = immutable ? copy(node_, options) : node_;
 		var modifiers = {};
 
 		var keepGoing = true;
@@ -163,7 +166,7 @@ function walk(root, cb) {
 
 		function updateState() {
 			if (typeof state.node === 'object' && state.node !== null) {
-				var nodeKeys = ownEnumerableKeys(state.node);
+				var nodeKeys = iteratorFunction(state.node);
 				// keys assigned by the callback are kept unless it replaced the node with a new object
 				if (!state.keys || (state.node !== node && state.node !== node_)) {
 					state.keys = nodeKeys;
@@ -237,16 +240,30 @@ function walk(root, cb) {
 	}(root)).node;
 }
 
+/** @typedef {{ immutable?: boolean, includeSymbols?: boolean }} TraverseOptions */
+
+/**
+ * A traverse constructor
+ * @param {object} obj - the object to traverse
+ * @param {TraverseOptions | undefined} [options] - options for the traverse
+ * @constructor
+ */
 function Traverse(obj) {
-	if (!(this instanceof Traverse)) { return new Traverse(obj); }
+	if (!(this instanceof Traverse)) {
+		return new Traverse(obj, arguments.length > 1 ? arguments[1] : emptyNull);
+	}
+	/** @type {TraverseOptions} */
+	this.options = arguments.length > 1 ? arguments[1] : emptyNull;
 	this.value = obj;
 }
 
+/** @type {(ps: PropertyKey[]) => Traverse['value']} */
 Traverse.prototype.get = function (ps) {
 	var node = this.value;
-	for (var i = 0; i < ps.length; i++) {
+	for (var i = 0; node && i < ps.length; i++) {
 		var key = ps[i];
-		if (!node || !hasOwnProperty.call(node, key)) {
+		// a symbol path segment is looked up whether or not `includeSymbols` is set
+		if (!hasOwnProperty.call(node, key)) {
 			return void undefined;
 		}
 		node = node[key];
@@ -254,11 +271,12 @@ Traverse.prototype.get = function (ps) {
 	return node;
 };
 
+/** @type {(ps: PropertyKey[]) => boolean} */
 Traverse.prototype.has = function (ps) {
 	var node = this.value;
-	for (var i = 0; i < ps.length; i++) {
+	for (var i = 0; node && i < ps.length; i++) {
 		var key = ps[i];
-		if (!node || !hasOwnProperty.call(node, key)) {
+		if (!hasOwnProperty.call(node, key)) {
 			return false;
 		}
 		node = node[key];
@@ -277,14 +295,12 @@ Traverse.prototype.set = function (ps, value) {
 	return value;
 };
 
-var immutableOpts = { __proto__: null, immutable: true };
-
 Traverse.prototype.map = function (cb) {
-	return walk(this.value, cb, immutableOpts);
+	return walk(this.value, cb, { __proto__: null, immutable: true, includeSymbols: !!this.options.includeSymbols });
 };
 
 Traverse.prototype.forEach = function (cb) {
-	this.value = walk(this.value, cb);
+	this.value = walk(this.value, cb, this.options);
 	return this.value;
 };
 
@@ -318,6 +334,7 @@ Traverse.prototype.nodes = function () {
 Traverse.prototype.clone = function () {
 	var parents = [];
 	var nodes = [];
+	var options = this.options;
 
 	if (whichTypedArray(this.value)) {
 		return taSlice(this.value);
@@ -331,12 +348,13 @@ Traverse.prototype.clone = function () {
 		}
 
 		if (typeof src === 'object' && src !== null) {
-			var dst = copy(src);
+			var dst = copy(src, options);
 
 			parents.push(src);
 			nodes.push(dst);
 
-			forEach(ownEnumerableKeys(src), function (key) {
+			var iteratorFunction = options.includeSymbols ? ownEnumerableKeys : objectKeys;
+			forEach(iteratorFunction(src), function (key) {
 				dst[key] = clone(src[key]);
 			});
 

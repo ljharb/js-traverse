@@ -10,6 +10,7 @@ export default [
 			complexity: 'off',
 			'func-style': ['error', 'declaration'],
 			'global-require': 'warn',
+			'max-lines': 'warn',
 			'max-lines-per-function': 'off',
 			'max-statements-per-line': ['warn', { max: 2 }],
 			'multiline-comment-style': 'off',
