@@ -23,14 +23,29 @@ test('has', function (t) {
 		obj[globalSymbol][localSymbol] = 7;
 		obj[localSymbol] = 8;
 
-		st.equal(traverse(obj).has([globalSymbol]), true);
+		st.equal(traverse(obj).has([globalSymbol]), false);
+		st.equal(traverse(obj, { includeSymbols: true }).has([globalSymbol]), true);
+
 		st.equal(traverse(obj).has([globalSymbol, globalSymbol]), false);
-		st.equal(traverse(obj).has([globalSymbol, localSymbol]), true);
-		st.equal(traverse(obj).has([localSymbol]), true);
-		st.equal(traverse(obj).has([localSymbol]), true);
+		st.equal(traverse(obj, { includeSymbols: true }).has([globalSymbol, globalSymbol]), false);
+
+		st.equal(traverse(obj).has([globalSymbol, localSymbol]), false);
+		st.equal(traverse(obj, { includeSymbols: true }).has([globalSymbol, localSymbol]), true);
+
+		st.equal(traverse(obj).has([localSymbol]), false);
+		st.equal(traverse(obj, { includeSymbols: true }).has([localSymbol]), true);
+
+		st.equal(traverse(obj).has([Symbol('d')]), false);
+		st.equal(traverse(obj, { includeSymbols: true }).has([Symbol('d')]), false);
+
 		st.equal(traverse(obj).has([Symbol('e')]), false);
-		st.equal(traverse(obj).has([Symbol.for('d')]), true);
+		st.equal(traverse(obj, { includeSymbols: true }).has([Symbol('e')]), false);
+
+		st.equal(traverse(obj).has([Symbol.for('d')]), false);
+		st.equal(traverse(obj, { includeSymbols: true }).has([Symbol.for('d')]), true);
+
 		st.equal(traverse(obj).has([Symbol.for('e')]), false);
+		st.equal(traverse(obj, { includeSymbols: true }).has([Symbol.for('e')]), false);
 
 		st.end();
 	});
