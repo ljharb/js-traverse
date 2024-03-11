@@ -57,7 +57,7 @@ var hasOwnProperty = Object.prototype.hasOwnProperty || function (obj, key) {
 	return key in obj;
 };
 
-function copy(src) {
+function copy(src, options) {
 	if (typeof src === 'object' && src !== null) {
 		var dst;
 
@@ -89,7 +89,8 @@ function copy(src) {
 			}
 		}
 
-		forEach(ownEnumerableKeys(src), function (key) {
+		var iteratorFunction = options.includeSymbols ? ownEnumerableKeys : objectKeys;
+		forEach(iteratorFunction(src), function (key) {
 			dst[key] = src[key];
 		});
 		return dst;
@@ -97,6 +98,7 @@ function copy(src) {
 	return src;
 }
 
+/** @type {TraverseOptions} */
 var emptyNull = { __proto__: null };
 
 function walk(root, cb) {
@@ -104,10 +106,11 @@ function walk(root, cb) {
 	var parents = [];
 	var alive = true;
 	var options = arguments.length > 2 ? arguments[2] : emptyNull;
+	var iteratorFunction = options.includeSymbols ? ownEnumerableKeys : objectKeys;
 	var immutable = !!options.immutable;
 
 	return (function walker(node_) {
-		var node = immutable ? copy(node_) : node_;
+		var node = immutable ? copy(node_, options) : node_;
 		var modifiers = {};
 
 		var keepGoing = true;
@@ -155,7 +158,7 @@ function walk(root, cb) {
 		function updateState() {
 			if (typeof state.node === 'object' && state.node !== null) {
 				if (!state.keys || state.node_ !== state.node) {
-					state.keys = ownEnumerableKeys(state.node);
+					state.keys = iteratorFunction(state.node);
 				}
 
 				state.isLeaf = state.keys.length === 0;
@@ -220,15 +223,29 @@ function walk(root, cb) {
 	}(root)).node;
 }
 
+/** @typedef {{ immutable?: boolean, includeSymbols?: boolean }} TraverseOptions */
+
+/**
+ * A traverse constructor
+ * @param {object} obj - the object to traverse
+ * @param {TraverseOptions | undefined} [options] - options for the traverse
+ * @constructor
+ */
 function Traverse(obj) {
+	/** @type {TraverseOptions} */
+	this.options = arguments.length > 1 ? arguments[1] : emptyNull;
 	this.value = obj;
 }
 
+/**
+ * @param {PropertyKey[]} ps
+ * @returns {Traverse.value}
+ */
 Traverse.prototype.get = function (ps) {
 	var node = this.value;
-	for (var i = 0; i < ps.length; i++) {
+	for (var i = 0; node && i < ps.length; i++) {
 		var key = ps[i];
-		if (!node || !hasOwnProperty.call(node, key)) {
+		if (!!hasOwnProperty.call(node, key) || (!this.options.includeSymbols && typeof key === 'symbol')) {
 			return void undefined;
 		}
 		node = node[key];
@@ -236,11 +253,15 @@ Traverse.prototype.get = function (ps) {
 	return node;
 };
 
+/**
+ * @param {PropertyKey[]} ps
+ * @returns {boolean}
+ */
 Traverse.prototype.has = function (ps) {
 	var node = this.value;
-	for (var i = 0; i < ps.length; i++) {
+	for (var i = 0; node && i < ps.length; i++) {
 		var key = ps[i];
-		if (!node || !hasOwnProperty.call(node, key)) {
+		if (!hasOwnProperty.call(node, key) || (!this.options.includeSymbols && typeof key === 'symbol')) {
 			return false;
 		}
 		node = node[key];
@@ -259,14 +280,12 @@ Traverse.prototype.set = function (ps, value) {
 	return value;
 };
 
-var immutableOpts = { __proto__: null, immutable: true };
-
 Traverse.prototype.map = function (cb) {
-	return walk(this.value, cb, immutableOpts);
+	return walk(this.value, cb, { __proto__: null, immutable: true, includeSymbols: !!this.options.includeSymbols });
 };
 
 Traverse.prototype.forEach = function (cb) {
-	this.value = walk(this.value, cb);
+	this.value = walk(this.value, cb, this.options);
 	return this.value;
 };
 
@@ -300,6 +319,7 @@ Traverse.prototype.nodes = function () {
 Traverse.prototype.clone = function () {
 	var parents = [];
 	var nodes = [];
+	var options = this.options;
 
 	if (whichTypedArray(this.value)) {
 		return taSlice(this.value);
@@ -313,12 +333,13 @@ Traverse.prototype.clone = function () {
 		}
 
 		if (typeof src === 'object' && src !== null) {
-			var dst = copy(src);
+			var dst = copy(src, options);
 
 			parents.push(src);
 			nodes.push(dst);
 
-			forEach(ownEnumerableKeys(src), function (key) {
+			var iteratorFunction = options.includeSymbols ? ownEnumerableKeys : objectKeys;
+			forEach(iteratorFunction(src), function (key) {
 				dst[key] = clone(src[key]);
 			});
 
@@ -332,8 +353,15 @@ Traverse.prototype.clone = function () {
 	}(this.value));
 };
 
+/**
+ * Traverse a given object
+ * @param {object} obj - the object to traverse
+ * @param {TraverseOptions | undefined} [options] - options for the traverse
+ * @returns {Traverse}
+ */
 function traverse(obj) {
-	return new Traverse(obj);
+	var options = arguments.length > 1 ? arguments[1] : emptyNull;
+	return new Traverse(obj, options);
 }
 
 // TODO: replace with object.assign?
