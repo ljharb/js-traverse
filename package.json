@@ -92,8 +92,8 @@
 		]
 	},
 	"dependencies": {
-		"typedarray.prototype.slice": "^1.0.1",
-		"which-typed-array": "^1.1.11"
+		"typedarray.prototype.slice": "^1.0.2",
+		"which-typed-array": "^1.1.15"
 	},
 	"engines": {
 		"node": ">= 0.4"
