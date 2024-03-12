@@ -97,10 +97,14 @@ function copy(src) {
 	return src;
 }
 
-function walk(root, cb, immutable) {
+var emptyNull = { __proto__: null };
+
+function walk(root, cb) {
 	var path = [];
 	var parents = [];
 	var alive = true;
+	var options = arguments.length > 2 ? arguments[2] : emptyNull;
+	var immutable = !!options.immutable;
 
 	return (function walker(node_) {
 		var node = immutable ? copy(node_) : node_;
@@ -255,12 +259,14 @@ Traverse.prototype.set = function (ps, value) {
 	return value;
 };
 
+var immutableOpts = { __proto__: null, immutable: true };
+
 Traverse.prototype.map = function (cb) {
-	return walk(this.value, cb, true);
+	return walk(this.value, cb, immutableOpts);
 };
 
 Traverse.prototype.forEach = function (cb) {
-	this.value = walk(this.value, cb, false);
+	this.value = walk(this.value, cb);
 	return this.value;
 };
 
