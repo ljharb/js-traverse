@@ -19,6 +19,7 @@
 		"no-invalid-this": 0,
 		"object-curly-newline": 0,
 		"sort-keys": 0,
+		"max-lines": "warn",
 	},
 
 	"overrides": [
