@@ -2,6 +2,7 @@
 
 var whichTypedArray = require('which-typed-array');
 var taSlice = require('typedarray.prototype.slice');
+var gopd = require('gopd');
 
 // TODO: use call-bind, is-date, is-regex, is-string, is-boolean-object, is-number-object
 function toS(obj) { return Object.prototype.toString.call(obj); }
@@ -56,6 +57,14 @@ function ownEnumerableKeys(obj) {
 var hasOwnProperty = Object.prototype.hasOwnProperty || function (obj, key) {
 	return key in obj;
 };
+
+function isWritable(object, key) {
+	if (typeof gopd !== 'function') {
+		return true;
+	}
+
+	return !gopd(object, key).writable;
+}
 
 function copy(src) {
 	if (typeof src === 'object' && src !== null) {
@@ -200,7 +209,11 @@ function walk(root, cb) {
 				if (modifiers.pre) { modifiers.pre.call(state, state.node[key], key); }
 
 				var child = walker(state.node[key]);
-				if (immutable && hasOwnProperty.call(state.node, key)) {
+				if (
+					immutable
+					&& hasOwnProperty.call(state.node, key)
+					&& !isWritable(state.node, key)
+				) {
 					state.node[key] = child.node;
 				}
 
