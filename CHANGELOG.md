@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.6.9](https://github.com/ljharb/js-traverse/compare/v0.6.8...v0.6.9) - 2024-04-08
+
+### Commits
+
+- [New] support cloning Typed Arrays [`18c32c5`](https://github.com/ljharb/js-traverse/commit/18c32c5ba8ebc84344925198bb29b6def97471fd)
+- [New] [Fix] add `includeSymbols` option; partial revert of "[New] support enumerable Symbol properties" [`aab373f`](https://github.com/ljharb/js-traverse/commit/aab373f503f80f62ea958124c0cc9321f9fe0b78)
+- [Fix] Add "isWritable" before writing to properties [`595d64e`](https://github.com/ljharb/js-traverse/commit/595d64e307452b805c4d209a6f77916e54c031ab)
+- [actions] remove redundant finisher [`7539473`](https://github.com/ljharb/js-traverse/commit/7539473f969589ca19eee197d02b568b299cfebc)
+- [Refactor] use an internal null options object instead of an `immutable` boolean [`0f1e6f1`](https://github.com/ljharb/js-traverse/commit/0f1e6f126a3d847864d3a80fc8227a2bb1f97c78)
+- [Deps] update `typedarray.prototype.slice`, `which-typed-array` [`165f954`](https://github.com/ljharb/js-traverse/commit/165f954e540975b4a5db7f4b7134de2c0b48ee29)
+- [Deps] update `typedarray.prototype.slice` [`ed483ed`](https://github.com/ljharb/js-traverse/commit/ed483ed7aa1cc85e8d7e25d2b2cd1e0881eb6522)
+- [Dev Deps] update `tape` [`5ee670c`](https://github.com/ljharb/js-traverse/commit/5ee670cdc074026f087f18860d80a30c86921e46)
+
 ## [v0.6.8](https://github.com/ljharb/js-traverse/compare/v0.6.7...v0.6.8) - 2023-12-20
 
 ### Commits
