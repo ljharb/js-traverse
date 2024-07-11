@@ -93,6 +93,7 @@
 	},
 	"dependencies": {
 		"gopd": "^1.0.1",
+		"is-regex": "^1.1.4",
 		"typedarray.prototype.slice": "^1.0.3",
 		"which-typed-array": "^1.1.15"
 	},
