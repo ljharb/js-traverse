@@ -1,6 +1,6 @@
 'use strict';
 
-var whichTypedArray = require('which-typed-array');
+var isTypedArray = require('is-typed-array');
 var taSlice = require('typedarray.prototype.slice');
 var gopd = require('gopd');
 
@@ -81,7 +81,7 @@ function copy(src, options) {
 		} else if (isBoolean(src) || isNumber(src) || isString(src)) {
 			dst = Object(src);
 		} else {
-			var ta = whichTypedArray(src);
+			var ta = isTypedArray(src);
 			if (ta) {
 				return taSlice(src);
 			} else if (Object.create && Object.getPrototypeOf) {
@@ -331,7 +331,7 @@ Traverse.prototype.clone = function () {
 	var nodes = [];
 	var options = this.options;
 
-	if (whichTypedArray(this.value)) {
+	if (isTypedArray(this.value)) {
 		return taSlice(this.value);
 	}
 
