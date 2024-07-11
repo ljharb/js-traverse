@@ -3,14 +3,14 @@
 var whichTypedArray = require('which-typed-array');
 var taSlice = require('typedarray.prototype.slice');
 var gopd = require('gopd');
+var isNumber = require('is-number-object');
 
-// TODO: use call-bind, is-date, is-regex, is-string, is-boolean-object, is-number-object
+// TODO: use call-bind, is-date, is-regex, is-string, is-boolean-object
 function toS(obj) { return Object.prototype.toString.call(obj); }
 function isDate(obj) { return toS(obj) === '[object Date]'; }
 function isRegExp(obj) { return toS(obj) === '[object RegExp]'; }
 function isError(obj) { return toS(obj) === '[object Error]'; }
 function isBoolean(obj) { return toS(obj) === '[object Boolean]'; }
-function isNumber(obj) { return toS(obj) === '[object Number]'; }
 function isString(obj) { return toS(obj) === '[object String]'; }
 
 // TODO: use isarray
