@@ -3,9 +3,11 @@
 var whichTypedArray = require('which-typed-array');
 var taSlice = require('typedarray.prototype.slice');
 var gopd = require('gopd');
+var callBound = require('call-bind/callBound');
 
-// TODO: use call-bind, is-date, is-regex, is-string, is-boolean-object, is-number-object
-function toS(obj) { return Object.prototype.toString.call(obj); }
+var toS = callBound('Object.prototype.toString');
+
+// TODO: is-date, is-regex, is-string, is-boolean-object, is-number-object
 function isDate(obj) { return toS(obj) === '[object Date]'; }
 function isRegExp(obj) { return toS(obj) === '[object RegExp]'; }
 function isError(obj) { return toS(obj) === '[object Error]'; }
@@ -15,7 +17,7 @@ function isString(obj) { return toS(obj) === '[object String]'; }
 
 // TODO: use isarray
 var isArray = Array.isArray || function isArray(xs) {
-	return Object.prototype.toString.call(xs) === '[object Array]';
+	return toS(xs) === '[object Array]';
 };
 
 // TODO: use for-each?
@@ -34,8 +36,8 @@ var objectKeys = Object.keys || function keys(obj) {
 	return res;
 };
 
-var propertyIsEnumerable = Object.prototype.propertyIsEnumerable;
-var getOwnPropertySymbols = Object.getOwnPropertySymbols; // eslint-disable-line id-length
+var propertyIsEnumerable = callBound('Object.prototype.propertyIsEnumerable');
+var getOwnPropertySymbols = callBound('Object.getOwnPropertySymbols'); // eslint-disable-line id-length
 
 // TODO: use reflect.ownkeys and filter out non-enumerables
 function ownEnumerableKeys(obj) {
@@ -45,7 +47,7 @@ function ownEnumerableKeys(obj) {
 	if (getOwnPropertySymbols) {
 		var symbols = getOwnPropertySymbols(obj);
 		for (var i = 0; i < symbols.length; i++) {
-			if (propertyIsEnumerable.call(obj, symbols[i])) {
+			if (propertyIsEnumerable(obj, symbols[i])) {
 				res.push(symbols[i]);
 			}
 		}
