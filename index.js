@@ -63,7 +63,8 @@ function isWritable(object, key) {
 		return true;
 	}
 
-	return !gopd(object, key).writable;
+	var desc = gopd(object, key);
+	return !desc || !desc.writable;
 }
 
 function copy(src, options) {
