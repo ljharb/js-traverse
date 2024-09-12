@@ -132,6 +132,7 @@ function walk(root, cb) {
 			parent: parents[parents.length - 1],
 			parents: parents,
 			key: path[path.length - 1],
+			removedKeys: { __proto__: null },
 			isRoot: path.length === 0,
 			level: path.length,
 			circular: null,
@@ -144,15 +145,17 @@ function walk(root, cb) {
 			},
 			delete: function (stopHere) {
 				delete state.parent.node[state.key];
+				state.parent.removedKeys[state.key] = true;
 				if (stopHere) { keepGoing = false; }
 			},
 			remove: function (stopHere) {
 				if (isArray(state.parent.node)) {
 					state.parent.node.splice(state.key, 1);
+					state.parent.removedKeys[state.key] = true;
+					if (stopHere) { keepGoing = false; }
 				} else {
-					delete state.parent.node[state.key];
+					state.delete(stopHere);
 				}
-				if (stopHere) { keepGoing = false; }
 			},
 			keys: null,
 			before: function (f) { modifiers.before = f; },
@@ -208,6 +211,11 @@ function walk(root, cb) {
 			updateState();
 
 			forEach(state.keys, function (key, i) {
+				var prevIsRemoved = (i - 1) in state.removedKeys;
+				if (prevIsRemoved) {
+					key = state.keys[i - 1]; // eslint-disable-line no-param-reassign
+				}
+
 				path[path.length] = (key);
 
 				if (modifiers.pre) { modifiers.pre.call(state, state.node[key], key); }
@@ -217,6 +225,7 @@ function walk(root, cb) {
 					immutable
 					&& hasOwnProperty.call(state.node, key)
 					&& !isWritable(state.node, key)
+					&& !prevIsRemoved
 				) {
 					state.node[key] = child.node;
 				}
