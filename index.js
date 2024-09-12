@@ -120,7 +120,7 @@ function walk(root, cb) {
 
 	return (function walker(node_) {
 		var node = immutable ? copy(node_, options) : node_;
-		var modifiers = {};
+		var modifiers = { __proto__: null };
 
 		var keepGoing = true;
 
