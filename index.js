@@ -30,7 +30,7 @@ function forEach(xs, fn) {
 // TODO: use object-keys
 var objectKeys = Object.keys || function keys(obj) {
 	var res = [];
-	for (var key in obj) { res.push(key); } // eslint-disable-line no-restricted-syntax
+	for (var key in obj) { res[res.length] = key; } // eslint-disable-line no-restricted-syntax
 	return res;
 };
 
@@ -46,7 +46,7 @@ function ownEnumerableKeys(obj) {
 		var symbols = getOwnPropertySymbols(obj);
 		for (var i = 0; i < symbols.length; i++) {
 			if (propertyIsEnumerable.call(obj, symbols[i])) {
-				res.push(symbols[i]);
+				res[res.length] = symbols[i];
 			}
 		}
 	}
@@ -202,12 +202,12 @@ function walk(root, cb) {
 			&& state.node !== null
 			&& !state.circular
 		) {
-			parents.push(state);
+			parents[parents.length] = state;
 
 			updateState();
 
 			forEach(state.keys, function (key, i) {
-				path.push(key);
+				path[path.length] = (key);
 
 				if (modifiers.pre) { modifiers.pre.call(state, state.node[key], key); }
 
@@ -313,7 +313,7 @@ Traverse.prototype.reduce = function (cb, init) {
 Traverse.prototype.paths = function () {
 	var acc = [];
 	this.forEach(function () {
-		acc.push(this.path);
+		acc[acc.length] = this.path;
 	});
 	return acc;
 };
@@ -321,7 +321,7 @@ Traverse.prototype.paths = function () {
 Traverse.prototype.nodes = function () {
 	var acc = [];
 	this.forEach(function () {
-		acc.push(this.node);
+		acc[acc.length] = this.node;
 	});
 	return acc;
 };
@@ -345,8 +345,8 @@ Traverse.prototype.clone = function () {
 		if (typeof src === 'object' && src !== null) {
 			var dst = copy(src, options);
 
-			parents.push(src);
-			nodes.push(dst);
+			parents[parents.length] = (src);
+			nodes[nodes.length] = (dst);
 
 			var iteratorFunction = options.includeSymbols ? ownEnumerableKeys : objectKeys;
 			forEach(iteratorFunction(src), function (key) {
