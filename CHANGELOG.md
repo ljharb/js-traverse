@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.6.11](https://github.com/ljharb/js-traverse/compare/v0.6.10...v0.6.11) - 2025-01-15
+
+### Fixed
+
+- [Fix] `.has` should not return true on a falsy node [`#20`](https://github.com/ljharb/js-traverse/issues/20)
+
+### Commits
+
+- [Deps] update `gopd`, `typedarray.prototype.slice`, `which-typed-array` [`cc24fd2`](https://github.com/ljharb/js-traverse/commit/cc24fd22dfab620238d60967d12a6416cbc73770)
+- [Dev Deps] update `es-value-fixtures`, `tape` [`d26f1b4`](https://github.com/ljharb/js-traverse/commit/d26f1b4cf2176849ebb22a28d8072b503f66b694)
+
 ## [v0.6.10](https://github.com/ljharb/js-traverse/compare/v0.6.9...v0.6.10) - 2024-09-12
 
 ### Fixed
