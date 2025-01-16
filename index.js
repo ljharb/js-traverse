@@ -279,6 +279,10 @@ Traverse.prototype.get = function (ps) {
 /** @type {(ps: PropertyKey[]) => boolean} */
 Traverse.prototype.has = function (ps) {
 	var node = this.value;
+	// TODO: remove ps.length check
+	if (!node && ps.length > 0) {
+		return false;
+	}
 	for (var i = 0; node && i < ps.length; i++) {
 		var key = ps[i];
 		if (!hasOwnProperty.call(node, key) || (!this.options.includeSymbols && typeof key === 'symbol')) {
