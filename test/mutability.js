@@ -87,6 +87,17 @@ test('cloneTypedArray', { skip: typeof Uint8Array !== 'function' }, function (t)
 	res.set([3], 0);
 	t.same(obj, new Uint8Array([2]));
 	t.same(res, new Uint8Array([3]));
+
+	t.end();
+});
+
+test('cloneBuffer', function (t) {
+	var obj = { buffer: Buffer.from('hi', 'utf-8') };
+	var res = traverse.clone(obj);
+	t.same(res.buffer.toString(), 'hi');
+	t.same(obj, res);
+	t.notEqual(obj, res);
+
 	t.end();
 });
 
