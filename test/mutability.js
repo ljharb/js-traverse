@@ -233,7 +233,7 @@ test('deleteMap', function (t) {
 
 	t.ok(deepEqual(res, { a: 1, c: xs }));
 
-	// eslint-disable-next-line comma-spacing, no-sparse-arrays
+	// eslint-disable-next-line no-sparse-arrays
 	t.ok(deepEqual(res, { a: 1, c: [3,,] }));
 
 	t.ok(deepEqual(res, { a: 1, c: [3] }));

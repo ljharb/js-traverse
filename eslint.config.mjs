@@ -49,10 +49,4 @@ export default [
 			},
 		},
 	},
-	{
-		files: ['eslint.config.mjs'],
-		languageOptions: {
-			ecmaVersion: 'latest',
-		},
-	},
 ];
