@@ -14,6 +14,13 @@ export default [
 			'max-lines-per-function': 'off',
 			'max-statements-per-line': ['warn', { max: 2 }],
 			'multiline-comment-style': 'off',
+			'new-cap': [
+				'error', {
+					capIsNewExceptions: [
+						'ToPropertyKey',
+					],
+				},
+			],
 			'no-invalid-this': 'off',
 			'no-proto': 'off',
 			'no-sparse-arrays': 'warn',
