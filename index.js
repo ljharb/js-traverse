@@ -2,6 +2,7 @@ var whichTypedArray = require('which-typed-array');
 var taSlice = require('typedarray.prototype.slice');
 var gopd = require('gopd');
 var defineDataProperty = require('define-data-property');
+var ToPropertyKey = require('es-abstract/2025/ToPropertyKey');
 
 // TODO: use call-bind, is-date, is-regex, is-string, is-boolean-object, is-number-object
 function toS(obj) { return Object.prototype.toString.call(obj); }
@@ -76,6 +77,35 @@ function setProperty(object, key, value) {
 		defineDataProperty(object, key, value);
 	} else {
 		object[key] = value; // eslint-disable-line no-param-reassign
+	}
+}
+
+// where `__proto__` is magic, reading or assigning it only ever reaches the [[Prototype]],
+// even on an object that has it as an own property.
+var hasMagicProto = !hasProtoAccessor && {}.__proto__ === Object.prototype;
+
+function toSettableKey(segment) {
+	// a segment that is an object would otherwise be coerced anew on every use, and need not produce the same key each time
+	var key = ToPropertyKey(segment);
+	if (hasMagicProto && key === '__proto__') {
+		throw new TypeError('`__proto__` can not be set as a property in this engine');
+	}
+	return key;
+}
+
+function setOwnProperty(object, key, value) {
+	'use strict';
+
+	// this file is sloppy, so the assignment is repeated here, where a failed one throws
+	if (hasProtoAccessor && key === '__proto__' && !hasOwnProperty.call(object, key)) {
+		defineDataProperty(object, key, value);
+	} else {
+		object[key] = value; // eslint-disable-line no-param-reassign
+	}
+	// a primitive can not gain an own property; when assigning one does not throw,
+	// the property would be read from, or written to, a built-in prototype
+	if (Object(object) !== object) {
+		throw new TypeError('Cannot create property `' + String(key) + '` on a ' + typeof object);
 	}
 }
 
@@ -315,11 +345,13 @@ Traverse.prototype.has = function (ps) {
 Traverse.prototype.set = function (ps, value) {
 	var node = this.value;
 	for (var i = 0; i < ps.length - 1; i++) {
-		var key = ps[i];
-		if (!hasOwnProperty.call(node, key)) { node[key] = {}; }
+		var key = toSettableKey(ps[i]);
+		if (!hasOwnProperty.call(node, key)) {
+			setOwnProperty(node, key, {});
+		}
 		node = node[key];
 	}
-	node[ps[i]] = value;
+	setOwnProperty(node, toSettableKey(ps[i]), value);
 	return value;
 };
 
