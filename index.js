@@ -3,6 +3,7 @@
 var whichTypedArray = require('which-typed-array');
 var taSlice = require('typedarray.prototype.slice');
 var gopd = require('gopd');
+var defineDataProperty = require('define-data-property');
 
 // TODO: use call-bind, is-date, is-regex, is-string, is-boolean-object, is-number-object
 function toS(obj) { return Object.prototype.toString.call(obj); }
@@ -67,6 +68,19 @@ function isWritable(object, key) {
 	return !desc || !desc.writable;
 }
 
+// where `__proto__` is an accessor on Object.prototype, assigning it on an object
+// that lacks it as an own property replaces the [[Prototype]], instead of creating it.
+// in older engines it is magic on every object, so there is no own `__proto__` to preserve.
+var hasProtoAccessor = typeof gopd === 'function' && !!gopd(Object.prototype, '__proto__');
+
+function setProperty(object, key, value) {
+	if (hasProtoAccessor && key === '__proto__' && !hasOwnProperty.call(object, key)) {
+		defineDataProperty(object, key, value);
+	} else {
+		object[key] = value; // eslint-disable-line no-param-reassign
+	}
+}
+
 function copy(src, options) {
 	if (typeof src === 'object' && src !== null) {
 		var dst;
@@ -101,7 +115,7 @@ function copy(src, options) {
 
 		var iteratorFunction = options.includeSymbols ? ownEnumerableKeys : objectKeys;
 		forEach(iteratorFunction(src), function (key) {
-			dst[key] = src[key];
+			setProperty(dst, key, src[key]);
 		});
 		return dst;
 	}
@@ -138,7 +152,7 @@ function walk(root, cb) {
 			circular: null,
 			update: function (x, stopHere) {
 				if (!state.isRoot) {
-					state.parent.node[state.key] = x;
+					setProperty(state.parent.node, state.key, x);
 				}
 				state.node = x;
 				if (stopHere) { keepGoing = false; }
@@ -364,7 +378,7 @@ Traverse.prototype.clone = function () {
 
 			var iteratorFunction = options.includeSymbols ? ownEnumerableKeys : objectKeys;
 			forEach(iteratorFunction(src), function (key) {
-				dst[key] = clone(src[key]);
+				setProperty(dst, key, clone(src[key]));
 			});
 
 			parents.pop();
