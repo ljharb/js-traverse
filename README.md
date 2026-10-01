@@ -180,6 +180,10 @@ true.
 Remove the current element from the output. If the node is in an Array it will
 be spliced off. Otherwise it will be deleted from its parent.
 
+When an Array element is spliced off, the elements after it are still each
+visited once, and their `this.key` and `this.path` reflect their new index.
+A property of an Array that is not an index is deleted, rather than spliced.
+
 ## this.delete(stopHere=false)
 
 Delete the current element from its parent in the output. Calls `delete` even on
