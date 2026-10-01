@@ -94,7 +94,7 @@
 	"dependencies": {
 		"gopd": "^1.2.0",
 		"typedarray.prototype.slice": "^1.0.5",
-		"which-typed-array": "^1.1.18"
+		"which-typed-array": "^1.1.24"
 	},
 	"engines": {
 		"node": ">= 0.4"
