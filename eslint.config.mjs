@@ -40,6 +40,7 @@ export default [
 		files: [
 			'test/typed-array.js',
 			'test/mutability.js',
+			'test/proto.js',
 		],
 		languageOptions: {
 			globals: {
