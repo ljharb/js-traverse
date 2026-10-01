@@ -42,3 +42,65 @@ test('copies of an Error keep its prototype and message', function (t) {
 
 	t.end();
 });
+
+var setProto = Object.setPrototypeOf || function (obj, proto) {
+	obj.__proto__ = proto; // eslint-disable-line no-param-reassign
+	return obj;
+};
+
+function copiesOf(obj) {
+	return {
+		clone: traverse(obj).clone(),
+		map: traverse(obj).map(function () {}),
+		'immutable forEach': traverse(obj, { immutable: true }).forEach(function () {}),
+	};
+}
+
+test('copies of an Error whose prototype has a non-writable message', function (t) {
+	var proto = Object.create(Error.prototype);
+	Object.defineProperty(proto, 'message', { value: 'from prototype', writable: false });
+	var obj = setProto(new Error('own message'), proto);
+
+	var copies = copiesOf(obj);
+	for (var name in copies) { // eslint-disable-line no-restricted-syntax
+		var copied = copies[name];
+		t.ok(copied !== obj, name + ': is a copy');
+		t.equal(Object.getPrototypeOf(copied), proto, name + ': keeps the prototype');
+		t.same(
+			Object.getOwnPropertyDescriptor(copied, 'message'),
+			{ value: 'own message', writable: true, enumerable: true, configurable: true },
+			name + ': has an own message'
+		);
+	}
+
+	t.end();
+});
+
+test('copies of an Error subclass whose prototype has a message accessor', function (t) {
+	var setterCalls = 0;
+	function Subclass() {}
+	Subclass.prototype = Object.create(Error.prototype, {
+		constructor: { configurable: true, value: Subclass, writable: true },
+		message: {
+			configurable: true,
+			get: function () { return 'accessor'; },
+			set: function () { setterCalls += 1; },
+		},
+	});
+	var obj = setProto(new Error(), Subclass.prototype);
+
+	var copies = copiesOf(obj);
+	for (var name in copies) { // eslint-disable-line no-restricted-syntax
+		var copied = copies[name];
+		t.ok(copied !== obj, name + ': is a copy');
+		t.ok(copied instanceof Subclass, name + ': keeps the prototype');
+		t.same(
+			Object.getOwnPropertyDescriptor(copied, 'message'),
+			{ value: 'accessor', writable: true, enumerable: true, configurable: true },
+			name + ': has an own message'
+		);
+	}
+	t.equal(setterCalls, 0, 'the prototype\'s message setter is not called');
+
+	t.end();
+});
