@@ -163,6 +163,9 @@ Get the element at the array `path`.
 
 Set the element at the array `path` to `value`.
 
+Only own properties are followed or created, including for a `__proto__` segment.
+A `path` that crosses, or ends on, a primitive throws a `TypeError`.
+
 ## .has(path)
 
 Return whether the element at the array `path` exists.
