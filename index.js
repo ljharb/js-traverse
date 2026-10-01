@@ -67,6 +67,51 @@ function isWritable(object, key) {
 	return !desc || !desc.writable;
 }
 
+var maxArrayLength = 4294967295;
+
+function isIndex(key) {
+	if (typeof key === 'symbol') {
+		return false;
+	}
+	var index = Number(key);
+	return index >= 0
+		&& index < maxArrayLength
+		&& index % 1 === 0
+		&& String(index) === String(key);
+}
+
+function countBelow(ascending, index) {
+	var low = 0;
+	var high = ascending.length;
+	while (low < high) {
+		var middle = Math.floor((low + high) / 2);
+		if (ascending[middle] < index) {
+			low = middle + 1;
+		} else {
+			high = middle;
+		}
+	}
+	return low;
+}
+
+// While an array's children are walked, `spliced` holds, in ascending order, the index that each
+// child spliced out of it so far had when that walk began. This is enough to tell which children
+// are gone, and where each remaining one is now, however many went away and in whatever order.
+// Nothing but a splice moves a child, so for every other kind of parent `spliced` stays empty.
+function wasSpliced(key, spliced) {
+	return spliced.length > 0
+		&& isIndex(key)
+		&& spliced[countBelow(spliced, Number(key))] === Number(key);
+}
+
+function shiftedKey(key, spliced) {
+	if (spliced.length === 0 || !isIndex(key)) {
+		return key;
+	}
+	var shifted = Number(key) - countBelow(spliced, Number(key));
+	return typeof key === 'number' ? shifted : String(shifted);
+}
+
 // where `__proto__` is an accessor on Object.prototype, assigning it on an object
 // that lacks it as an own property replaces the [[Prototype]], instead of creating it.
 // in older engines it is magic on every object, so there is no own `__proto__` to preserve.
@@ -163,7 +208,7 @@ function walk(root, cb) {
 	var iteratorFunction = options.includeSymbols ? ownEnumerableKeys : objectKeys;
 	var immutable = !!options.immutable;
 
-	return (function walker(node_) {
+	return (function walker(node_, splicedSiblings, originalKey) {
 		var node = immutable ? copy(node_, options) : node_;
 		var modifiers = { __proto__: null };
 
@@ -181,21 +226,29 @@ function walk(root, cb) {
 			level: path.length,
 			circular: null,
 			update: function (x, stopHere) {
-				if (!state.isRoot) {
+				// once this node is spliced out, its key belongs to whichever sibling took its place
+				if (!state.isRoot && !wasSpliced(originalKey, splicedSiblings)) {
 					setProperty(state.parent.node, state.key, x);
 				}
 				state.node = x;
 				if (stopHere) { keepGoing = false; }
 			},
 			delete: function (stopHere) {
-				delete state.parent.node[state.key];
-				state.parent.removedKeys[state.key] = true;
+				if (!wasSpliced(originalKey, splicedSiblings)) {
+					delete state.parent.node[state.key];
+					state.parent.removedKeys[state.key] = true;
+				}
 				if (stopHere) { keepGoing = false; }
 			},
 			remove: function (stopHere) {
-				if (isArray(state.parent.node)) {
-					state.parent.node.splice(state.key, 1);
-					state.parent.removedKeys[state.key] = true;
+				if (isArray(state.parent.node) && isIndex(originalKey)) {
+					var index = Number(originalKey);
+					var at = countBelow(splicedSiblings, index);
+					if (splicedSiblings[at] !== index) {
+						state.parent.node.splice(index - at, 1);
+						splicedSiblings.splice(at, 0, index);
+						state.parent.removedKeys[state.key] = true;
+					}
 					if (stopHere) { keepGoing = false; }
 				} else {
 					state.delete(stopHere);
@@ -258,24 +311,29 @@ function walk(root, cb) {
 
 			parents[parents.length] = state;
 
-			forEach(state.keys, function (key, i) {
-				var prevIsRemoved = (i - 1) in state.removedKeys;
-				if (prevIsRemoved) {
-					key = state.keys[i - 1]; // eslint-disable-line no-param-reassign
-				}
+			var splicedChildren = [];
+
+			forEach(state.keys, function (listedKey, i) {
+				// a child can only be gone before its turn if custom `keys` list it more than once
+				if (wasSpliced(listedKey, splicedChildren)) { return; }
+
+				var key = shiftedKey(listedKey, splicedChildren);
 
 				path[path.length] = (key);
 
 				if (modifiers.pre) { modifiers.pre.call(state, state.node[key], key); }
 
-				var child = walker(state.node[key]);
-				if (
-					immutable
-					&& hasOwnProperty.call(state.node, key)
-					&& !isWritable(state.node, key)
-					&& !prevIsRemoved
-				) {
-					state.node[key] = child.node;
+				var child = walker(state.node[key], splicedChildren, listedKey);
+
+				if (immutable && !wasSpliced(listedKey, splicedChildren)) {
+					// not `key`: a sibling spliced during this child's walk will have moved it
+					var writeKey = shiftedKey(listedKey, splicedChildren);
+					if (
+						hasOwnProperty.call(state.node, writeKey)
+						&& !isWritable(state.node, writeKey)
+					) {
+						state.node[writeKey] = child.node;
+					}
 				}
 
 				child.isLast = i === state.keys.length - 1;
@@ -291,7 +349,7 @@ function walk(root, cb) {
 		if (modifiers.after) { modifiers.after.call(state, state.node); }
 
 		return state;
-	}(root)).node;
+	}(root, [])).node;
 }
 
 /** @typedef {{ immutable?: boolean, includeSymbols?: boolean }} TraverseOptions */
