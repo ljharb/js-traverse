@@ -2,16 +2,13 @@
 
 var test = require('tape');
 var v = require('es-value-fixtures');
+var setProto = require('set-proto');
 var traverse = require('../');
 
 var has = Object.prototype.hasOwnProperty;
 
 // in engines where `__proto__` is magic on every object, JSON.parse replaces the [[Prototype]] instead, and an own `__proto__` can not be read
 var hasOwnProto = has.call(JSON.parse('{"__proto__":{}}'), '__proto__');
-
-var setPrototypeOf = Object.setPrototypeOf || function (obj, proto) {
-	obj.__proto__ = proto; // eslint-disable-line no-param-reassign
-};
 
 var builtins = [
 	{ name: 'Object.prototype', value: Object.prototype },
@@ -52,7 +49,7 @@ function undoPollution(state) {
 		}
 		if (Object.getPrototypeOf(builtin) !== state[i].proto) {
 			pollution.push(builtins[i].name + ' has a different [[Prototype]]');
-			setPrototypeOf(builtin, state[i].proto);
+			setProto(builtin, state[i].proto);
 		}
 	}
 	return pollution;
@@ -375,6 +372,65 @@ test('set does not follow an accessor that a primitive inherits', function (t) {
 		TypeError,
 		'throws when it is the last segment'
 	);
+	t.same(undoPollution(state), [], 'no built-in is modified');
+
+	t.end();
+});
+
+test('set does not descend into a property it could not create', function (t) {
+	var state = getState();
+	t.teardown(function () { undoPollution(state); });
+
+	var shared = {};
+	var calls = [];
+	function Config() {}
+	Object.defineProperty(Config.prototype, 'defaults', {
+		configurable: true,
+		get: function () { return shared; },
+		set: function (x) { calls.push(x); },
+	});
+
+	t.throws(
+		function () { traverse(new Config()).set(['defaults', 'polluted'], 'yes'); },
+		TypeError,
+		'an inherited accessor in the middle of the path throws'
+	);
+	t.same(shared, {}, 'the inherited value is not modified');
+
+	var config = new Config();
+	t.equal(traverse(config).set(['defaults'], 'yes'), 'yes', 'an inherited accessor as the last segment returns the value');
+	t.same(calls.slice(-1), ['yes'], 'an inherited accessor as the last segment is still assigned to');
+	t.notOk(has.call(config, 'defaults'), 'an inherited accessor as the last segment creates no own property');
+
+	t.test('Proxy', { skip: typeof Proxy !== 'function' }, function (st) {
+		var ignoresSet = new Proxy({}, {
+			set: function () { return true; },
+		});
+		st.throws(
+			function () { traverse(ignoresSet).set(['constructor', 'prototype', 'polluted'], 'yes'); },
+			TypeError,
+			'a target that ignores assignment throws'
+		);
+		st.throws(
+			function () { traverse({ a: ignoresSet }).set(['a', 'constructor', 'prototype', 'polluted'], 'yes'); },
+			TypeError,
+			'a nested target that ignores assignment throws'
+		);
+
+		var ignoresDefine = new Proxy({}, {
+			defineProperty: function () { return true; },
+		});
+		st.throws(
+			function () { traverse(ignoresDefine).set(['__proto__', 'polluted'], 'yes'); },
+			TypeError,
+			'a target that ignores a property definition throws'
+		);
+
+		st.same(undoPollution(state), [], 'no built-in is modified');
+
+		st.end();
+	});
+
 	t.same(undoPollution(state), [], 'no built-in is modified');
 
 	t.end();
