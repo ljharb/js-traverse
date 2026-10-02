@@ -139,11 +139,13 @@ test('delete: array elements', function (t) {
 });
 
 test('remove and delete: object with index-like keys', function (t) {
+	// in io.js 1.x, deleting an index-like key from an object made by a literal
+	// also deletes it from every object that literal makes afterwards
 	[removeBad, deleteBad].forEach(function (cb) {
 		check(
 			t,
 			allModes,
-			function () { return { 0: 'BAD1', evil: 'BAD2', z: 'BAD3' }; },
+			function () { return JSON.parse('{"0":"BAD1","evil":"BAD2","z":"BAD3"}'); },
 			cb,
 			{},
 			'0:BAD1 evil:BAD2 z:BAD3'
@@ -152,7 +154,7 @@ test('remove and delete: object with index-like keys', function (t) {
 		check(
 			t,
 			allModes,
-			function () { return { 0: 'BAD1', 1: 'ok1', 2: 'BAD2', 3: 'ok2' }; },
+			function () { return JSON.parse('{"0":"BAD1","1":"ok1","2":"BAD2","3":"ok2"}'); },
 			cb,
 			{ 1: 'ok1', 3: 'ok2' },
 			'0:BAD1 1:ok1 2:BAD2 3:ok2'
