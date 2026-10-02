@@ -394,6 +394,11 @@ Traverse.prototype.set = function (ps, value) {
 		var key = toSettableKey(ps[i]);
 		if (!hasOwnProperty.call(node, key)) {
 			setOwnProperty(node, key, {});
+			// an inherited setter, or a Proxy, can accept the assignment without creating the property;
+			// the next node would then be read from wherever the key is inherited from
+			if (!hasOwnProperty.call(node, key)) {
+				throw new TypeError('Cannot create property `' + String(key) + '` as an own property');
+			}
 		}
 		node = node[key];
 	}
