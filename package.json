@@ -16,6 +16,7 @@
 		"jiti": "^0.0.0",
 		"npmignore": "^0.3.5",
 		"safe-publish-latest": "^2.0.0",
+		"set-proto": "^1.0.0",
 		"tape": "^5.10.2"
 	},
 	"scripts": {
