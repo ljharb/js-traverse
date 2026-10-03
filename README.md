@@ -224,6 +224,8 @@ be spliced off. Otherwise it will be deleted from its parent.
 
 When an Array element is spliced off, the elements after it are still each
 visited once, and their `this.key` and `this.path` reflect their new index.
+Calling `this.remove()` again for an element already spliced off removes the
+element that took its place, which is then not visited.
 A property of an Array that is not an index is deleted, rather than spliced.
 
 ## this.delete(stopHere=false)

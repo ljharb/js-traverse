@@ -286,7 +286,7 @@ test('remove: a descendant removes its parent', function (t) {
 	t.end();
 });
 
-test('remove: twice on the same node', function (t) {
+test('remove: repeatedly from the same node', function (t) {
 	check(
 		t,
 		allModes,
@@ -297,23 +297,51 @@ test('remove: twice on the same node', function (t) {
 				this.remove();
 			}
 		},
-		['ok1', 'ok2'],
-		'0:BAD1 0:ok1 1:ok2'
+		['ok2'],
+		'0:BAD1 0:ok2'
 	);
 
 	check(
 		t,
 		allModes,
-		function () { return [['BAD1', 'x'], ['ok1']]; },
+		function () { return [['BAD1', 'x'], ['ok1'], ['ok2']]; },
 		function (x) {
 			if (isBadArray(x)) {
 				this.remove();
 				this.remove(true);
 			}
 		},
-		[['ok1']],
-		'0:[] 0:[] 0.0:ok1'
+		[['ok2']],
+		'0:[] 0:[] 0.0:ok2'
 	);
+
+	check(
+		t,
+		allModes,
+		function () { return ['ok1', 'BAD1']; },
+		function (x) {
+			if (isBad(x)) {
+				this.remove();
+				this.remove();
+			}
+		},
+		['ok1'],
+		'0:ok1 1:BAD1'
+	);
+
+	inPlaceModes.forEach(function (mode) {
+		var calls = 0;
+		var input = ['BAD1', 'BAD2', 'ok', 'BAD3'];
+		var walked = walk(mode, input, function () {
+			while (!this.isRoot && isBad(this.parent.node[this.key]) && calls < 10) {
+				calls += 1;
+				this.remove();
+			}
+		});
+		t.deepEqual(input, ['ok'], mode + ': removing until the slot holds no bad value terminates');
+		t.equal(calls, 3, mode + ': removing until the slot holds no bad value removes each bad value once');
+		t.equal(walked.visits, '0:BAD1 0:ok 1:BAD3', mode + ': a sibling removed from another node is not visited');
+	});
 
 	t.end();
 });
