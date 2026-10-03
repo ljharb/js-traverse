@@ -237,7 +237,13 @@ function walk(root, cb) {
 				if (isArray(state.parent.node) && isIndex(originalKey)) {
 					var index = Number(originalKey);
 					var at = countBelow(splicedSiblings, index);
-					if (splicedSiblings[at] !== index) {
+					// once this node is spliced out, its slot holds the next sibling still there,
+					// and removing again removes that one, as it always has
+					while (splicedSiblings[at] === index) {
+						index += 1;
+						at += 1;
+					}
+					if (index - at < state.parent.node.length) {
 						state.parent.node.splice(index - at, 1);
 						splicedSiblings.splice(at, 0, index);
 						state.parent.removedKeys[state.key] = true;
