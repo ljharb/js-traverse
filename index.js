@@ -149,6 +149,43 @@ function setOwnProperty(object, key, value) {
 	}
 }
 
+var gPO = Object.getPrototypeOf;
+// TODO: use get-proto
+function getProto(obj) {
+	return gPO ? gPO(obj) : obj.__proto__;
+}
+
+var sPO = Object.setPrototypeOf;
+// TODO: use set-proto
+function setProto(obj, proto) {
+	if (sPO) {
+		sPO(obj, proto);
+	} else {
+		obj.__proto__ = proto; // eslint-disable-line no-param-reassign
+	}
+}
+
+function copyBoxed(src, valueOf) {
+	var primitive;
+	try {
+		primitive = valueOf.call(src);
+	} catch (e) {
+		// an object that only claims to be a boxed primitive, via Symbol.toStringTag, is handled as before
+		return Object(src);
+	}
+	var dst = Object(primitive);
+	var proto = getProto(src);
+	if (proto && proto !== getProto(dst)) {
+		setProto(dst, proto);
+	}
+	return dst;
+}
+
+// a String object's characters are its own read-only properties, which a copy made from its value already has
+function isStringCharacter(obj, key) {
+	return isString(obj) && isIndex(key) && Number(key) < obj.length;
+}
+
 function copy(src, options) {
 	if (typeof src === 'object' && src !== null) {
 		var dst;
@@ -161,8 +198,12 @@ function copy(src, options) {
 			dst = new RegExp(src);
 		} else if (isError(src)) {
 			dst = { message: src.message };
-		} else if (isBoolean(src) || isNumber(src) || isString(src)) {
-			dst = Object(src);
+		} else if (isBoolean(src)) {
+			dst = copyBoxed(src, Boolean.prototype.valueOf);
+		} else if (isNumber(src)) {
+			dst = copyBoxed(src, Number.prototype.valueOf);
+		} else if (isString(src)) {
+			dst = copyBoxed(src, String.prototype.valueOf);
 		} else {
 			var ta = whichTypedArray(src);
 			if (ta) {
@@ -183,7 +224,9 @@ function copy(src, options) {
 
 		var iteratorFunction = options.includeSymbols ? ownEnumerableKeys : objectKeys;
 		forEach(iteratorFunction(src), function (key) {
-			setProperty(dst, key, src[key]);
+			if (!isStringCharacter(dst, key)) {
+				setProperty(dst, key, src[key]);
+			}
 		});
 		return dst;
 	}
@@ -472,7 +515,9 @@ Traverse.prototype.clone = function () {
 
 			var iteratorFunction = options.includeSymbols ? ownEnumerableKeys : objectKeys;
 			forEach(iteratorFunction(src), function (key) {
-				setProperty(dst, key, clone(src[key]));
+				if (!isStringCharacter(dst, key)) {
+					setProperty(dst, key, clone(src[key]));
+				}
 			});
 
 			parents.pop();
