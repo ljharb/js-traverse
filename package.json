@@ -97,7 +97,7 @@
 		"define-data-property": "^1.1.4",
 		"es-abstract": "^1.24.2",
 		"gopd": "^1.2.0",
-		"typedarray.prototype.slice": "^1.0.5",
+		"typedarray.prototype.slice": "^1.0.6",
 		"which-typed-array": "^1.1.24"
 	},
 	"engines": {
