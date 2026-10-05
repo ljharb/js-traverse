@@ -8,6 +8,7 @@ export default [
 			'array-callback-return': 'off',
 			'array-element-newline': 'off',
 			complexity: 'off',
+			eqeqeq: ['error', 'allow-null'],
 			'func-style': ['error', 'declaration'],
 			'global-require': 'warn',
 			'max-lines': 'warn',
