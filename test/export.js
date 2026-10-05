@@ -61,3 +61,24 @@ test('every method has a static form', function (t) {
 
 	t.end();
 });
+
+test('options are taken with or without new', function (t) {
+	var sym = typeof Symbol === 'function' ? Symbol('s') : null;
+	var obj = { a: 1 };
+	if (sym) { obj[sym] = 2; }
+
+	[undefined, null].forEach(function (options) {
+		t.same(traverse(obj, options).paths(), [[], ['a']], String(options) + ': called');
+		t.same(new traverse(obj, options).paths(), [[], ['a']], String(options) + ': constructed'); // eslint-disable-line new-cap
+		t.equal(new traverse(obj, options).options, traverse(obj).options, String(options) + ': default options'); // eslint-disable-line new-cap
+	});
+
+	var included = { includeSymbols: true };
+	t.equal(traverse(obj, included).options, included, 'called: options kept');
+	t.equal(new traverse(obj, included).options, included, 'constructed: options kept'); // eslint-disable-line new-cap
+	if (sym) {
+		t.same(traverse(obj, included).paths(), [[], ['a'], [sym]], 'called: includeSymbols');
+	}
+
+	t.end();
+});
