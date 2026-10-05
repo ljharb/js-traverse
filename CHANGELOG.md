@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.6.12](https://github.com/ljharb/js-traverse/compare/v0.6.11...v0.6.12) - 2026-10-05
+
+### Fixed
+
+- [Fix] `remove`, `delete`: visit every remaining sibling exactly once [`#18`](https://github.com/ljharb/js-traverse/issues/18)
+
+### Commits
+
+- [Fix] `set`: only follow and create own properties; never write to a built-in prototype [`81ccab4`](https://github.com/ljharb/js-traverse/commit/81ccab43e379cf42eb2a5f689630f7f79b3d71b8)
+- [Fix] `clone`, `map`, immutable `forEach`: copy an own `__proto__` key as an own property [`770d9fc`](https://github.com/ljharb/js-traverse/commit/770d9fc49bb07bc198b5b86308e48a894819a428)
+- [Fix] `clone`, `map`, immutable `forEach`: copy boxed primitives instead of sharing them [`3e03610`](https://github.com/ljharb/js-traverse/commit/3e03610a3a0196317dedb887515bfde96c3bc6bf)
+- [Dev Deps] update `eslint` [`dabef68`](https://github.com/ljharb/js-traverse/commit/dabef6872bcdb7d06c06fb022312f5d4cf6591f8)
+- [Fix] `set`: do not descend into a property that could not be created as an own property [`37a9ebd`](https://github.com/ljharb/js-traverse/commit/37a9ebd103d2a259c824c29cdcc3f0dfe1acffce)
+- [Fix] `remove`: a repeated `remove()` removes the element that took the node's place [`940f4d7`](https://github.com/ljharb/js-traverse/commit/940f4d7a6e12840f2e4fb6a47004816a9d16d6ec)
+- [actions] update workflows [`95382f8`](https://github.com/ljharb/js-traverse/commit/95382f871388610ac2ce3cab7a7548f1736290b6)
+- [Tests] `clone`, `map`: add a test for a Buffer [`3631118`](https://github.com/ljharb/js-traverse/commit/3631118625e00d25584f0688f9ad22f3e014ef89)
+- [Dev Deps] update `@ljharb/eslint-config`, `eslint` [`5691345`](https://github.com/ljharb/js-traverse/commit/56913457796ec1a6bbd92e76448383a9b599d928)
+- [Dev Deps] update `@ljharb/eslint-config`, `auto-changelog`, `es-value-fixtures`, `eslint`, `npmignore`, `tape` [`3a92419`](https://github.com/ljharb/js-traverse/commit/3a92419ef5bf38d301cc2bd90a46d22ab6840c61)
+- [Tests] avoid an io.js 1.x bug with index-like keys in object literals [`ee21263`](https://github.com/ljharb/js-traverse/commit/ee212636aa6c38d78533acd31e3589f4736aa2f7)
+- [Refactor] avoid use of a dep [`e07218c`](https://github.com/ljharb/js-traverse/commit/e07218cd2a91fcee203da917d97eb0001d4a39db)
+- [meta] omit some files [`60be911`](https://github.com/ljharb/js-traverse/commit/60be911a8953fbe9f35fc7a1ec163949ba518870)
+- [Dev Deps] update `auto-changelog`; remove `encoding` [`79fe607`](https://github.com/ljharb/js-traverse/commit/79fe6072532432871f8feb0ce12ff5330de3f17c)
+- [Dev Deps] update `eslint` [`f131e8b`](https://github.com/ljharb/js-traverse/commit/f131e8b944e37a5854e8d9dbd42dad1083f5599c)
+- [Deps] update `typedarray.prototype.slice` [`4b22169`](https://github.com/ljharb/js-traverse/commit/4b221693f200ed4ae557420468f757d2bbad483e)
+- [Deps] update `which-typed-array` [`c287366`](https://github.com/ljharb/js-traverse/commit/c2873661a14c509c67bd6628f7f1393c0b26bbd1)
+- [actions] set least-privilege `cache-mode` [`fb61e0e`](https://github.com/ljharb/js-traverse/commit/fb61e0e5ec818e526dd2661e7e19672105506195)
+
 ## [v0.6.11](https://github.com/ljharb/js-traverse/compare/v0.6.10...v0.6.11) - 2025-01-15
 
 ### Fixed
@@ -88,8 +115,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Commits
 
-- merge the null fix [`c405df2`](https://github.com/ljharb/js-traverse/commit/c405df2c8a8d49321ac8081b928b4e5df5f80237)
 - fix for Cannot convert null to object  at hasOwnProperty (native) when node is null [`d9f52fa`](https://github.com/ljharb/js-traverse/commit/d9f52fa400c53f5bf1b5e388c0dd457c4dc651e3)
+- merge the null fix [`c405df2`](https://github.com/ljharb/js-traverse/commit/c405df2c8a8d49321ac8081b928b4e5df5f80237)
 
 ## [v0.6.4](https://github.com/ljharb/js-traverse/compare/v0.6.3...v0.6.4) - 2012-12-17
 
@@ -105,13 +132,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Commits
 
-- 0.6.3, fixes bugs when the replacement for an object is not an object [`09f560c`](https://github.com/ljharb/js-traverse/commit/09f560c0f910a9ac76fa0fc507655627cda6dd6f)
-- fixed merge conflicts [`576832a`](https://github.com/ljharb/js-traverse/commit/576832a2e4d91197b88a002dec643310fa9b3b26)
 - Update state with the current node before recursing [`3857dca`](https://github.com/ljharb/js-traverse/commit/3857dcaeaceca9a739300b0b846c1094ddf3b26f)
 - Add test for replacing objects with strings and vice-versa [`28d5fb6`](https://github.com/ljharb/js-traverse/commit/28d5fb64e44237e21c01904d6e46b34626d66d33)
 - s/Object_keys/objectKeys/g [`ef3694f`](https://github.com/ljharb/js-traverse/commit/ef3694f1fcfe948c39a5caaded33480bcbdafdfa)
 - Only set state.keys when necessary [`ee66cd1`](https://github.com/ljharb/js-traverse/commit/ee66cd1c71db7701769323548916ce860f442d03)
+- 0.6.3, fixes bugs when the replacement for an object is not an object [`09f560c`](https://github.com/ljharb/js-traverse/commit/09f560c0f910a9ac76fa0fc507655627cda6dd6f)
 - Fix crash when node is a string and this.update is called with an object. [`5c6f161`](https://github.com/ljharb/js-traverse/commit/5c6f161f2006df87f231317f3413bc38ad799b7d)
+- fixed merge conflicts [`576832a`](https://github.com/ljharb/js-traverse/commit/576832a2e4d91197b88a002dec643310fa9b3b26)
 
 ## [v0.6.2](https://github.com/ljharb/js-traverse/compare/v0.6.1...v0.6.2) - 2012-06-16
 
