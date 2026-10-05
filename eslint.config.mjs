@@ -17,7 +17,7 @@ export default [
 			'new-cap': [
 				'error', {
 					capIsNewExceptions: [
-						'ToPropertyKey',
+						'ToPrimitive',
 					],
 				},
 			],
