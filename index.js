@@ -238,6 +238,11 @@ function copy(src, options) {
 /** @type {TraverseOptions} */
 var emptyNull = { __proto__: null };
 
+/** @type {(options: TraverseOptions | null | undefined) => TraverseOptions} */
+function getOptions(options) {
+	return options == null ? emptyNull : options;
+}
+
 function walk(root, cb) {
 	var path = [];
 	var parents = [];
@@ -397,12 +402,12 @@ function walk(root, cb) {
 /**
  * A traverse constructor
  * @param {object} obj - the object to traverse
- * @param {TraverseOptions | undefined} [options] - options for the traverse
+ * @param {TraverseOptions | null | undefined} [options] - options for the traverse
  * @constructor
  */
 function Traverse(obj) {
 	/** @type {TraverseOptions} */
-	this.options = arguments.length > 1 ? arguments[1] : emptyNull;
+	this.options = getOptions(arguments.length > 1 ? arguments[1] : null);
 	this.value = obj;
 }
 
@@ -532,10 +537,9 @@ Traverse.prototype.clone = function () {
 	}(this.value));
 };
 
-/** @type {(obj: object, options?: TraverseOptions) => Traverse} */
+/** @type {(obj: object, options?: TraverseOptions | null) => Traverse} */
 function traverse(obj) {
-	var options = arguments.length > 1 ? arguments[1] : emptyNull;
-	return new Traverse(obj, options);
+	return new Traverse(obj, getOptions(arguments.length > 1 ? arguments[1] : null));
 }
 
 // TODO: replace with object.assign?
