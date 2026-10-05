@@ -414,10 +414,11 @@ function Traverse(obj) {
 /** @type {(ps: PropertyKey[]) => Traverse['value']} */
 Traverse.prototype.get = function (ps) {
 	var node = this.value;
-	for (var i = 0; node && i < ps.length; i++) {
+	for (var i = 0; i < ps.length; i++) {
 		var key = ps[i];
 		if (
-			!hasOwnProperty.call(node, key)
+			node == null
+			|| !hasOwnProperty.call(node, key)
 			|| (!this.options.includeSymbols && typeof key === 'symbol')
 		) {
 			return void undefined;
@@ -434,9 +435,13 @@ Traverse.prototype.has = function (ps) {
 	if (!node && ps.length > 0) {
 		return false;
 	}
-	for (var i = 0; node && i < ps.length; i++) {
+	for (var i = 0; i < ps.length; i++) {
 		var key = ps[i];
-		if (!hasOwnProperty.call(node, key) || (!this.options.includeSymbols && typeof key === 'symbol')) {
+		if (
+			node == null
+			|| !hasOwnProperty.call(node, key)
+			|| (!this.options.includeSymbols && typeof key === 'symbol')
+		) {
 			return false;
 		}
 		node = node[key];
