@@ -4,7 +4,6 @@ var whichTypedArray = require('which-typed-array');
 var taSlice = require('typedarray.prototype.slice');
 var gopd = require('gopd');
 var defineDataProperty = require('define-data-property');
-var ToPropertyKey = require('es-abstract/2025/ToPropertyKey');
 
 // TODO: use call-bind, is-date, is-regex, is-string, is-boolean-object, is-number-object
 function toS(obj) { return Object.prototype.toString.call(obj); }
@@ -131,9 +130,10 @@ function setProperty(object, key, value) {
 // even on an object that has it as an own property.
 var hasMagicProto = !hasProtoAccessor && {}.__proto__ === Object.prototype;
 
+// TODO: use es-abstract's ToPropertyKey semantics
 function toSettableKey(segment) {
 	// a segment that is an object would otherwise be coerced anew on every use, and need not produce the same key each time
-	var key = ToPropertyKey(segment);
+	var key = typeof segment === 'symbol' ? segment : String(segment);
 	if (hasMagicProto && key === '__proto__') {
 		throw new TypeError('`__proto__` can not be set as a property in this engine');
 	}
