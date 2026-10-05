@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.6.14](https://github.com/ljharb/js-traverse/compare/v0.6.13...v0.6.14) - 2026-10-05
+
+### Commits
+
+- [Fix] an `undefined` or `null` options argument is the same as none [`e3bb15c`](https://github.com/ljharb/js-traverse/commit/e3bb15c5094f4118b7ead5b2af9fecfda1e7af8d)
+- [Fix] `get`, `has`: a null or undefined node along the path means the path does not exist [`eacd4ab`](https://github.com/ljharb/js-traverse/commit/eacd4ab2a62b8afaea2d844c567cf536bbc842bb)
+
 ## [v0.6.13](https://github.com/ljharb/js-traverse/compare/v0.6.12...v0.6.13) - 2026-10-05
 
 ### Commits
