@@ -91,7 +91,10 @@
 	},
 	"publishConfig": {
 		"ignore": [
-			".github/workflows"
+			".github/workflows",
+			"eslint.config.mjs",
+			"examples/",
+			"test"
 		]
 	},
 	"dependencies": {
