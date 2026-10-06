@@ -2,239 +2,237 @@ var test = require('tape');
 var traverse = require('../');
 
 test('deepDates', function (t) {
-    t.plan(2);
-    
-    var now = new Date;
-    t.ok(
-        traverse.deepEqual(
-            { d : new Date(now), x : [ 1, 2, 3 ] },
-            { d : new Date(now), x : [ 1, 2, 3 ] }
-        ),
-        'dates should be equal'
-    );
-    
-    var d0 = new Date;
-    setTimeout(function () {
-        t.ok(
-            !traverse.deepEqual(
-                { d : d0, x : [ 1, 2, 3 ], },
-                { d : new Date, x : [ 1, 2, 3 ] }
-            ),
-            'microseconds should count in date equality'
-        );
-    }, 5);
+	t.plan(2);
+
+	var now = new Date;
+	t.ok(
+		traverse.deepEqual(
+			{ d: new Date(now), x: [1, 2, 3] },
+			{ d: new Date(now), x: [1, 2, 3] }
+		),
+		'dates should be equal'
+	);
+
+	var d0 = new Date;
+	setTimeout(function () {
+		t.ok(
+			!traverse.deepEqual(
+				{ d: d0, x: [1, 2, 3], },
+				{ d: new Date, x: [1, 2, 3] }
+			),
+			'microseconds should count in date equality'
+		);
+	}, 5);
 });
 
 test('deepCircular', function (t) {
-    var a = [1];
-    a.push(a); // a = [ 1, *a ]
-    
-    var b = [1];
-    b.push(a); // b = [ 1, [ 1, *a ] ]
-    
-    t.ok(
-        !traverse.deepEqual(a, b),
-        'circular ref mount points count towards equality'
-    );
-    
-    var c = [1];
-    c.push(c); // c = [ 1, *c ]
-    t.ok(
-        traverse.deepEqual(a, c),
-        'circular refs are structurally the same here'
-    );
-    
-    var d = [1];
-    d.push(a); // c = [ 1, [ 1, *d ] ]
-    t.ok(
-        traverse.deepEqual(b, d),
-        'non-root circular ref structural comparison'
-    );
-    
-    t.end();
+	var a = [1];
+	a.push(a); // a = [ 1, *a ]
+
+	var b = [1];
+	b.push(a); // b = [ 1, [ 1, *a ] ]
+
+	t.ok(
+		!traverse.deepEqual(a, b),
+		'circular ref mount points count towards equality'
+	);
+
+	var c = [1];
+	c.push(c); // c = [ 1, *c ]
+	t.ok(
+		traverse.deepEqual(a, c),
+		'circular refs are structurally the same here'
+	);
+
+	var d = [1];
+	d.push(a); // c = [ 1, [ 1, *d ] ]
+	t.ok(
+		traverse.deepEqual(b, d),
+		'non-root circular ref structural comparison'
+	);
+
+	t.end();
 });
 
 test('deepInstances', function (t) {
-    t.ok(
-        !traverse.deepEqual([ new Boolean(false) ], [ false ]),
-        'boolean instances are not real booleans'
-    );
-    
-    t.ok(
-        !traverse.deepEqual([ new String('x') ], [ 'x' ]),
-        'string instances are not real strings'
-    );
-    
-    t.ok(
-        !traverse.deepEqual([ new Number(4) ], [ 4 ]),
-        'number instances are not real numbers'
-    );
-    
-    t.ok(
-        traverse.deepEqual([ new RegExp('x') ], [ /x/ ]),
-        'regexp instances are real regexps'
-    );
-    
-    t.ok(
-        !traverse.deepEqual([ new RegExp(/./) ], [ /../ ]),
-        'these regexps aren\'t the same'
-    );
-    
-    t.ok(
-        !traverse.deepEqual(
-            [ function (x) { return x * 2 } ],
-            [ function (x) { return x * 2 } ]
-        ),
-        'functions with the same .toString() aren\'t necessarily the same'
-    );
-    
-    var f = function (x) { return x * 2 };
-    t.ok(
-        traverse.deepEqual([ f ], [ f ]),
-        'these functions are actually equal'
-    );
-    
-    t.end();
+	t.ok(
+		!traverse.deepEqual([new Boolean(false)], [false]),
+		'boolean instances are not real booleans'
+	);
+
+	t.ok(
+		!traverse.deepEqual([new String('x')], ['x']),
+		'string instances are not real strings'
+	);
+
+	t.ok(
+		!traverse.deepEqual([new Number(4)], [4]),
+		'number instances are not real numbers'
+	);
+
+	t.ok(
+		traverse.deepEqual([new RegExp('x')], [/x/]),
+		'regexp instances are real regexps'
+	);
+
+	t.ok(
+		!traverse.deepEqual([new RegExp(/./)], [/../]),
+		'these regexps aren\'t the same'
+	);
+
+	t.ok(
+		!traverse.deepEqual(
+			[function (x) { return x * 2 }],
+			[function (x) { return x * 2 }]
+		),
+		'functions with the same .toString() aren\'t necessarily the same'
+	);
+
+	var f = function (x) { return x * 2 };
+	t.ok(
+		traverse.deepEqual([f], [f]),
+		'these functions are actually equal'
+	);
+
+	t.end();
 });
 
 test('deepEqual', function (t) {
-    t.ok(
-        !traverse.deepEqual([ 1, 2, 3 ], { 0 : 1, 1 : 2, 2 : 3 }),
-        'arrays are not objects'
-    );
-    t.end();
+	t.ok(
+		!traverse.deepEqual([1, 2, 3], { 0: 1, 1: 2, 2: 3 }),
+		'arrays are not objects'
+	);
+	t.end();
 });
 
 test('falsy', function (t) {
-    t.ok(
-        !traverse.deepEqual([ undefined ], [ null ]),
-        'null is not undefined!'
-    );
-    
-    t.ok(
-        !traverse.deepEqual([ null ], [ undefined ]),
-        'undefined is not null!'
-    );
-    
-    t.ok(
-        !traverse.deepEqual(
-            { a : 1, b : 2, c : [ 3, undefined, 5 ] },
-            { a : 1, b : 2, c : [ 3, null, 5 ] }
-        ),
-        'undefined is not null, however deeply!'
-    );
-    
-    t.ok(
-        !traverse.deepEqual(
-            { a : 1, b : 2, c : [ 3, undefined, 5 ] },
-            { a : 1, b : 2, c : [ 3, null, 5 ] }
-        ),
-        'null is not undefined, however deeply!'
-    );
-    
-    t.ok(
-        !traverse.deepEqual(
-            { a : 1, b : 2, c : [ 3, undefined, 5 ] },
-            { a : 1, b : 2, c : [ 3, null, 5 ] }
-        ),
-        'null is not undefined, however deeply!'
-    );
-    
-    t.end();
+	t.ok(
+		!traverse.deepEqual([undefined], [null]),
+		'null is not undefined!'
+	);
+
+	t.ok(
+		!traverse.deepEqual([null], [undefined]),
+		'undefined is not null!'
+	);
+
+	t.ok(
+		!traverse.deepEqual(
+			{ a: 1, b: 2, c: [3, undefined, 5] },
+			{ a: 1, b: 2, c: [3, null, 5] }
+		),
+		'undefined is not null, however deeply!'
+	);
+
+	t.ok(
+		!traverse.deepEqual(
+			{ a: 1, b: 2, c: [3, undefined, 5] },
+			{ a: 1, b: 2, c: [3, null, 5] }
+		),
+		'null is not undefined, however deeply!'
+	);
+
+	t.ok(
+		!traverse.deepEqual(
+			{ a: 1, b: 2, c: [3, undefined, 5] },
+			{ a: 1, b: 2, c: [3, null, 5] }
+		),
+		'null is not undefined, however deeply!'
+	);
+
+	t.end();
 });
 
 test('deletedArrayEqual', function (t) {
-    var xs = [ 1, 2, 3, 4 ];
-    delete xs[2];
-    
-    var ys = Object.create(Array.prototype);
-    ys[0] = 1;
-    ys[1] = 2;
-    ys[3] = 4;
-    
-    t.ok(
-        traverse.deepEqual(xs, ys),
-        'arrays with deleted elements are only equal to'
+	var xs = [1, 2, 3, 4];
+	delete xs[2];
+
+	var ys = Object.create(Array.prototype);
+	ys[0] = 1;
+	ys[1] = 2;
+	ys[3] = 4;
+
+	t.ok(
+		traverse.deepEqual(xs, ys),
+		'arrays with deleted elements are only equal to'
         + ' arrays with similarly deleted elements'
-    );
-    
-    t.ok(
-        !traverse.deepEqual(xs, [ 1, 2, undefined, 4 ]),
-        'deleted array elements cannot be undefined'
-    );
-    
-    t.ok(
-        !traverse.deepEqual(xs, [ 1, 2, null, 4 ]),
-        'deleted array elements cannot be null'
-    );
-    
-    t.end();
+	);
+
+	t.ok(
+		!traverse.deepEqual(xs, [1, 2, undefined, 4]),
+		'deleted array elements cannot be undefined'
+	);
+
+	t.ok(
+		!traverse.deepEqual(xs, [1, 2, null, 4]),
+		'deleted array elements cannot be null'
+	);
+
+	t.end();
 });
 
 test('deletedObjectEqual', function (t) {
-    var obj = { a : 1, b : 2, c : 3 };
-    delete obj.c;
-    
-    t.ok(
-        traverse.deepEqual(obj, { a : 1, b : 2 }),
-        'deleted object elements should not show up'
-    );
-    
-    t.ok(
-        !traverse.deepEqual(obj, { a : 1, b : 2, c : undefined }),
-        'deleted object elements are not undefined'
-    );
-    
-    t.ok(
-        !traverse.deepEqual(obj, { a : 1, b : 2, c : null }),
-        'deleted object elements are not null'
-    );
-    
-    t.end();
+	var obj = { a: 1, b: 2, c: 3 };
+	delete obj.c;
+
+	t.ok(
+		traverse.deepEqual(obj, { a: 1, b: 2 }),
+		'deleted object elements should not show up'
+	);
+
+	t.ok(
+		!traverse.deepEqual(obj, { a: 1, b: 2, c: undefined }),
+		'deleted object elements are not undefined'
+	);
+
+	t.ok(
+		!traverse.deepEqual(obj, { a: 1, b: 2, c: null }),
+		'deleted object elements are not null'
+	);
+
+	t.end();
 });
 
 test('emptyKeyEqual', function (t) {
-    t.ok(!traverse.deepEqual(
-        { a : 1 }, { a : 1, '' : 55 }
-    ));
-    
-    t.end();
+	t.ok(!traverse.deepEqual({ a: 1 }, { a: 1, '': 55 }));
+
+	t.end();
 });
 
 test('deepArguments', function (t) {
-    t.ok(
-        !traverse.deepEqual(
-            [ 4, 5, 6 ],
-            (function () { return arguments })(4, 5, 6)
-        ),
-        'arguments are not arrays'
-    );
-    
-    t.ok(
-        traverse.deepEqual(
-            (function () { return arguments })(4, 5, 6),
-            (function () { return arguments })(4, 5, 6)
-        ),
-        'arguments should equal'
-    );
-    
-    t.end();
+	t.ok(
+		!traverse.deepEqual(
+			[4, 5, 6],
+			(function () { return arguments })(4, 5, 6)
+		),
+		'arguments are not arrays'
+	);
+
+	t.ok(
+		traverse.deepEqual(
+			(function () { return arguments })(4, 5, 6),
+			(function () { return arguments })(4, 5, 6)
+		),
+		'arguments should equal'
+	);
+
+	t.end();
 });
 
 test('deepUn', function (t) {
-    t.ok(!traverse.deepEqual({ a : 1, b : 2 }, undefined));
-    t.ok(!traverse.deepEqual({ a : 1, b : 2 }, {}));
-    t.ok(!traverse.deepEqual(undefined, { a : 1, b : 2 }));
-    t.ok(!traverse.deepEqual({}, { a : 1, b : 2 }));
-    t.ok(traverse.deepEqual(undefined, undefined));
-    t.ok(traverse.deepEqual(null, null));
-    t.ok(!traverse.deepEqual(undefined, null));
-    
-    t.end();
+	t.ok(!traverse.deepEqual({ a: 1, b: 2 }, undefined));
+	t.ok(!traverse.deepEqual({ a: 1, b: 2 }, {}));
+	t.ok(!traverse.deepEqual(undefined, { a: 1, b: 2 }));
+	t.ok(!traverse.deepEqual({}, { a: 1, b: 2 }));
+	t.ok(traverse.deepEqual(undefined, undefined));
+	t.ok(traverse.deepEqual(null, null));
+	t.ok(!traverse.deepEqual(undefined, null));
+
+	t.end();
 });
 
 test('deepLevels', function (t) {
-    var xs = [ 1, 2, [ 3, 4, [ 5, 6 ] ] ];
-    t.ok(!traverse.deepEqual(xs, []));
-    t.end();
+	var xs = [1, 2, [3, 4, [5, 6]]];
+	t.ok(!traverse.deepEqual(xs, []));
+	t.end();
 });
