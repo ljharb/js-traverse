@@ -8,9 +8,14 @@
         "test": "test"
     },
     "devDependencies": {
+        "@ljharb/eslint-config": "^22.2.5",
+        "eslint": "^10.12.0",
+        "jiti": "^0.0.0",
         "tape": "^5.10.2"
     },
     "scripts": {
+        "lint": "eslint .",
+        "pretest": "npm run lint",
         "tests-only": "tape 'test/**/*.js'",
         "test": "npm run tests-only"
     },
