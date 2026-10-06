@@ -8,7 +8,7 @@ test('the export is the constructor', function (t) {
     t.ok(called instanceof traverse);
     t.equal(called.value, obj);
 
-    var constructed = new traverse(obj);
+    var constructed = new traverse(obj); // eslint-disable-line new-cap
     t.ok(constructed instanceof traverse);
     t.equal(constructed.value, obj);
 
@@ -23,7 +23,7 @@ test('methods added to the prototype are available', function (t) {
     };
     try {
         t.equal(traverse({ a : [ 1, 2 ], b : 3 }).leafCount(), 3);
-        t.equal(new traverse([ 1 ]).leafCount(), 1);
+        t.equal(new traverse([ 1 ]).leafCount(), 1); // eslint-disable-line new-cap
     }
     finally {
         delete traverse.prototype.leafCount;

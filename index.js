@@ -100,7 +100,7 @@ Traverse.prototype.deepEqual = function (obj) {
         };
         
         if (this.circular) {
-            if (Traverse(obj).get(this.circular.path) !== x) notEqual();
+            if (new Traverse(obj).get(this.circular.path) !== x) notEqual();
         }
         else if (typeof x !== typeof y) {
             notEqual();
