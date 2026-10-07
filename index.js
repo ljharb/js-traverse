@@ -198,6 +198,8 @@ function walk (root, cb, immutable) {
         var node = immutable ? copy(node_) : node_;
         var modifiers = {};
         
+        var updated = false;
+        
         var state = {
             node : node,
             node_ : node_,
@@ -208,6 +210,8 @@ function walk (root, cb, immutable) {
             level : path.length,
             circular : null,
             update : function (x) {
+                updated = true;
+                
                 if (!state.isRoot) {
                     state.parent.node[state.key] = x;
                 }
@@ -256,7 +260,7 @@ function walk (root, cb, immutable) {
         if (modifiers.before) modifiers.before.call(state, state.node);
         
         if (typeof state.node == 'object'
-        && state.node !== null && !state.circular) {
+        && state.node !== null && !state.circular && !updated) {
             parents.push(state);
             
             var keys = Object.keys(state.node);
